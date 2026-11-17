@@ -133,7 +133,7 @@ public final class ClientMessageHandler {
         if (level == null) return;
         if (!(level.getEntity(m.getEntityId()) instanceof LivingEntity living)) return;
 
-        MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(m.getEffectId());
+        var effect = BuiltInRegistries.MOB_EFFECT.getHolder(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.MOB_EFFECT, m.getEffectId())).orElse(null);
         if (effect == null) {
             EBLogger.warn("Received magic effect sync for unknown effect: {}", m.getEffectId());
             return;

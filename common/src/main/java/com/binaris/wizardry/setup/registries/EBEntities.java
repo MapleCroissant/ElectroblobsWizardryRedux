@@ -93,7 +93,7 @@ public final class EBEntities {
     }
 
     public static void registerSpawns() {
-        SpawnPlacementsInvoker.callRegister(EBEntities.EVIL_WIZARD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EvilWizard::checkEvilWizardSpawnRules);
+        SpawnPlacementsInvoker.callRegister(EBEntities.EVIL_WIZARD.get(), net.minecraft.world.entity.SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EvilWizard::checkEvilWizardSpawnRules);
     }
 
     // ======= Helpers =======

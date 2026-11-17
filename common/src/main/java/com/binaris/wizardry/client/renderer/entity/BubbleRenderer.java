@@ -18,7 +18,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class BubbleRenderer extends EntityRenderer<BubbleConstruct> {
-    private static final ResourceLocation BUBBLE_TEXTURE = new ResourceLocation("textures/particle/bubble.png");
+    private static final ResourceLocation BUBBLE_TEXTURE = ResourceLocation.parse("textures/particle/bubble.png");
     private static final ResourceLocation ENTRAPMENT_TEXTURE = WizardryMainMod.location("textures/entity/entrapment.png");
     private static final float BUBBLE_SIZE_MULTIPLIER = 1.1f;
 
@@ -70,12 +70,13 @@ public class BubbleRenderer extends EntityRenderer<BubbleConstruct> {
     }
 
     private void addVertex(VertexConsumer vc, Matrix4f pose, Matrix3f normal, float x, float y, float u, float v, int packedLight) {
-        vc.vertex(pose, x, y, 0f)
-                .color(255, 255, 255, 200)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(packedLight)
-                .normal(normal, 0f, 1f, 0f)
-                .endVertex();
+        org.joml.Vector3f transformedNormal = normal.transform(new org.joml.Vector3f(0, 1, 0));
+        vc.addVertex(pose, x, y, 0f)
+                .setColor(255, 255, 255, 200)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(packedLight)
+                .setNormal(transformedNormal.x(), transformedNormal.y(), transformedNormal.z())
+                ;
     }
 }

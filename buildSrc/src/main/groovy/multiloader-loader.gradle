@@ -29,11 +29,9 @@ configurations {
 }
 
 dependencies {
-    compileOnly(project(':common')) {
-        capabilities {
-            requireCapability "$group:$mod_id"
-        }
-    }
+    // Compile the shared sources below in this loader's mapping namespace.
+    // Depending on common's compiled Loom variants as well produces ambiguous
+    // capabilities and duplicates the same classes in the Fabric runtime.
     commonJava project(path: ':common', configuration: 'commonJava')
     commonResources project(path: ':common', configuration: 'commonResources')
 }

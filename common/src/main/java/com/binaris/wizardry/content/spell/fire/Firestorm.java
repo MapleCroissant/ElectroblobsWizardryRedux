@@ -56,7 +56,7 @@ public class Firestorm extends AreaEffectSpell {
 
     @Override
     protected boolean affectEntity(CastContext ctx, Vec3 origin, LivingEntity target, int targetCount) {
-        target.setSecondsOnFire(property(DefaultProperties.EFFECT_DURATION));
+        target.igniteForSeconds(property(DefaultProperties.EFFECT_DURATION));
         return true;
     }
 

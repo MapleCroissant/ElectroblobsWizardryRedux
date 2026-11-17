@@ -9,8 +9,8 @@ import com.binaris.wizardry.api.content.spell.Spell;
 import com.binaris.wizardry.cca.EBComponents;
 import com.binaris.wizardry.core.platform.Services;
 import com.binaris.wizardry.setup.registries.Spells;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SpellManagerDataHolder implements SpellManagerData, ComponentV3, AutoSyncedComponent {
+public class SpellManagerDataHolder implements SpellManagerData, Component, AutoSyncedComponent {
     @SuppressWarnings("rawtypes")
     public static final Set<IStoredSpellVar> storedVariables = new HashSet<>();
     @SuppressWarnings("rawtypes")
@@ -80,7 +80,7 @@ public class SpellManagerDataHolder implements SpellManagerData, ComponentV3, Au
     }
 
     @Override
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         spellsDiscovered.clear();
         if (tag.contains("spellsDiscovered", Tag.TAG_LIST)) {
             ListTag listTag = tag.getList("spellsDiscovered", Tag.TAG_STRING);
@@ -100,7 +100,7 @@ public class SpellManagerDataHolder implements SpellManagerData, ComponentV3, Au
     }
 
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         ListTag spellsDiscoveredTag = new ListTag();
         spellsDiscovered.forEach((spell -> spellsDiscoveredTag.add(StringTag.valueOf(spell.getLocation().toString()))));
         tag.put("spellsDiscovered", spellsDiscoveredTag);

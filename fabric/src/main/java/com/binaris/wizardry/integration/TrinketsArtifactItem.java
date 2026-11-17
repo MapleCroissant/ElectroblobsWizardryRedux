@@ -54,7 +54,7 @@ public class TrinketsArtifactItem extends ArtifactItem implements Trinket {
                             if (TrinketSlot.canInsert(stack, ref, user)) {
                                 ItemStack newStack = stack.copy();
                                 inv.setItem(i, newStack);
-                                SoundEvent soundEvent = stack.getItem() instanceof Equipable eq ? eq.getEquipSound() : null;
+                                SoundEvent soundEvent = stack.getItem() instanceof Equipable eq ? eq.getEquipSound().value() : null;
                                 if (!stack.isEmpty() && soundEvent != null) {
                                     user.gameEvent(GameEvent.EQUIP);
                                     user.playSound(soundEvent, 1.0F, 1.0F);

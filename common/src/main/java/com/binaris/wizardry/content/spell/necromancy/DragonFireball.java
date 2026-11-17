@@ -21,15 +21,13 @@ public class DragonFireball extends Spell {
 
         if (!ctx.world().isClientSide) {
             net.minecraft.world.entity.projectile.DragonFireball fireball =
-                    new net.minecraft.world.entity.projectile.DragonFireball(ctx.world(), ctx.caster(), 1, 1, 1);
+                    new net.minecraft.world.entity.projectile.DragonFireball(ctx.world(), ctx.caster(), look);
 
             fireball.setPos(ctx.caster().getX() + look.x, ctx.caster().getY() + look.y + 1.3, ctx.caster().getZ() + look.z);
 
             double acceleration = ctx.modifiers().get(SpellModifiers.RANGE, property(DefaultProperties.ACCELERATION));
 
-            fireball.xPower = look.x * acceleration;
-            fireball.yPower = look.y * acceleration;
-            fireball.zPower = look.z * acceleration;
+            fireball.accelerationPower = acceleration;
 
             ctx.world().addFreshEntity(fireball);
         }
@@ -44,15 +42,13 @@ public class DragonFireball extends Spell {
 
         if (!ctx.world().isClientSide) {
             net.minecraft.world.entity.projectile.DragonFireball fireball =
-                    new net.minecraft.world.entity.projectile.DragonFireball(ctx.world(), ctx.caster(), 1, 1, 1);
+                    new net.minecraft.world.entity.projectile.DragonFireball(ctx.world(), ctx.caster(), look);
 
             fireball.setPos(ctx.caster().getX() + look.x, ctx.caster().getY() + look.y + 1.3, ctx.caster().getZ() + look.z);
 
             double acceleration = property(DefaultProperties.ACCELERATION);
 
-            fireball.xPower = look.x * acceleration;
-            fireball.yPower = look.y * acceleration;
-            fireball.zPower = look.z * acceleration;
+            fireball.accelerationPower = acceleration;
 
             ctx.world().addFreshEntity(fireball);
         }

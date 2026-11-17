@@ -54,7 +54,7 @@ public class TooltipElementSpellEntry extends TooltipElementText {
         boolean discovered = ClientUtils.shouldDisplayDiscovered(spell, stack);
         int color = discovered ? spell.getElement().getColor().getColor() : ChatFormatting.BLUE.getColor();
 
-        return shouldFlash(stack) ? ClientUtils.makeTranslucentColor(color, getAlpha(Minecraft.getInstance().getFrameTime()))
+        return shouldFlash(stack) ? ClientUtils.makeTranslucentColor(color, getAlpha(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false)))
                 : color;
     }
 
@@ -68,7 +68,7 @@ public class TooltipElementSpellEntry extends TooltipElementText {
         if (ClientUtils.shouldDisplayDiscovered(spell, null)) {
             return Component.translatable(spell.getDescriptionId()).withStyle(spell.getElement().getColor());
         } else {
-            return Component.literal(SpellGlyphData.getGlyphName(spell, GlyphClientHandler.INSTANCE.getGlyphData())).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE).withFont(new ResourceLocation("minecraft", "alt")));
+            return Component.literal(SpellGlyphData.getGlyphName(spell, GlyphClientHandler.INSTANCE.getGlyphData())).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE).withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")));
         }
     }
 

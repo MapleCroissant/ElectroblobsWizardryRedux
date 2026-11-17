@@ -16,7 +16,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -33,6 +33,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class WizardryFabricMod implements ModInitializer {
     @Override
     public void onInitialize() {
+        EBDataComponents.init();
+        com.binaris.wizardry.network.EBFabricPayloads.register();
         WizardryMainMod.init();
 
         EBMobEffects.register(Registry::register);
@@ -42,10 +44,11 @@ public final class WizardryFabricMod implements ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTING.register((server) -> WizardryEventBus.fireEvent(new EBServerLoad(server)));
 
+        EBSounds.register(Registry::register);
         EBBlocks.register(Registry::register);
         EBBlockEntities.register(Registry::register);
         EBItems.register(Registry::register);
-        EBBannerPatterns.register(Registry::register);
+        // Banner patterns are loaded from data/ebwizardry/banner_pattern in 1.21.
         EBEntities.register(Registry::register);
         EBEntities.registerAttributes(FabricDefaultAttributeRegistry::register);
         BookshelfMenu.initBookItems();
@@ -55,8 +58,8 @@ public final class WizardryFabricMod implements ModInitializer {
         Spells.register(EBRegistriesFabric.SPELLS, Registry::register);
 
         EBCreativeTabs.register(Registry::register);
-        EBSounds.register(Registry::register);
-        EBEnchantments.register(Registry::register);
+
+        // Enchantments are data-driven in 1.21; the original custom registry was empty.
         EBLootFunctions.register(Registry::register);
         EBMenus.register(Registry::register);
 
@@ -64,7 +67,7 @@ public final class WizardryFabricMod implements ModInitializer {
         EBRecipeTypes.registerSerializers(Registry::register);
         EBAttributes.register(Registry::register);
 
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((id, tableBuilder, source, registries) -> {
             if (BuiltInLootTables.FISHING.equals(id)) {
                 AtomicBoolean injected = new AtomicBoolean();
                 tableBuilder.modifyPools(pool -> {
@@ -77,8 +80,8 @@ public final class WizardryFabricMod implements ModInitializer {
             LootPool.Builder poolBuilder = new LootPool.Builder();
 
             EBLootTables.applyInjections((location, pool) -> {
-                if (id.equals(location)) {
-                    poolBuilder.with(pool.entries[0]).build();
+                if (id.location().equals(location)) {
+                    poolBuilder.with(pool.entries.get(0)).build();
                 }
             });
             tableBuilder.withPool(poolBuilder);

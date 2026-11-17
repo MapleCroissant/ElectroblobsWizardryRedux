@@ -356,6 +356,6 @@ public class SpellProperty<T> {
         return result.map(this::copyWithValue)
                 .result()
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "Failed to decode spell property '" + id + "': " + result.error().map(DataResult.PartialResult::message).orElse("unknown error")));
+                        "Failed to decode spell property '" + id + "': " + result.error().map(error -> error.message()).orElse("unknown error")));
     }
 }

@@ -11,8 +11,8 @@ import com.binaris.wizardry.cca.EBComponents;
 import com.binaris.wizardry.core.event.WizardryEventBus;
 import com.binaris.wizardry.core.platform.Services;
 import com.binaris.wizardry.setup.registries.Spells;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -21,7 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class CastCommandDataHolder implements CastCommandData, ComponentV3, AutoSyncedComponent {
+public class CastCommandDataHolder implements CastCommandData, Component, AutoSyncedComponent {
     private final Player provider;
 
     private Spell castCommandSpell = Spells.NONE;
@@ -118,7 +118,7 @@ public class CastCommandDataHolder implements CastCommandData, ComponentV3, Auto
     }
 
     @Override
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         ResourceLocation spellLocation = ResourceLocation.tryParse(tag.getString("castCommandSpell"));
         Spell spell = Services.REGISTRY_UTIL.getSpell(spellLocation);
         if (spell != null) {
@@ -137,7 +137,7 @@ public class CastCommandDataHolder implements CastCommandData, ComponentV3, Auto
     }
 
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.put("castCommandSpell", StringTag.valueOf(castCommandSpell.getLocation().toString()));
         tag.putInt("castCommandDuration", castCommandDuration);
         tag.putInt("castCommandTick", castCommandTick);

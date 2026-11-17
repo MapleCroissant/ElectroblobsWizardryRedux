@@ -21,32 +21,17 @@ import java.util.UUID;
 ///
 /// This doesn't cancel or interrupt the base Attribute Modifier system, we can still use it normally. This just adds new
 /// load values when need it.
-public class WizardryAttributeModifier extends AttributeModifier {
-    @Nullable
-    private final SpellCondition condition;
-
-    public WizardryAttributeModifier(String name, double amount, Operation operation) {
-        super(name, amount, operation);
-        condition = null;
+public final class WizardryAttributeModifier {
+    private WizardryAttributeModifier() {
     }
 
-    public WizardryAttributeModifier(UUID uuid, String name, double amount,
-                                     Operation operation, @Nullable SpellCondition condition) {
-        super(uuid, name, amount, operation);
-        this.condition = condition;
+    public static AttributeModifier create(UUID uuid, String name, double amount,
+                                          AttributeModifier.Operation operation, @Nullable SpellCondition condition) {
+        AttributeModifier modifier = new AttributeModifier(
+                com.binaris.wizardry.WizardryMainMod.location("modifier/" + uuid), amount, operation);
+        ((ConditionalAttributeModifier) (Object) modifier).ebwizardry$setCondition(condition);
+        return modifier;
     }
-
-    public @Nullable SpellCondition getCondition() {
-        return condition;
-    }
-
-    @Override
-    public @NotNull CompoundTag save() {
-        CompoundTag tag = super.save();
-        if (condition != null) condition.save(tag);
-        return tag;
-    }
-
     public static void onPreCast(SpellCastEvent.Pre event) {
         if (event.getCaster() == null) return;
         LivingEntity caster = event.getCaster();
@@ -61,19 +46,19 @@ public class WizardryAttributeModifier extends AttributeModifier {
         convertToModifiers(event.getModifiers(), SpellModifiers.COOLDOWN, caster, event.getSpell(), EBAttributes.CAST_COOLDOWN.get());
     }
 
-    private static void convertToModifiers(SpellModifiers modifiers, String key, LivingEntity caster, Spell spell, Attribute attribute) {
+    private static void convertToModifiers(SpellModifiers modifiers, String key, LivingEntity caster, Spell spell, net.minecraft.core.Holder<Attribute> attribute) {
         AttributeInstance instance = caster.getAttribute(attribute);
         if (instance == null) return;
 
-        List<AttributeModifier> attributes = instance.getModifiers().stream().sorted(Comparator.comparingInt(m -> m.getOperation().toValue())).toList();
+        List<AttributeModifier> attributes = instance.getModifiers().stream().sorted(Comparator.comparingInt(m -> m.operation().id())).toList();
 
         for (AttributeModifier attributeModifier : attributes) {
-            if (!(attributeModifier instanceof WizardryAttributeModifier wizardryModifier) || wizardryModifier.getCondition() == null || wizardryModifier.getCondition().isEmpty()) {
+            if (!((Object) attributeModifier instanceof ConditionalAttributeModifier wizardryModifier) || wizardryModifier.ebwizardry$getCondition() == null || wizardryModifier.ebwizardry$getCondition().isEmpty()) {
                 applyVanillaModifier(modifiers, key, attributeModifier);
                 continue;
             }
 
-            if (wizardryModifier.getCondition().test(spell)) {
+            if (wizardryModifier.ebwizardry$getCondition().test(spell)) {
                 applyVanillaModifier(modifiers, key, attributeModifier);
             }
         }
@@ -81,10 +66,10 @@ public class WizardryAttributeModifier extends AttributeModifier {
 
     /// Maps a vanilla attribute modifier onto the spell modifiers, converting vanilla increments into direct factors.
     private static void applyVanillaModifier(SpellModifiers modifiers, String key, AttributeModifier attributeModifier) {
-        float amount = (float) attributeModifier.getAmount();
-        switch (attributeModifier.getOperation()) {
-            case ADDITION -> modifiers.add(key, amount);
-            case MULTIPLY_BASE, MULTIPLY_TOTAL -> modifiers.multiplyTotal(key, 1.0f + amount);
+        float amount = (float) attributeModifier.amount();
+        switch (attributeModifier.operation()) {
+            case ADD_VALUE -> modifiers.add(key, amount);
+            case ADD_MULTIPLIED_BASE, ADD_MULTIPLIED_TOTAL -> modifiers.multiplyTotal(key, 1.0f + amount);
             default -> {}
         }
     }
@@ -98,27 +83,27 @@ public class WizardryAttributeModifier extends AttributeModifier {
     /// @param attribute attribute that needs to be check in order to find its modifiers
     /// @return the calculation result of all the modifiers, 1 if there wasn't any modifiers or the entity doesn't have
     /// the attribute instance
-    public static float calculateModifiers(LivingEntity entity, SpellCondition condition, Attribute attribute) {
+    public static float calculateModifiers(LivingEntity entity, SpellCondition condition, net.minecraft.core.Holder<Attribute> attribute) {
         AttributeInstance instance = entity.getAttribute(attribute);
         if (instance == null) return 1;
 
-        List<AttributeModifier> attributes = instance.getModifiers().stream().sorted(Comparator.comparingInt(m -> m.getOperation().toValue())).toList();
+        List<AttributeModifier> attributes = instance.getModifiers().stream().sorted(Comparator.comparingInt(m -> m.operation().id())).toList();
         Accumulator acc = new Accumulator();
         for (AttributeModifier attributeModifier : attributes) {
-            if (!(attributeModifier instanceof WizardryAttributeModifier wizardryModifier) || wizardryModifier.getCondition() == null || wizardryModifier.getCondition().isEmpty()) {
-                acc.apply(attributeModifier.getOperation(), attributeModifier.getAmount());
+            if (!((Object) attributeModifier instanceof ConditionalAttributeModifier wizardryModifier) || wizardryModifier.ebwizardry$getCondition() == null || wizardryModifier.ebwizardry$getCondition().isEmpty()) {
+                acc.apply(attributeModifier.operation(), attributeModifier.amount());
                 continue;
             }
 
-            if (wizardryModifier.getCondition().test(condition)) {
-                acc.apply(wizardryModifier.getOperation(), wizardryModifier.getAmount());
+            if (wizardryModifier.ebwizardry$getCondition().test(condition)) {
+                acc.apply(attributeModifier.operation(), attributeModifier.amount());
             }
         }
 
         return (float) acc.result();
     }
 
-    /// Vanilla-style accumulator: base 1, additions sum, MULTIPLY_BASE adds to base, MULTIPLY_TOTAL multiplies total.
+    /// Vanilla-style accumulator: base 1, additions sum, ADD_MULTIPLIED_BASE adds to base, ADD_MULTIPLIED_TOTAL multiplies total.
     private static final class Accumulator {
         private double value = 1;
         private double additions = 0;
@@ -127,9 +112,9 @@ public class WizardryAttributeModifier extends AttributeModifier {
 
         void apply(AttributeModifier.Operation op, double amount) {
             switch (op) {
-                case ADDITION -> additions += amount;
-                case MULTIPLY_BASE -> multiplyBase += amount;
-                case MULTIPLY_TOTAL -> multiplyTotal *= 1 + amount;
+                case ADD_VALUE -> additions += amount;
+                case ADD_MULTIPLIED_BASE -> multiplyBase += amount;
+                case ADD_MULTIPLIED_TOTAL -> multiplyTotal *= 1 + amount;
             }
         }
 

@@ -1,5 +1,7 @@
 package com.binaris.wizardry.content.item;
 
+import com.binaris.wizardry.api.content.util.ItemData;
+
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -20,7 +22,7 @@ public class SpectralPickaxeItem extends PickaxeItem {
     private static final int DIAMOND_SPEED_TIER = 2;
 
     public SpectralPickaxeItem() {
-        super(Tiers.DIAMOND, 1, -2.8F, new Properties().durability(1200).rarity(Rarity.UNCOMMON));
+        super(Tiers.DIAMOND, new Properties().durability(1200).rarity(Rarity.UNCOMMON).attributes(PickaxeItem.createAttributes(Tiers.DIAMOND, 1, -2.8F)));
     }
 
     @Override
@@ -40,7 +42,7 @@ public class SpectralPickaxeItem extends PickaxeItem {
     }
 
     public static int getTierLevel(ItemStack stack) {
-        return stack.hasTag() ? stack.getTag().getInt(TIER_LEVEL_TAG) : 0;
+        return !ItemData.read(stack).isEmpty() ? ItemData.read(stack).getInt(TIER_LEVEL_TAG) : 0;
     }
 
     @Override

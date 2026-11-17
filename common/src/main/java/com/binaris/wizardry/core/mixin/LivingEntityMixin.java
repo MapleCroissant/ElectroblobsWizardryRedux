@@ -141,16 +141,16 @@ public abstract class LivingEntityMixin {
     }
 
     @Inject(method = "onChangedBlock", at = @At("HEAD"))
-    public void EBWIZARDRY$frostStep(BlockPos pos, CallbackInfo ci) {
+    public void EBWIZARDRY$frostStep(net.minecraft.server.level.ServerLevel level, BlockPos pos, CallbackInfo ci) {
         if (livingEntity.hasEffect(EBMobEffects.FROST_STEP.get())) {
             FrostStepEffect.onEntityMoved(livingEntity, livingEntity.level(), pos,
                     livingEntity.getEffect(EBMobEffects.FROST_STEP.get()).getAmplifier());
         }
     }
 
-    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isNoGravity()Z"))
-    private boolean EBWIZARDRY$flightIgnoresGravity(LivingEntity entity) {
-        if (EntityUtil.isCasting(entity, Spells.FLIGHT)) return true;
-        return entity.isNoGravity();
+    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getGravity()D"))
+    private double EBWIZARDRY$flightIgnoresGravity(LivingEntity entity) {
+        if (EntityUtil.isCasting(entity, Spells.FLIGHT)) return 0.0;
+        return entity.getGravity();
     }
 }

@@ -73,7 +73,7 @@ public class Whirlwind extends RaySpell {
         float range = ctx.modifiers().get(SpellModifiers.RANGE, property(DefaultProperties.RANGE));
         Vec3 direction = player.getLookAngle();
 
-        AABB aabb = new AABB(BlockPos.containing(origin), BlockPos.containing(origin.add(direction.scale(range)))).inflate(BEAM_RADIUS);
+        AABB aabb = new AABB(origin, origin.add(direction.scale(range))).inflate(BEAM_RADIUS);
         List<LivingEntity> entities = ctx.world().getEntitiesOfClass(LivingEntity.class, aabb, e -> e != player);
 
         for (LivingEntity target : entities) {

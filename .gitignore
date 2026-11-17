@@ -23,3 +23,11 @@ eclipse
 run
 /common/src/generated/resources/docs/
 common/src/generated/resources/.cache/
+
+# Local migration diagnostics (baseline and validation reports remain tracked)
+/fabric/logs/
+/migration/*-current.log
+/migration/compile*.log
+/migration/errors*.txt
+/migration/api-signatures*.txt
+/migration/sources.log

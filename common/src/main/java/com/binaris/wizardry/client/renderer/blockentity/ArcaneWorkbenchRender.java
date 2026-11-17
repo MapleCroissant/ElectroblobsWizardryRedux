@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 // and the way the angle is interpolated is everything from there.
 
 public class ArcaneWorkbenchRender implements BlockEntityRenderer<ArcaneWorkbenchBlockEntity> {
-    private static final ResourceLocation RUNE_TEXTURE = new ResourceLocation(WizardryMainMod.MOD_ID, "textures/entity/arcane_workbench_rune.png");
+    private static final ResourceLocation RUNE_TEXTURE = ResourceLocation.fromNamespaceAndPath(WizardryMainMod.MOD_ID, "textures/entity/arcane_workbench_rune.png");
     public int time;
 
     public ArcaneWorkbenchRender(BlockEntityRendererProvider.Context context) {
@@ -68,15 +68,15 @@ public class ArcaneWorkbenchRender implements BlockEntityRenderer<ArcaneWorkbenc
         poseStack.mulPose(Axis.YP.rotationDegrees(entity.timer + partialTicks));
         poseStack.translate(0.0f, 0.65f, 0.0f);
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
+        BufferBuilder buffer;
         RenderSystem.setShaderTexture(0, RUNE_TEXTURE);
 
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(poseStack.last().pose(), -0.5f, 0, -0.5f).uv(0, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), 0.5f, 0, -0.5f).uv(1, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), 0.5f, 0, 0.5f).uv(1, 1).endVertex();
-        buffer.vertex(poseStack.last().pose(), -0.5f, 0, 0.5f).uv(0, 1).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(poseStack.last().pose(), -0.5f, 0, -0.5f).setUv(0, 0);
+        buffer.addVertex(poseStack.last().pose(), 0.5f, 0, -0.5f).setUv(1, 0);
+        buffer.addVertex(poseStack.last().pose(), 0.5f, 0, 0.5f).setUv(1, 1);
+        buffer.addVertex(poseStack.last().pose(), -0.5f, 0, 0.5f).setUv(0, 1);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         RenderSystem.disableBlend();
         poseStack.popPose();

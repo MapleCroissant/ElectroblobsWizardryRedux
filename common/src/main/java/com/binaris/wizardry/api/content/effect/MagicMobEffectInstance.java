@@ -9,23 +9,23 @@ import net.minecraft.world.effect.MobEffectInstance;
 public class MagicMobEffectInstance extends MobEffectInstance {
     public static final String MAGIC_TAG = "ebwizardry:magic";
 
-    public MagicMobEffectInstance(MobEffect effect) {
+    public MagicMobEffectInstance(net.minecraft.core.Holder<MobEffect> effect) {
         super(effect);
     }
 
-    public MagicMobEffectInstance(MobEffect effect, int duration) {
+    public MagicMobEffectInstance(net.minecraft.core.Holder<MobEffect> effect, int duration) {
         super(effect, duration);
     }
 
-    public MagicMobEffectInstance(MobEffect effect, int duration, int amplifier) {
+    public MagicMobEffectInstance(net.minecraft.core.Holder<MobEffect> effect, int duration, int amplifier) {
         super(effect, duration, amplifier);
     }
 
-    public MagicMobEffectInstance(MobEffect effect, int duration, int amplifier, boolean ambient, boolean visible) {
+    public MagicMobEffectInstance(net.minecraft.core.Holder<MobEffect> effect, int duration, int amplifier, boolean ambient, boolean visible) {
         super(effect, duration, amplifier, ambient, visible);
     }
 
-    public MagicMobEffectInstance(MobEffect effect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon) {
+    public MagicMobEffectInstance(net.minecraft.core.Holder<MobEffect> effect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon) {
         super(effect, duration, amplifier, ambient, visible, showIcon);
     }
 
@@ -34,8 +34,8 @@ public class MagicMobEffectInstance extends MobEffectInstance {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        tag = super.save(tag);
+    public net.minecraft.nbt.Tag save() {
+        CompoundTag tag = (CompoundTag) super.save();
         tag.putBoolean(MAGIC_TAG, true);
         return tag;
     }

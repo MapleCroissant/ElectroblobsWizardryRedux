@@ -2,15 +2,15 @@ package com.binaris.wizardry.cca.entity;
 
 import com.binaris.wizardry.api.content.data.ContainmentData;
 import com.binaris.wizardry.cca.EBComponents;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ContainmentDataHolder implements ContainmentData, ComponentV3, AutoSyncedComponent {
+public class ContainmentDataHolder implements ContainmentData, Component, AutoSyncedComponent {
     private final LivingEntity provider;
     private BlockPos containmentPos = null;
 
@@ -39,7 +39,7 @@ public class ContainmentDataHolder implements ContainmentData, ComponentV3, Auto
     }
 
     @Override
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         if (tag.contains("containmentPos")) {
             CompoundTag posTag = tag.getCompound("containmentPos");
             int x = posTag.getInt("x");
@@ -52,7 +52,7 @@ public class ContainmentDataHolder implements ContainmentData, ComponentV3, Auto
     }
 
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         if (containmentPos != null) {
             CompoundTag posTag = new CompoundTag();
             posTag.putInt("x", containmentPos.getX());

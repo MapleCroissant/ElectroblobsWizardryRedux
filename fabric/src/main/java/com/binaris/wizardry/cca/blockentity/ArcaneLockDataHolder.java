@@ -3,8 +3,8 @@ package com.binaris.wizardry.cca.blockentity;
 import com.binaris.wizardry.api.content.data.ArcaneLockData;
 import com.binaris.wizardry.cca.EBComponents;
 import com.binaris.wizardry.client.effect.ArcaneLockRender;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class ArcaneLockDataHolder implements ArcaneLockData, ComponentV3, AutoSyncedComponent {
+public class ArcaneLockDataHolder implements ArcaneLockData, Component, AutoSyncedComponent {
     private final BaseContainerBlockEntity provider;
     private UUID ownerUUID = null;
 
@@ -52,7 +52,7 @@ public class ArcaneLockDataHolder implements ArcaneLockData, ComponentV3, AutoSy
     }
 
     @Override
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         if (tag.contains(NBT_KEY)) {
             this.ownerUUID = UUID.fromString(tag.getString(NBT_KEY));
         } else {
@@ -65,7 +65,7 @@ public class ArcaneLockDataHolder implements ArcaneLockData, ComponentV3, AutoSy
     }
 
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         if (this.ownerUUID != null) {
             tag.putString(NBT_KEY, this.ownerUUID.toString());
         }

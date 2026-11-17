@@ -1,5 +1,7 @@
 package com.binaris.wizardry.content.spell.sorcery;
 
+import com.binaris.wizardry.api.content.util.ItemData;
+
 import com.binaris.wizardry.api.content.spell.internal.PlayerCastContext;
 import com.binaris.wizardry.content.item.SpectralPickaxeItem;
 import com.binaris.wizardry.content.spell.abstr.ConjureItemSpell;
@@ -17,10 +19,10 @@ public class ConjurePickaxe extends ConjureItemSpell {
     @Override
     protected ItemStack addItemExtras(PlayerCastContext ctx, ItemStack stack) {
         int level = Math.min(MASTER_LEVEL, getPotencyLevel(ctx));
-        stack.getOrCreateTag().putInt(SpectralPickaxeItem.TIER_LEVEL_TAG, level);
+        ItemData.update(stack, itemData -> itemData.putInt(SpectralPickaxeItem.TIER_LEVEL_TAG, level));
 
         if (level >= 1) {
-            stack.enchant(Enchantments.BLOCK_EFFICIENCY, level * 2 - 1);
+            stack.enchant(com.binaris.wizardry.api.content.util.EnchantmentUtil.get(ctx.world(), Enchantments.EFFICIENCY), level * 2 - 1);
         }
         return super.addItemExtras(ctx, stack);
     }

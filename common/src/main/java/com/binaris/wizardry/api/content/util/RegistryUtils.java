@@ -44,7 +44,7 @@ public final class RegistryUtils {
         String registryName = tier == SpellTiers.NOVICE && element == Elements.MAGIC ? "novice" : tier.getOrCreateLocation().getPath();
         if (element != Elements.MAGIC) registryName = registryName + "_" + element.getLocation().getPath();
         registryName = "wand_" + registryName;
-        return BuiltInRegistries.ITEM.get(new ResourceLocation(element.getLocation().getNamespace(), registryName));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(element.getLocation().getNamespace(), registryName));
     }
 
     public static Item getCrystal(Element element) {
@@ -52,7 +52,7 @@ public final class RegistryUtils {
         if (element != null && element != Elements.MAGIC) {
             registryName += "_" + element.getLocation().getPath();
         }
-        return BuiltInRegistries.ITEM.get(new ResourceLocation(element.getLocation().getNamespace(), registryName));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(element.getLocation().getNamespace(), registryName));
     }
 
     /// Gets a random wizard armor item of the given material and element.
@@ -74,7 +74,7 @@ public final class RegistryUtils {
     /// @return The corresponding wizard armor item.
     /// @throws IllegalArgumentException if the slot is null or not an armor slot. (this should never happen if used correctly)
     public static Item getArmor(WizardArmorMaterial material, Element element, EquipmentSlot slot) {
-        if (slot == null || slot.getType() != EquipmentSlot.Type.ARMOR)
+        if (slot == null || !slot.isArmor())
             throw new IllegalArgumentException("Must be a valid armour slot");
         if (element == null) element = Elements.MAGIC;
 
@@ -83,7 +83,7 @@ public final class RegistryUtils {
             registryName = registryName + "_" + element.getLocation().getPath();
 
         // Each mod should be responsible for ensuring their items are registered with the correct names
-        return BuiltInRegistries.ITEM.get(new ResourceLocation(element.getLocation().getNamespace(), registryName));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(element.getLocation().getNamespace(), registryName));
     }
 
     /// Returns a list of all spells that match the given filter.
@@ -108,7 +108,7 @@ public final class RegistryUtils {
     /// @param spell The spell to be set to the ItemStack.
     /// @return The ItemStack with the spell set.
     public static ItemStack setSpell(ItemStack stack, Spell spell) {
-        stack.getOrCreateTag().putString(SPELL_KEY, spell.getLocation().toString());
+        ItemData.update(stack, data -> data.putString(SPELL_KEY, spell.getLocation().toString()));
         return stack;
     }
 
@@ -128,7 +128,7 @@ public final class RegistryUtils {
     /// @return The arcane tome ItemStack.
     public static ItemStack createArcaneTome(SpellTier tier) {
         ItemStack stack = new ItemStack(EBItems.ARCANE_TOME.get());
-        stack.getOrCreateTag().putString("Tier", tier.getOrCreateLocation().toString());
+        ItemData.update(stack, data -> data.putString("Tier", tier.getOrCreateLocation().toString()));
         return stack;
     }
 
@@ -150,8 +150,8 @@ public final class RegistryUtils {
     /// @param stack The ItemStack to get the spell from.
     /// @return The spell from the ItemStack, or [Spells#NONE] if the stack has no tag or the spell is not found.
     public static @NotNull Spell getSpell(ItemStack stack) {
-        if (!stack.hasTag()) return Spells.NONE;
-        return getSpellFromNbt(stack.getTag());
+        if (!!ItemData.read(stack).isEmpty()) return Spells.NONE;
+        return getSpellFromNbt(ItemData.read(stack));
     }
 
     /// Gets the spell from the given CompoundTag.

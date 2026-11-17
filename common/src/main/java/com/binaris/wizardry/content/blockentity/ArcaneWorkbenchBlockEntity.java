@@ -40,6 +40,16 @@ public class ArcaneWorkbenchBlockEntity extends BaseContainerBlockEntity {
     public float tRot;
     private NonNullList<ItemStack> inventory;
 
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        inventory = items;
+    }
+
     public ArcaneWorkbenchBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(EBBlockEntities.ARCANE_WORKBENCH.get(), blockPos, blockState);
         inventory = NonNullList.withSize(ArcaneWorkbenchMenu.UPGRADE_SLOT + 1, ItemStack.EMPTY);
@@ -157,9 +167,9 @@ public class ArcaneWorkbenchBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag, registries);
         return tag;
     }
 
@@ -203,17 +213,17 @@ public class ArcaneWorkbenchBlockEntity extends BaseContainerBlockEntity {
     // NBT
     // ===============================
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (inventory == null) this.inventory = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         this.inventory.clear();
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        ContainerHelper.loadAllItems(tag, this.inventory, registries);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
-        ContainerHelper.saveAllItems(tag, this.inventory);
+    public void saveAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        ContainerHelper.saveAllItems(tag, this.inventory, registries);
     }
 
     // ===============================

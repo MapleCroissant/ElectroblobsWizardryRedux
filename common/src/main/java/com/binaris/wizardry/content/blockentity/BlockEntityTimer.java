@@ -44,15 +44,15 @@ public class BlockEntityTimer extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tagCompound) {
-        super.load(tagCompound);
+    public void loadAdditional(@NotNull CompoundTag tagCompound, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tagCompound, registries);
         timer = tagCompound.getInt("timer");
         maxTimer = tagCompound.getInt("maxTimer");
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tagCompound) {
-        super.saveAdditional(tagCompound);
+    public void saveAdditional(@NotNull CompoundTag tagCompound, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tagCompound, registries);
         tagCompound.putInt("timer", timer);
         tagCompound.putInt("maxTimer", maxTimer);
     }

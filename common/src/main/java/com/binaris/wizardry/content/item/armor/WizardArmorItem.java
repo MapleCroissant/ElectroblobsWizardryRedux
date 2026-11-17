@@ -50,7 +50,7 @@ public class WizardArmorItem extends ArmorItem implements IManaItem, ICustomDama
     private final WizardArmorMaterial wizardArmorType;
 
     public WizardArmorItem(WizardArmorMaterial material, Type type, Element element) {
-        super(material, type, new Properties());
+        super(material.material(), type, new Properties().durability(material.getDurabilityForType(type)));
         this.wizardArmorType = material;
         this.element = element;
     }
@@ -102,7 +102,7 @@ public class WizardArmorItem extends ArmorItem implements IManaItem, ICustomDama
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         if (getElement() != null) {
             tooltip.add(Component.translatable("item.%s.wizard_armor.element_cost_reduction".formatted(WizardryMainMod.MOD_ID),
                     (int) (this.getWizardArmorType().getElementalCostReduction() * 100), getElement().getDescriptionFormatted().getString()).withStyle(ChatFormatting.DARK_GRAY));
@@ -147,7 +147,7 @@ public class WizardArmorItem extends ArmorItem implements IManaItem, ICustomDama
         Item newItem = RegistryUtils.getArmor(iArmorUpgrade.getWizardArmorMaterial(), this.getElement(), getEquipmentSlot());
         ItemStack newStack = new ItemStack(newItem);
         ((WizardArmorItem) newItem).setMana(newStack, this.getMana(stack));
-        newStack.setTag(stack.getTag());
+        newStack.applyComponents(stack.getComponentsPatch());
         upgrade.shrink(1);
         return newStack;
     }
@@ -166,7 +166,7 @@ public class WizardArmorItem extends ArmorItem implements IManaItem, ICustomDama
 
     @Override
     public void setCustomDamage(ItemStack stack, int damage) {
-        stack.getOrCreateTag().putInt("Damage", Math.max(0, Math.min(damage, stack.getMaxDamage())));
+        stack.set(net.minecraft.core.component.DataComponents.DAMAGE, Math.max(0, Math.min(damage, stack.getMaxDamage())));
     }
 
     @Override
@@ -213,7 +213,7 @@ public class WizardArmorItem extends ArmorItem implements IManaItem, ICustomDama
 
     @Override
     public int getManaCapacity(ItemStack stack) {
-        return this.getMaxDamage();
+        return stack.getOrDefault(net.minecraft.core.component.DataComponents.MAX_DAMAGE, 0);
     }
 
     @Override
@@ -233,7 +233,11 @@ public class WizardArmorItem extends ArmorItem implements IManaItem, ICustomDama
 
     @Override
     public Multimap<Attribute, AttributeModifier> getCustomAttributes(ItemStack stack, EquipmentSlot slot) {
-        if (getMana(stack) != 0) return super.getDefaultAttributeModifiers(slot);
-        return ImmutableMultimap.of();
+        if (getMana(stack) == 0) return ImmutableMultimap.of();
+        var attributes = ImmutableMultimap.<Attribute, AttributeModifier>builder();
+        super.getDefaultAttributeModifiers().modifiers().forEach(entry -> {
+            if (entry.slot().test(slot)) attributes.put(entry.attribute().value(), entry.modifier());
+        });
+        return attributes.build();
     }
 }

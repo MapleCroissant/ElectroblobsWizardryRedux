@@ -3,6 +3,10 @@ package com.binaris.wizardry.platform;
 import com.binaris.wizardry.api.content.data.*;
 import com.binaris.wizardry.cca.EBComponents;
 import com.binaris.wizardry.cca.player.SpellManagerDataHolder;
+import com.binaris.wizardry.cca.stack.ConjureDataHolder;
+import com.binaris.wizardry.cca.stack.ImbuementEnchantDataHolder;
+import com.binaris.wizardry.api.content.util.RegistryUtils;
+import net.minecraft.world.item.TieredItem;
 import com.binaris.wizardry.content.spell.abstr.ConjureItemSpell;
 import com.binaris.wizardry.core.platform.services.IObjectData;
 import net.minecraft.world.entity.Entity;
@@ -39,12 +43,13 @@ public class FabricObjectData implements IObjectData {
     @Override
     public @Nullable ConjureData getConjureData(ItemStack stack) {
         if (!ConjureItemSpell.isSummonableItem(stack.getItem())) return null;
-        return EBComponents.CONJURE.get(stack);
+        return new ConjureDataHolder(stack);
     }
 
     @Override
     public @Nullable ImbuementEnchantData getImbuementData(ItemStack stack) {
-        return EBComponents.IMBUEMENT_ENCHANTS.getNullable(stack);
+        if (!(stack.getItem() instanceof TieredItem) || !RegistryUtils.isSafelyEnchantable(stack.getItem())) return null;
+        return new ImbuementEnchantDataHolder(stack);
     }
 
     @Override

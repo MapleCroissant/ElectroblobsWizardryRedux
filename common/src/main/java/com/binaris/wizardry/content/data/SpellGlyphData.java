@@ -43,7 +43,7 @@ public class SpellGlyphData extends SavedData {
     /// @param world The server level to get the SpellGlyphData for.
     /// @return The SpellGlyphData instance for the given world.
     public static SpellGlyphData get(ServerLevel world) {
-        SpellGlyphData instance = world.getDataStorage().get(SpellGlyphData::load, NAME);
+        SpellGlyphData instance = world.getDataStorage().get(new SavedData.Factory<>(SpellGlyphData::new, (tag, registries) -> SpellGlyphData.load(tag), net.minecraft.util.datafix.DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES), NAME);
         if (instance == null) instance = new SpellGlyphData();
 
         boolean changed = false;
@@ -68,7 +68,7 @@ public class SpellGlyphData extends SavedData {
     }
 
     public static Component getGlyphNameFormatted(Spell spell, SpellGlyphData data) {
-        return Component.literal(getGlyphName(spell, data)).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")));
+        return Component.literal(getGlyphName(spell, data)).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")));
     }
 
     public static String getGlyphName(Spell spell, SpellGlyphData data) {
@@ -173,7 +173,7 @@ public class SpellGlyphData extends SavedData {
     }
 
     @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag nbt) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag nbt, net.minecraft.core.HolderLookup.Provider registries) {
         ListTag tagList = new ListTag();
 
         for (Spell spell : Services.REGISTRY_UTIL.getSpells()) {

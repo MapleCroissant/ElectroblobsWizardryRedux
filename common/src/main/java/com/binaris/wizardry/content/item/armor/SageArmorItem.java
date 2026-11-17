@@ -23,7 +23,7 @@ public class SageArmorItem extends WizardArmorItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         super.appendHoverText(stack, world, tooltip, advanced);
         tooltip.add(Component.translatable("item.%s.wizard_armor.enchantability".formatted(WizardryMainMod.MOD_ID)).withStyle(ChatFormatting.BLUE));
         tooltip.add(Component.translatable("item.%s.wizard_armor.full_set".formatted(WizardryMainMod.MOD_ID)).withStyle(ChatFormatting.AQUA));

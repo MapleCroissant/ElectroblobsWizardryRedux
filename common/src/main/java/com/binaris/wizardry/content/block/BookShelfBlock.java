@@ -20,22 +20,26 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public class BookShelfBlock extends HorizontalDirectionalBlock implements EntityBlock {
+    public static final com.mojang.serialization.MapCodec<BookShelfBlock> CODEC = com.mojang.serialization.MapCodec.unit(BookShelfBlock::new);
+    @Override
+    protected com.mojang.serialization.MapCodec<BookShelfBlock> codec() { return CODEC; }
+
     public static final int SLOT_COUNT = 12;
 
     public BookShelfBlock() {
-        super(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD).strength(2.0F, 5.0F).sound(SoundType.WOOD));
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD).strength(2.0F, 5.0F).sound(SoundType.WOOD));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult blockHitResult) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+    public @NotNull net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack usedStack, @NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult blockHitResult) {
+        if (level.isClientSide) return net.minecraft.world.ItemInteractionResult.SUCCESS;
 
         BlockEntity blockentity = level.getBlockEntity(pos);
-        if (blockentity == null || player.isShiftKeyDown()) return InteractionResult.PASS;
+        if (blockentity == null || player.isShiftKeyDown()) return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         if (blockentity instanceof BookshelfBlockEntity entity) player.openMenu(entity);
-        return InteractionResult.CONSUME;
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     @Override

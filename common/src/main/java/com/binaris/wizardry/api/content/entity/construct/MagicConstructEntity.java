@@ -66,8 +66,8 @@ public abstract class MagicConstructEntity extends Entity implements OwnableEnti
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(LIFETIME, 600);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        builder.define(LIFETIME, 600);
     }
 
     /// Sets the lifetime of this construct in ticks, syncing it to all clients. A negative value means the construct

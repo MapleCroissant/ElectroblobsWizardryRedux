@@ -76,7 +76,7 @@ public class ForfeitRegistry {
     }
 
     public static void register() {
-        create("burn_self", SpellTiers.NOVICE, Elements.FIRE, (w, p) -> p.setSecondsOnFire(5));
+        create("burn_self", SpellTiers.NOVICE, Elements.FIRE, (w, p) -> p.igniteForSeconds(5));
 
         create("firebomb", SpellTiers.APPRENTICE, Elements.FIRE, (w, p) ->
                 summon(w, p.blockPosition(), new FireBombEntity(w), 0, 5, 0));

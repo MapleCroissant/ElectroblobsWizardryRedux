@@ -61,11 +61,10 @@ public final class EntityTransformations {
             panda.setHiddenGene(pick(ctx, Panda.Gene.values()));
         });
         change("rabbit_variant", Rabbit.class, (rabbit, ctx) -> rabbit.setVariant(pick(ctx, Rabbit.Variant.values())));
-         change("frog_variant", Frog.class, (frog, ctx) -> frog.setVariant(pick(ctx,
-                 new FrogVariant[]{FrogVariant.TEMPERATE, FrogVariant.WARM, FrogVariant.COLD})));
+         change("frog_variant", Frog.class, (frog, ctx) -> frog.setVariant(ctx.world().registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.FROG_VARIANT).getHolderOrThrow(java.util.List.of(FrogVariant.TEMPERATE, FrogVariant.WARM, FrogVariant.COLD).get(ctx.world().random.nextInt(3)))));
         
         change("cat_variant", Cat.class, (cat, ctx) -> {
-            List<CatVariant> variants = BuiltInRegistries.CAT_VARIANT.stream().toList();
+            var variants = BuiltInRegistries.CAT_VARIANT.holders().toList();
             cat.setVariant(variants.get(ctx.world().random.nextInt(variants.size())));
         });
     }

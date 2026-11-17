@@ -4,8 +4,8 @@ import com.binaris.wizardry.api.client.ParticleBuilder;
 import com.binaris.wizardry.api.content.data.MinionData;
 import com.binaris.wizardry.cca.EBComponents;
 import com.binaris.wizardry.setup.registries.client.EBParticles;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class MinionDataHolder implements MinionData, ComponentV3, AutoSyncedComponent {
+public class MinionDataHolder implements MinionData, Component, AutoSyncedComponent {
     Mob provider;
     private int lifetime = -1;
     private boolean summoned = false;
@@ -163,7 +163,7 @@ public class MinionDataHolder implements MinionData, ComponentV3, AutoSyncedComp
     }
 
     @Override
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         this.lifetime = tag.getInt("lifetime");
         this.summoned = tag.getBoolean("summoned");
         this.shouldDeleteGoals = tag.getBoolean("shouldDeleteGoals");
@@ -176,7 +176,7 @@ public class MinionDataHolder implements MinionData, ComponentV3, AutoSyncedComp
     }
 
     @Override
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.putInt("lifetime", lifetime);
         tag.putBoolean("summoned", summoned);
         tag.putBoolean("shouldDeleteGoals", shouldDeleteGoals);

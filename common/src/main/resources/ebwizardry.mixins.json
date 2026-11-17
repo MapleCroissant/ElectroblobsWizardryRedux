@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.binaris.wizardry.core.mixin",
   "refmap": "${mod_id}.refmap.json",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AttributeModifierMixin",
     "BlazeMixin",
@@ -15,6 +15,7 @@
     "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "MobEffectInstanceMixin",
     "PersistentEntitySectionManagerMixin",
     "PlayerMixin",
     "ReloadCommandMixin",
@@ -27,7 +28,6 @@
     "accessor.BlazeAccessor",
     "accessor.CriteriaAccessor",
     "accessor.FallingBlockEntityAccessor",
-    "accessor.ItemPropertiesAccessor",
     "accessor.MerchantMenuAccessor",
     "accessor.MobGoalsAccessor",
     "accessor.RCBEAccessor",
@@ -35,6 +35,7 @@
     "invoker.SpawnPlacementsInvoker"
   ],
   "client": [
+    "accessor.ItemPropertiesAccessor",
     "ClientLevelMixin",
     "HumanoidModelMixin",
     "MinecraftMixin",

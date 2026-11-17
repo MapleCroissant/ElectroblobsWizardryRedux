@@ -7,7 +7,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.BlockPos;
@@ -52,17 +52,17 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean intHotBiomes(Holder<Biome> biome) {
-        return biome.is(ConventionalBiomeTags.CLIMATE_DRY) || biome.is(ConventionalBiomeTags.CLIMATE_HOT);
+        return biome.is(ConventionalBiomeTags.IS_DRY) || biome.is(ConventionalBiomeTags.IS_HOT);
     }
 
     @Override
     public boolean inEarthBiomes(Holder<Biome> biome) {
-        return biome.is(ConventionalBiomeTags.FOREST) || biome.is(ConventionalBiomeTags.TREE_CONIFEROUS) || biome.is(ConventionalBiomeTags.JUNGLE);
+        return biome.is(ConventionalBiomeTags.IS_FOREST) || biome.is(ConventionalBiomeTags.IS_CONIFEROUS_TREE) || biome.is(ConventionalBiomeTags.IS_JUNGLE);
     }
 
     @Override
     public boolean inIceBiomes(Holder<Biome> biome) {
-        return biome.is(ConventionalBiomeTags.SNOWY);
+        return biome.is(ConventionalBiomeTags.IS_SNOWY);
     }
 
     @Override

@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
-import net.minecraft.world.level.storage.loot.entries.LootTableReference;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
@@ -61,11 +61,11 @@ public final class EBLootTables {
                 location -> LOOT_INJECTIONS.add(Pair.of(location, createAdditivePool(DUNGEON_ADDITIONS, 1)))
         );
 
-        LOOT_INJECTIONS.add(Pair.of(new ResourceLocation("chests/jungle_temple_dispenser"), createAdditivePool(DISPENSER_ADDITIONS, 1)));
+        LOOT_INJECTIONS.add(Pair.of(ResourceLocation.parse("chests/jungle_temple_dispenser"), createAdditivePool(DISPENSER_ADDITIONS, 1)));
 
         // For each entity, if it's in the modifiableMobs or a hostile mob, add the loot pool
         for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-            ResourceLocation lootTable = entityType.getDefaultLootTable();
+            ResourceLocation lootTable = entityType.getDefaultLootTable().location();
             ResourceLocation entityName = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
             if (EBServerConfig.INJECT_LOOT_TO_HOSTILE_MOBS.get() && !entityType.getCategory().isFriendly()) {
                 LOOT_INJECTIONS.add(Pair.of(lootTable, createAdditivePool(WizardryMainMod.location("entities/mob_additions"), 1)));
@@ -84,10 +84,10 @@ public final class EBLootTables {
     }
 
     private static LootPool createAdditivePool(ResourceLocation entry, int weight) {
-        return LootPool.lootPool().add(LootTableReference.lootTableReference(entry).setWeight(weight).setQuality(0)).setRolls(ConstantValue.exactly(1)).setBonusRolls(UniformGenerator.between(0, 1)).build();
+        return LootPool.lootPool().add(NestedLootTable.lootTableReference(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, entry)).setWeight(weight).setQuality(0)).setRolls(ConstantValue.exactly(1)).setBonusRolls(UniformGenerator.between(0, 1)).build();
     }
 
     public static LootPoolSingletonContainer.Builder<?> fishingEntry(int weight) {
-        return LootTableReference.lootTableReference(FISHING_ADDITIONS).setWeight(weight).setQuality(0);
+        return NestedLootTable.lootTableReference(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, FISHING_ADDITIONS)).setWeight(weight).setQuality(0);
     }
 }

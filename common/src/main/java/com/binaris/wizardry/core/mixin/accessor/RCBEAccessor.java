@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(RandomizableContainerBlockEntity.class)
 public interface RCBEAccessor {
     @Accessor
-    ResourceLocation getLootTable();
+    net.minecraft.resources.ResourceKey<net.minecraft.world.level.storage.loot.LootTable> getLootTable();
 
     @Accessor
-    void setLootTable(ResourceLocation lootTable);
+    void setLootTable(net.minecraft.resources.ResourceKey<net.minecraft.world.level.storage.loot.LootTable> lootTable);
 }

@@ -12,7 +12,7 @@ public interface ICustomDamageItem {
 
     /// you can use this to set custom max damage based on some events
     default int getCustomMaxDamage(ItemStack stack) {
-        return this.self().getMaxDamage();
+        return stack.getOrDefault(net.minecraft.core.component.DataComponents.MAX_DAMAGE, 0);
     }
 
     /// exposing a new way to control when and how damage is set

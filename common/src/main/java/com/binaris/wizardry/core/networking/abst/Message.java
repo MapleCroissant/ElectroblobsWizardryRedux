@@ -9,7 +9,11 @@ import net.minecraft.server.level.ServerPlayer;
 ///
 /// Each implementation defines its own data fields and provides a constructor taking a
 /// {@code FriendlyByteBuf} for deserialization.
-public interface Message {
+public interface Message extends net.minecraft.network.protocol.common.custom.CustomPacketPayload {
+    @Override
+    default Type<Message> type() {
+        return new Type<>(getId());
+    }
     /// Returns the unique channel identifier used to register this packet type.
     ///
     /// Used by Fabric's networking API ({@code ServerPlayNetworking.send}, etc.) to

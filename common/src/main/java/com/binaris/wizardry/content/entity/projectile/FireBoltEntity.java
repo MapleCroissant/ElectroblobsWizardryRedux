@@ -53,7 +53,7 @@ public class FireBoltEntity extends MagicProjectileEntity {
     @Override
     public void onHitTargetExtraEffects(@NotNull EntityHitResult hitResult) {
         if (!(hitResult.getEntity() instanceof LivingEntity entity)) return;
-        entity.setSecondsOnFire(Spells.FIREBOLT.property(DefaultProperties.EFFECT_DURATION));
+        entity.igniteForSeconds(Spells.FIREBOLT.property(DefaultProperties.EFFECT_DURATION));
     }
 
     @Override

@@ -1,0 +1,21 @@
+{
+    "type":  "minecraft:crafting_shaped",
+    "category":  "misc",
+    "key":  {
+                "b":  {
+                          "item":  "minecraft:spruce_planks"
+                      },
+                "i":  {
+                          "item":  "minecraft:gold_nugget"
+                      }
+            },
+    "pattern":  [
+                    "bbb",
+                    "ibi",
+                    "bbb"
+                ],
+    "result":  {
+                   "id":  "ebwizardry:gilded_spruce_wood"
+               },
+    "show_notification":  true
+}

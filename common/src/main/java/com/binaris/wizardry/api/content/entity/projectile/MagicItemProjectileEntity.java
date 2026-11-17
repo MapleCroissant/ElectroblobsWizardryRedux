@@ -31,7 +31,7 @@ public abstract class MagicItemProjectileEntity extends MagicProjectileEntity im
     }
 
     public void setItem(ItemStack stack) {
-        if (!stack.is(this.getDefaultItem()) || stack.hasTag()) {
+        if (!stack.is(this.getDefaultItem()) || !stack.getComponentsPatch().isEmpty()) {
             this.getEntityData().set(DATA_ITEM_STACK, stack.copyWithCount(1));
         }
 
@@ -51,8 +51,8 @@ public abstract class MagicItemProjectileEntity extends MagicProjectileEntity im
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.getEntityData().define(DATA_ITEM_STACK, ItemStack.EMPTY);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        builder.define(DATA_ITEM_STACK, ItemStack.EMPTY);
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class MagicItemProjectileEntity extends MagicProjectileEntity im
         super.addAdditionalSaveData(compound);
         ItemStack itemstack = this.getItemRaw();
         if (!itemstack.isEmpty()) {
-            compound.put("Item", itemstack.save(new CompoundTag()));
+            compound.put("Item", itemstack.save(registryAccess()));
         }
 
     }
@@ -68,7 +68,7 @@ public abstract class MagicItemProjectileEntity extends MagicProjectileEntity im
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        ItemStack itemstack = ItemStack.of(compound.getCompound("Item"));
+        ItemStack itemstack = com.binaris.wizardry.api.content.util.ItemData.load(registryAccess(), compound.getCompound("Item"));
         this.setItem(itemstack);
     }
 }

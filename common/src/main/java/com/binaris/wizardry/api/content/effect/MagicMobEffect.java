@@ -36,7 +36,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
         Level level = event.getLevel();
 
         for (MobEffectInstance instance : entity.getActiveEffects()) {
-            if (!(instance.getEffect() instanceof MagicMobEffect magic)) continue;
+            if (!(instance.getEffect().value() instanceof MagicMobEffect magic)) continue;
             if (entity.tickCount % magic.particleTickInterval != 0) continue;
             if (!instance.isVisible()) continue;
 
@@ -82,7 +82,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
     /// @return true if the vanilla potion particles of this entity must not be spawned
     public static boolean hidesVanillaParticles(LivingEntity entity) {
         for (MobEffectInstance instance : entity.getActiveEffects()) {
-            if (instance.getEffect() instanceof MagicMobEffect magic && magic.shouldHideVanillaParticles()) return true;
+            if (instance.getEffect().value() instanceof MagicMobEffect magic && magic.shouldHideVanillaParticles()) return true;
         }
         return false;
     }
@@ -91,7 +91,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
     public static class EventCaller {
         public static void callTickEvent(EBLivingTick event) {
             for (MobEffectInstance instance : new ArrayList<>(event.getEntity().getActiveEffects())) {
-                if (instance.getEffect() instanceof MagicMobEffect magicEffect) {
+                if (instance.getEffect().value() instanceof MagicMobEffect magicEffect) {
                     magicEffect.onTick(event.getEntity(), event.getLevel(), new MobEffectContext(instance));
                 }
             }
@@ -102,7 +102,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
             AtomicDouble amount = new AtomicDouble(event.getAmount());
             AtomicBoolean canceled = new AtomicBoolean(event.isCanceled());
             for (MobEffectInstance instance : new ArrayList<>(livingEntity.getActiveEffects())) {
-                if (instance.getEffect() instanceof MagicMobEffect magicEffect) {
+                if (instance.getEffect().value() instanceof MagicMobEffect magicEffect) {
                     magicEffect.onHurtEntity(livingEntity, event.getDamagedEntity(), event.getSource(), amount, canceled, new MobEffectContext(instance));
                 }
             }
@@ -115,7 +115,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
             AtomicDouble amount = new AtomicDouble(event.getAmount());
             AtomicBoolean canceled = new AtomicBoolean(event.isCanceled());
             for (MobEffectInstance instance : new ArrayList<>(user.getActiveEffects())) {
-                if (instance.getEffect() instanceof MagicMobEffect magicEffect) {
+                if (instance.getEffect().value() instanceof MagicMobEffect magicEffect) {
                     magicEffect.onUserHurt(user, event.getSource(), amount, canceled, new MobEffectContext(instance));
                 }
             }
@@ -126,7 +126,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
         public static void callKillEntity(EBLivingDeathEvent event) {
             if (!(event.getSource().getEntity() instanceof LivingEntity livingEntity)) return;
             for (MobEffectInstance mobEffectInstance : new ArrayList<>(livingEntity.getActiveEffects())) {
-                if (mobEffectInstance.getEffect() instanceof MagicMobEffect magicMobEffect) {
+                if (mobEffectInstance.getEffect().value() instanceof MagicMobEffect magicMobEffect) {
                     magicMobEffect.onKillEntity(livingEntity, event.getEntity(), event.getSource(), new MobEffectContext(mobEffectInstance));
                 }
             }
@@ -135,7 +135,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
         public static void callSpellPreCast(SpellCastEvent.Pre event) {
             if (event.getCaster() == null) return;
             for (MobEffectInstance mobEffectInstance : new ArrayList<>(event.getCaster().getActiveEffects())) {
-                if (mobEffectInstance.getEffect() instanceof MagicMobEffect magicMobEffect) {
+                if (mobEffectInstance.getEffect().value() instanceof MagicMobEffect magicMobEffect) {
                     magicMobEffect.onSpellPreCast(event, new MobEffectContext(mobEffectInstance));
                 }
             }
@@ -144,7 +144,7 @@ public abstract class MagicMobEffect extends MobEffect implements CustomMobEffec
         public static void callSpellPostCast(SpellCastEvent.Post event) {
             if (event.getCaster() == null) return;
             for (MobEffectInstance mobEffectInstance : new ArrayList<>(event.getCaster().getActiveEffects())) {
-                if (mobEffectInstance.getEffect() instanceof MagicMobEffect magicMobEffect) {
+                if (mobEffectInstance.getEffect().value() instanceof MagicMobEffect magicMobEffect) {
                     magicMobEffect.onSpellPostCast(event, new MobEffectContext(mobEffectInstance));
                 }
             }

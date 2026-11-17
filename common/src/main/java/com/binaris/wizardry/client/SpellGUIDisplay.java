@@ -206,13 +206,13 @@ public final class SpellGUIDisplay {
         float v2 = flipY ? v * f1        : (v + h) * f1;
 
         Matrix4f mat = guiGraphics.pose().last().pose();
-        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(mat, x,     y + h, 0).uv(u1, v2).endVertex();
-        buffer.vertex(mat, x + w, y + h, 0).uv(u2, v2).endVertex();
-        buffer.vertex(mat, x + w, y,     0).uv(u2, v1).endVertex();
-        buffer.vertex(mat, x,     y,     0).uv(u1, v1).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        BufferBuilder buffer;
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(mat, x,     y + h, 0).setUv(u1, v2);
+        buffer.addVertex(mat, x + w, y + h, 0).setUv(u2, v2);
+        buffer.addVertex(mat, x + w, y,     0).setUv(u2, v1);
+        buffer.addVertex(mat, x,     y,     0).setUv(u1, v1);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
 
     private static void drawGlitchRect(GuiGraphics guiGraphics, ResourceLocation texture, int x, int y, int u, int v, int width, int height, int texW, int texH, boolean flipX, boolean flipY) {
@@ -305,7 +305,7 @@ public final class SpellGUIDisplay {
     public static void renderChargeMeter(GuiGraphics guiGraphics, Player player, ItemStack wand, int width, int height, float partialTicks) {
         if (player.isSpectator()) return;
         if (!EBClientConfig.SHOW_CHARGE_METER.get()) return;
-        if (mc.options.renderDebug) return;
+        if (mc.getDebugOverlay().showDebugScreen()) return;
         if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return;
         if (wand != player.getUseItem()) return;
         if (!(wand.getItem() instanceof ICastItem castItem))
@@ -337,7 +337,7 @@ public final class SpellGUIDisplay {
 
         Style format = cooldown > 0 ? Style.EMPTY.withColor(ChatFormatting.GRAY) : Style.EMPTY.withColor(spell.getElement().getColor());
         if (!discovered)
-            format = Style.EMPTY.withColor(ChatFormatting.BLUE).withFont(new ResourceLocation("minecraft", "alt"));
+            format = Style.EMPTY.withColor(ChatFormatting.BLUE).withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt"));
 
         if (player.hasEffect(EBMobEffects.ARCANE_JAMMER.get())) format = Style.EMPTY.withObfuscated(true);
 

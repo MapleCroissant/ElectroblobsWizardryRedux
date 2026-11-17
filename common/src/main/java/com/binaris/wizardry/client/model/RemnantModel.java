@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class RemnantModel extends EntityModel<Remnant> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(WizardryMainMod.MOD_ID, "remnant"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(WizardryMainMod.MOD_ID, "remnant"), "main");
     private final ModelPart cube;
 
     public RemnantModel(ModelPart root) {
@@ -41,7 +41,7 @@ public class RemnantModel extends EntityModel<Remnant> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack pStack, @NotNull VertexConsumer pBuffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(@NotNull PoseStack pStack, @NotNull VertexConsumer pBuffer, int packedLight, int packedOverlay, int color) {
         cube.render(pStack, pBuffer, packedLight, packedOverlay);
     }
 }

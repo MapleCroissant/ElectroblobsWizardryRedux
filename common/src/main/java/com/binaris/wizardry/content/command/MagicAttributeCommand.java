@@ -55,7 +55,7 @@ public final class MagicAttributeCommand {
                                                                 .then(Commands.argument("condition", SpellConditionArgument.spellCondition())
                                                                         .executes(ctx -> setModifier(ctx, EntityArgument.getEntity(ctx, "target"),
                                                                                 ResourceArgument.getAttribute(ctx, "attribute"), UuidArgument.getUuid(ctx, "uuid"), StringArgumentType.getString(ctx, "name"),
-                                                                                DoubleArgumentType.getDouble(ctx, "value"), AttributeModifier.Operation.ADDITION, SpellConditionArgument.getSpellCondition(ctx, "condition")))
+                                                                                DoubleArgumentType.getDouble(ctx, "value"), AttributeModifier.Operation.ADD_VALUE, SpellConditionArgument.getSpellCondition(ctx, "condition")))
                                                                 )
                                                         )
                                                 )
@@ -69,7 +69,7 @@ public final class MagicAttributeCommand {
                                                                 .then(Commands.argument("condition", SpellConditionArgument.spellCondition())
                                                                         .executes(ctx -> setModifier(ctx, EntityArgument.getEntity(ctx, "target"),
                                                                                 ResourceArgument.getAttribute(ctx, "attribute"), UuidArgument.getUuid(ctx, "uuid"), StringArgumentType.getString(ctx, "name"),
-                                                                                DoubleArgumentType.getDouble(ctx, "value"), AttributeModifier.Operation.MULTIPLY_BASE, SpellConditionArgument.getSpellCondition(ctx, "condition")))
+                                                                                DoubleArgumentType.getDouble(ctx, "value"), AttributeModifier.Operation.ADD_MULTIPLIED_BASE, SpellConditionArgument.getSpellCondition(ctx, "condition")))
                                                                 )
                                                         )
                                                 )
@@ -83,7 +83,7 @@ public final class MagicAttributeCommand {
                                                                 .then(Commands.argument("condition", SpellConditionArgument.spellCondition())
                                                                         .executes(ctx -> setModifier(ctx, EntityArgument.getEntity(ctx, "target"),
                                                                                 ResourceArgument.getAttribute(ctx, "attribute"), UuidArgument.getUuid(ctx, "uuid"), StringArgumentType.getString(ctx, "name"),
-                                                                                DoubleArgumentType.getDouble(ctx, "value"), AttributeModifier.Operation.MULTIPLY_TOTAL, SpellConditionArgument.getSpellCondition(ctx, "condition")))
+                                                                                DoubleArgumentType.getDouble(ctx, "value"), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, SpellConditionArgument.getSpellCondition(ctx, "condition")))
                                                                 )
                                                         )
                                                 )
@@ -96,10 +96,10 @@ public final class MagicAttributeCommand {
 
     private static int setModifier(CommandContext<CommandSourceStack> ctx, Entity target, Holder.Reference<Attribute> attribute, UUID uuid, String name, double value, AttributeModifier.Operation operation, SpellCondition condition) throws CommandSyntaxException {
         LivingEntity livingentity = getEntityWithAttribute(target, attribute);
-        AttributeInstance instance = livingentity.getAttribute(attribute.value());
-        WizardryAttributeModifier attributeModifier = new WizardryAttributeModifier(uuid, name, value, operation, condition);
+        AttributeInstance instance = livingentity.getAttribute(attribute);
+        AttributeModifier attributeModifier = WizardryAttributeModifier.create(uuid, name, value, operation, condition);
 
-        if (instance.hasModifier(attributeModifier)) {
+        if (instance.hasModifier(attributeModifier.id())) {
             throw ERROR_MODIFIER_ALREADY_PRESENT.create(target.getName(), getAttributeDescription(attribute), uuid);
         } else {
             instance.addPermanentModifier(attributeModifier);
@@ -110,7 +110,7 @@ public final class MagicAttributeCommand {
 
     private static int getModifiers(CommandContext<CommandSourceStack> ctx, Entity target, Holder.Reference<Attribute> attribute, SpellCondition condition, double scale) throws CommandSyntaxException {
         LivingEntity livingentity = getEntityWithAttribute(target, attribute);
-        double value = WizardryAttributeModifier.calculateModifiers(livingentity, condition, attribute.value());
+        double value = WizardryAttributeModifier.calculateModifiers(livingentity, condition, attribute);
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.attribute.value.get.success", getAttributeDescription(attribute), target.getName(), value), false);
         return (int)(value * scale);
     }

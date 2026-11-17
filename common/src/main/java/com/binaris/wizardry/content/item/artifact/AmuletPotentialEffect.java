@@ -15,7 +15,7 @@ public class AmuletPotentialEffect implements IArtifactEffect {
 
     @Override
     public void onUserHurt(LivingEntity user, DamageSource source, AtomicDouble amount, AtomicBoolean canceled, ArtifactEffectContext context) {
-        if (source.isIndirect() || !(source.getDirectEntity() instanceof LivingEntity)) return;
+        if ((source.getDirectEntity() != source.getEntity()) || !(source.getDirectEntity() instanceof LivingEntity)) return;
         if (user.getRandom().nextFloat() < PROBABILITY_EFFECT) {
             ArtifactUtils.handleLightningEffect(user, (LivingEntity) source.getDirectEntity(), user);
         }

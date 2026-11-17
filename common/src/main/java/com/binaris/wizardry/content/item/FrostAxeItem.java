@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class FrostAxeItem extends AxeItem {
 
     public FrostAxeItem() {
-        super(MagicItemTier.TIER, 8, -3, new Properties().durability(12000).rarity(Rarity.UNCOMMON));
+        super(MagicItemTier.TIER, new Properties().durability(12000).rarity(Rarity.UNCOMMON).attributes(AxeItem.createAttributes(MagicItemTier.TIER, 8, -3)));
     }
 
     @Override

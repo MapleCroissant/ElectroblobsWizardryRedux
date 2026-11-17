@@ -32,12 +32,12 @@ public final class EBItemProperties {
     }
 
     private static void registerWandProperties(Item wand) {
-        ItemPropertiesAccessor.callRegister(wand, new ResourceLocation("pointing"), (stack, clientLevel, entity, seed) ->
+        ItemPropertiesAccessor.callRegister(wand, ResourceLocation.parse("pointing"), (stack, clientLevel, entity, seed) ->
                 entity != null && entity.isUsingItem() && entity.getUseItem() == stack
                         && isPointingAction(CastItemDataHelper.getCurrentSpell(stack).getAction()) ? 1.0F : 0.0F);
 
         // Kept for backwards compatibility with models and addons that still use the old 'casting' property.
-        ItemPropertiesAccessor.callRegister(wand, new ResourceLocation("casting"), (stack, clientLevel, entity, seed) ->
+        ItemPropertiesAccessor.callRegister(wand, ResourceLocation.parse("casting"), (stack, clientLevel, entity, seed) ->
                 entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
     }
 
@@ -52,21 +52,21 @@ public final class EBItemProperties {
     }
 
     private static void pullingItem(Item item) {
-        ItemPropertiesAccessor.callRegister(item, new ResourceLocation("pull"), (stack, clientLevel, entity, seed) -> {
+        ItemPropertiesAccessor.callRegister(item, ResourceLocation.parse("pull"), (stack, clientLevel, entity, seed) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != stack ? 0.0F : (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F;
+                return entity.getUseItem() != stack ? 0.0F : (float) (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / 20.0F;
             }
         });
 
-        ItemPropertiesAccessor.callRegister(item, new ResourceLocation("pulling"), (stack, clientLevel, entity, seed) ->
+        ItemPropertiesAccessor.callRegister(item, ResourceLocation.parse("pulling"), (stack, clientLevel, entity, seed) ->
                 entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
     }
 
     private static void conjureItem(Item item) {
-        ItemPropertiesAccessor.callRegister(item, new ResourceLocation("conjure"), (stack, clientLevel, entity, seed) -> {
+        ItemPropertiesAccessor.callRegister(item, ResourceLocation.parse("conjure"), (stack, clientLevel, entity, seed) -> {
             ConjureData data = Services.OBJECT_DATA.getConjureData(stack);
             if (data != null && data.isSummoned()) {
                 int frames = 8;
@@ -78,7 +78,7 @@ public final class EBItemProperties {
             return 0.0F;
         });
 
-        ItemPropertiesAccessor.callRegister(item, new ResourceLocation("conjuring"), (stack, clientLevel, entity, seed) -> {
+        ItemPropertiesAccessor.callRegister(item, ResourceLocation.parse("conjuring"), (stack, clientLevel, entity, seed) -> {
             ConjureData data = Services.OBJECT_DATA.getConjureData(stack);
             if (data != null && data.isSummoned()) {
                 int frames = 8;

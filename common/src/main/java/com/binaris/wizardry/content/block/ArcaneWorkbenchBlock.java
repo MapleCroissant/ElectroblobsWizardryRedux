@@ -25,6 +25,10 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public class ArcaneWorkbenchBlock extends BaseEntityBlock {
+    public static final com.mojang.serialization.MapCodec<ArcaneWorkbenchBlock> CODEC = simpleCodec(ArcaneWorkbenchBlock::new);
+    @Override
+    protected com.mojang.serialization.MapCodec<ArcaneWorkbenchBlock> codec() { return CODEC; }
+
     public static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 12, 16);
 
     public ArcaneWorkbenchBlock(Properties properties) {
@@ -43,18 +47,18 @@ public class ArcaneWorkbenchBlock extends BaseEntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public @NotNull InteractionResult use(@NotNull BlockState blockState, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+    public @NotNull net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack usedStack, @NotNull BlockState blockState, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        if (level.isClientSide) return net.minecraft.world.ItemInteractionResult.SUCCESS;
 
         BlockEntity blockentity = level.getBlockEntity(pos);
         if (blockentity == null || player.isShiftKeyDown()) {
-            return InteractionResult.PASS;
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (blockentity instanceof ArcaneWorkbenchBlockEntity) {
             player.openMenu((MenuProvider) blockentity);
         }
-        return InteractionResult.CONSUME;
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     @SuppressWarnings("deprecation")

@@ -22,9 +22,8 @@ public class EBFabricClientNetwork {
     }
 
     private static <T extends Message> void registerClientMessage(ResourceLocation id, Function<FriendlyByteBuf, T> decoder) {
-        ClientPlayNetworking.registerGlobalReceiver(id, (client, handler, buf, responseSender) -> {
-            T packet = decoder.apply(buf);
-            client.execute(packet::handleClient);
-        });
+        ClientPlayNetworking.registerGlobalReceiver(
+                new net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type<Message>(id),
+                (packet, context) -> packet.handleClient());
     }
 }

@@ -16,18 +16,18 @@ public abstract class ClientboundUpdateMobEffectPacketMixin implements MagicEffe
     @Unique
     private boolean ebwizardry$magic;
 
-    @Inject(method = "<init>(ILnet/minecraft/world/effect/MobEffectInstance;)V", at = @At("TAIL"))
-    private void EBWIZARDRY$captureMagic(int entityId, MobEffectInstance instance, CallbackInfo ci) {
+    @Inject(method = "<init>(ILnet/minecraft/world/effect/MobEffectInstance;Z)V", at = @At("TAIL"))
+    private void EBWIZARDRY$captureMagic(int entityId, MobEffectInstance instance, boolean blend, CallbackInfo ci) {
         this.ebwizardry$magic = instance instanceof MagicMobEffectInstance;
     }
 
     @Inject(method = "write", at = @At("TAIL"))
-    private void EBWIZARDRY$writeMagic(FriendlyByteBuf buf, CallbackInfo ci) {
+    private void EBWIZARDRY$writeMagic(net.minecraft.network.RegistryFriendlyByteBuf buf, CallbackInfo ci) {
         buf.writeBoolean(this.ebwizardry$magic);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At("TAIL"))
-    private void EBWIZARDRY$readMagic(FriendlyByteBuf buf, CallbackInfo ci) {
+    @Inject(method = "<init>(Lnet/minecraft/network/RegistryFriendlyByteBuf;)V", at = @At("TAIL"))
+    private void EBWIZARDRY$readMagic(net.minecraft.network.RegistryFriendlyByteBuf buf, CallbackInfo ci) {
         this.ebwizardry$magic = buf.readBoolean();
     }
 

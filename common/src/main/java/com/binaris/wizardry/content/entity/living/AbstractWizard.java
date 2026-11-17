@@ -141,7 +141,7 @@ public abstract class AbstractWizard extends PathfinderMob implements ISpellCast
             }
             if (this.getHealth() < 10) this.setHealCooldown(150);
             else this.setHealCooldown(400);
-            SoundEvent sound = SoundEvent.createVariableRangeEvent(new ResourceLocation(Spells.HEAL.getLocation().getNamespace(), "spell." + Spells.HEAL.getLocation().getPath()));
+            SoundEvent sound = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Spells.HEAL.getLocation().getNamespace(), "spell." + Spells.HEAL.getLocation().getPath()));
             level().playSound(null, this.getX(), this.getY(), this.getZ(), sound, SoundSource.PLAYERS, Spells.HEAL.getVolume(), Spells.HEAL.getPitch() + Spells.HEAL.getPitchVariation() * (level().random.nextFloat() - 0.5f));
         }
 
@@ -156,7 +156,7 @@ public abstract class AbstractWizard extends PathfinderMob implements ISpellCast
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag tag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnData) {
         setTextureIndex(this.random.nextInt(6));
 
         if (this.entityData.get(ELEMENT).isEmpty()) {
@@ -171,7 +171,7 @@ public abstract class AbstractWizard extends PathfinderMob implements ISpellCast
         prepareWandWithSpells(getElement(), maxTier);
 
         this.setHealCooldown(50);
-        return super.finalizeSpawn(level, difficulty, mobSpawnType, spawnData, tag);
+        return super.finalizeSpawn(level, difficulty, mobSpawnType, spawnData);
     }
 
     /// Select an element for the wizard. There is a 50% chance of it being MAGIC, otherwise it is randomly chosen from
@@ -232,14 +232,14 @@ public abstract class AbstractWizard extends PathfinderMob implements ISpellCast
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HEAL_COOLDOWN, 50);
-        this.entityData.define(ELEMENT, "");
-        this.entityData.define(CONTINUOUS_SPELL, Spells.NONE.getLocation().toString());
-        this.entityData.define(SPELL_COUNTER, 0);
-        this.entityData.define(TEXTURE_INDEX, 0);
-        this.entityData.define(SPELL_TARGET_ID, -1);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HEAL_COOLDOWN, 50);
+        builder.define(ELEMENT, "");
+        builder.define(CONTINUOUS_SPELL, Spells.NONE.getLocation().toString());
+        builder.define(SPELL_COUNTER, 0);
+        builder.define(TEXTURE_INDEX, 0);
+        builder.define(SPELL_TARGET_ID, -1);
     }
 
 

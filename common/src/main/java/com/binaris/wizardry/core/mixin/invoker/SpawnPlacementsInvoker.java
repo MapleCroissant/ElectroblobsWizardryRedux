@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(SpawnPlacements.class)
 public interface SpawnPlacementsInvoker {
     @Invoker
-    static <T extends Mob> void callRegister(EntityType<T> entityType, SpawnPlacements.Type decoratorType, Heightmap.Types heightMapType, SpawnPlacements.SpawnPredicate<T> decoratorPredicate) {
+    static <T extends Mob> void callRegister(EntityType<T> entityType, net.minecraft.world.entity.SpawnPlacementType decoratorType, Heightmap.Types heightMapType, SpawnPlacements.SpawnPredicate<T> decoratorPredicate) {
 
     }
 

@@ -46,7 +46,11 @@ import java.util.Objects;
 /// {@code EBRecipeTypes.IMBUEMENT_ALTAR} during both {@code checkRecipe()} (to validate
 /// and start the imbuement timer) and {@code craftRecipe()} (to re-validate and produce
 /// the output).
-public class ImbuementAltarRecipe implements Recipe<Container> {
+public class ImbuementAltarRecipe implements Recipe<ImbuementAltarRecipe.Input> {
+    public record Input(ItemStack center, List<ItemStack> receptacles) implements RecipeInput {
+        @Override public ItemStack getItem(int slot) { return slot == 0 ? center : receptacles.get(slot - 1); }
+        @Override public int size() { return 1 + receptacles.size(); }
+    }
     private final ResourceLocation id;
     @Nullable
     private final NonNullList<Ingredient> receptacleIngredients;
@@ -77,7 +81,7 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
     /// then returns the item stack. This is specially made by hand because Minecraft doesn't support
     /// nbt data in recipe JSONs for items.
     private static ItemStack itemStackFromJson(JsonObject stackObject) {
-        Item item = ShapedRecipe.itemFromJson(stackObject);
+        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(GsonHelper.getAsString(stackObject, "item")));
         int count = GsonHelper.getAsInt(stackObject, "count", 1);
 
         if (count < 1) {
@@ -89,7 +93,7 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
         if (stackObject.has("nbt")) {
             try {
                 CompoundTag nbt = TagParser.parseTag(GsonHelper.getAsString(stackObject, "nbt"));
-                stack.setTag(nbt);
+                com.binaris.wizardry.api.content.util.ItemData.set(stack, nbt);
             } catch (Exception e) {
                 throw new JsonParseException("Invalid NBT data: " + e.getMessage());
             }
@@ -153,12 +157,12 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(@NotNull Container container, @NotNull Level level) {
-        return false;
+    public boolean matches(@NotNull Input container, @NotNull Level level) {
+        return matches(container.center(), container.receptacles().toArray(ItemStack[]::new));
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull Container container, @NotNull RegistryAccess access) {
+    public @NotNull ItemStack assemble(@NotNull Input container, @NotNull net.minecraft.core.HolderLookup.Provider access) {
         return output.copy();
     }
 
@@ -168,11 +172,10 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess access) {
+    public @NotNull ItemStack getResultItem(@NotNull net.minecraft.core.HolderLookup.Provider access) {
         return output.copy();
     }
 
-    @Override
     public @NotNull ResourceLocation getId() {
         return id;
     }
@@ -220,7 +223,7 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
     public static boolean isReceptacleItem(Level level, ItemStack stack) {
         return level.getRecipeManager().getAllRecipesFor(EBRecipeTypes.IMBUEMENT_ALTAR).stream()
                 .filter(Objects::nonNull)
-                .anyMatch(r -> r.acceptsReceptacleItem(stack));
+                .anyMatch(r -> r.value().acceptsReceptacleItem(stack));
     }
 
     private boolean acceptsReceptacleItem(ItemStack stack) {
@@ -343,6 +346,63 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
     /// serializes recipe definitions to JSON using the same field names expected by
     /// {@code fromJson}.
     public static class Serializer implements RecipeSerializer<ImbuementAltarRecipe> {
+        public static final com.mojang.serialization.MapCodec<ImbuementAltarRecipe> CODEC = new com.mojang.serialization.MapCodec<>() {
+            @Override public <T> com.mojang.serialization.DataResult<ImbuementAltarRecipe> decode(
+                    com.mojang.serialization.DynamicOps<T> ops, com.mojang.serialization.MapLike<T> input) {
+                try {
+                    JsonObject json = ops.convertTo(com.mojang.serialization.JsonOps.INSTANCE,
+                            ops.createMap(input.entries())).getAsJsonObject();
+                    return com.mojang.serialization.DataResult.success(new Serializer().fromJson(
+                            com.binaris.wizardry.WizardryMainMod.location("imbuement_altar"), json));
+                } catch (RuntimeException error) {
+                    return com.mojang.serialization.DataResult.error(error::getMessage);
+                }
+            }
+            @Override public <T> com.mojang.serialization.RecordBuilder<T> encode(ImbuementAltarRecipe recipe,
+                    com.mojang.serialization.DynamicOps<T> ops, com.mojang.serialization.RecordBuilder<T> prefix) {
+                JsonObject json = toJson(recipe);
+                json.entrySet().forEach(entry -> prefix.add(entry.getKey(),
+                        com.mojang.serialization.JsonOps.INSTANCE.convertTo(ops, entry.getValue())));
+                return prefix;
+            }
+            @Override public <T> java.util.stream.Stream<T> keys(com.mojang.serialization.DynamicOps<T> ops) {
+                return java.util.stream.Stream.of("center", "receptacles", "result", "poll", "results").map(ops::createString);
+            }
+        };
+        public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, ImbuementAltarRecipe> STREAM_CODEC =
+                net.minecraft.network.codec.StreamCodec.of((buffer, recipe) -> new Serializer().toNetwork(buffer, recipe),
+                        buffer -> new Serializer().fromNetwork(com.binaris.wizardry.WizardryMainMod.location("imbuement_altar"), buffer));
+        @Override public com.mojang.serialization.MapCodec<ImbuementAltarRecipe> codec() { return CODEC; }
+        @Override public net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, ImbuementAltarRecipe> streamCodec() { return STREAM_CODEC; }
+
+        private static JsonObject stackJson(ItemStack stack) {
+            JsonObject json = new JsonObject();
+            json.addProperty("item", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+            json.addProperty("count", stack.getCount());
+            CompoundTag data = com.binaris.wizardry.api.content.util.ItemData.read(stack);
+            if (!data.isEmpty()) json.addProperty("nbt", data.toString());
+            return json;
+        }
+        private static JsonObject toJson(ImbuementAltarRecipe recipe) {
+            JsonObject json = new JsonObject();
+            json.add("center", Ingredient.CODEC_NONEMPTY.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, recipe.centerIngredient).getOrThrow());
+            if (recipe.receptacleIngredients != null) {
+                com.google.gson.JsonArray receptacles = new com.google.gson.JsonArray();
+                recipe.receptacleIngredients.forEach(ingredient -> receptacles.add(Ingredient.CODEC_NONEMPTY.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, ingredient).getOrThrow()));
+                json.add("receptacles", receptacles);
+            }
+            if (recipe.poll == null) json.add("result", stackJson(recipe.output));
+            else {
+                com.google.gson.JsonArray poll = new com.google.gson.JsonArray();
+                recipe.poll.forEach(tag -> { JsonObject entry = new JsonObject(); entry.addProperty("tag", tag.location().toString()); poll.add(entry); });
+                json.add("poll", poll);
+                com.google.gson.JsonArray results = new com.google.gson.JsonArray();
+                recipe.results.forEach((tag, stack) -> { JsonObject entry = stackJson(stack); entry.addProperty("key", tag.location().toString()); results.add(entry); });
+                json.add("results", results);
+            }
+            return json;
+        }
+
         /// Expects a {@code "center"} ingredient object, and either a {@code "result"} item object or,
         /// when a {@code "poll"} array is present, a {@code "results"} array. The {@code "receptacles"}
         /// array (exactly 4 entries) is only required for fixed-result recipes; poll recipes validate
@@ -358,9 +418,8 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
         /// @param id the resource location for this recipe.
         /// @param json the JSON object to parse.
         /// @return a fully constructed ImbuementAltarRecipe.
-        @Override
         public @NotNull ImbuementAltarRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
-            Ingredient centerIngredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "center"));
+            Ingredient centerIngredient = Ingredient.CODEC_NONEMPTY.parse(com.mojang.serialization.JsonOps.INSTANCE, GsonHelper.getAsJsonObject(json, "center")).getOrThrow();
 
             if (json.has("poll")) {
                 List<TagKey<Item>> poll = new ArrayList<>();
@@ -405,7 +464,7 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
             }
 
             for (int i = 0; i < 4; i++) {
-                receptacleIngredients.set(i, Ingredient.fromJson(receptaclesArray.get(i)));
+                receptacleIngredients.set(i, Ingredient.CODEC_NONEMPTY.parse(com.mojang.serialization.JsonOps.INSTANCE, receptaclesArray.get(i)).getOrThrow());
             }
 
             return receptacleIngredients;
@@ -438,9 +497,8 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
         /// @param id the resource location for this recipe.
         /// @param buf the packet buffer to read from.
         /// @return a fully constructed ImbuementAltarRecipe.
-        @Override
-        public @NotNull ImbuementAltarRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
-            Ingredient centerIngredient = Ingredient.fromNetwork(buf);
+        public @NotNull ImbuementAltarRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull net.minecraft.network.RegistryFriendlyByteBuf buf) {
+            Ingredient centerIngredient = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
 
             if (buf.readBoolean()) {
                 NonNullList<Ingredient> receptacleIngredients = buf.readBoolean() ? readReceptaclesFromNetwork(buf) : null;
@@ -454,21 +512,21 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
                 int resultsSize = buf.readVarInt();
                 LinkedHashMap<TagKey<Item>, ItemStack> results = new LinkedHashMap<>();
                 for (int i = 0; i < resultsSize; i++) {
-                    results.put(TagKey.create(Registries.ITEM, buf.readResourceLocation()), buf.readItem());
+                    results.put(TagKey.create(Registries.ITEM, buf.readResourceLocation()), ItemStack.STREAM_CODEC.decode(buf));
                 }
 
                 return new ImbuementAltarRecipe(id, receptacleIngredients, centerIngredient, ItemStack.EMPTY, poll, results);
             }
 
             NonNullList<Ingredient> receptacleIngredients = readReceptaclesFromNetwork(buf);
-            ItemStack output = buf.readItem();
+            ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
             return new ImbuementAltarRecipe(id, receptacleIngredients, centerIngredient, output);
         }
 
-        private static NonNullList<Ingredient> readReceptaclesFromNetwork(FriendlyByteBuf buf) {
+        private static NonNullList<Ingredient> readReceptaclesFromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buf) {
             NonNullList<Ingredient> receptacleIngredients = NonNullList.withSize(4, Ingredient.EMPTY);
             for (int i = 0; i < 4; i++) {
-                receptacleIngredients.set(i, Ingredient.fromNetwork(buf));
+                receptacleIngredients.set(i, Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
             }
             return receptacleIngredients;
         }
@@ -479,16 +537,15 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
         ///
         /// @param buf the packet buffer to write to.
         /// @param recipe the recipe to serialize.
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, ImbuementAltarRecipe recipe) {
-            recipe.centerIngredient.toNetwork(buf);
+        public void toNetwork(@NotNull net.minecraft.network.RegistryFriendlyByteBuf buf, ImbuementAltarRecipe recipe) {
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.centerIngredient);
 
             if (recipe.poll != null) {
                 buf.writeBoolean(true);
                 buf.writeBoolean(recipe.receptacleIngredients != null);
                 if (recipe.receptacleIngredients != null) {
                     for (Ingredient ingredient : recipe.receptacleIngredients) {
-                        ingredient.toNetwork(buf);
+                        Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
                     }
                 }
                 buf.writeVarInt(recipe.poll.size());
@@ -498,16 +555,16 @@ public class ImbuementAltarRecipe implements Recipe<Container> {
                 buf.writeVarInt(recipe.results.size());
                 for (var entry : recipe.results.entrySet()) {
                     buf.writeResourceLocation(entry.getKey().location());
-                    buf.writeItem(entry.getValue());
+                    ItemStack.STREAM_CODEC.encode(buf, entry.getValue());
                 }
                 return;
             }
 
             buf.writeBoolean(false);
             for (Ingredient ingredient : recipe.receptacleIngredients) {
-                ingredient.toNetwork(buf);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
             }
-            buf.writeItem(recipe.output);
+            ItemStack.STREAM_CODEC.encode(buf, recipe.output);
         }
     }
 }

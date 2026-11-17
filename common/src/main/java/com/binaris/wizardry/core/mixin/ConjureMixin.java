@@ -46,24 +46,26 @@ public class ConjureMixin {
     }
 
     @Inject(method = "getTooltipLines", at = @At("RETURN"))
-    public void EBWIZARDRY$conjureGetTooltipLines(Player player, TooltipFlag isAdvanced, CallbackInfoReturnable<List<Component>> cir, @Local List<Component> list) {
+    public void EBWIZARDRY$conjureGetTooltipLines(net.minecraft.world.item.Item.TooltipContext context, Player player, TooltipFlag isAdvanced, CallbackInfoReturnable<List<Component>> cir) {
         ConjureData data = Services.OBJECT_DATA.getConjureData(stack);
-        if (data == null || !data.isSummoned()) return;
+        if (data == null || !data.isSummoned() || player == null) return;
 
         long currentGameTime = player.level().getGameTime();
         int remaining = data.getRemainingLifetime(currentGameTime);
 
-        list.add(Component.translatable("tooltip.ebwizardry.conjured_item",
+        cir.getReturnValue().add(Component.translatable("tooltip.ebwizardry.conjured_item",
                 remaining / 20).withStyle(ChatFormatting.DARK_PURPLE));
     }
 
     // This is the important one - prevents damage being set on conjured items, avoiding items to continue using the
     // durability tags and making inconsistent behavior with the conjure system.
-    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-    public void EBWIZARDRY$preventDurabilityLoss(int amount, RandomSource random, ServerPlayer user, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
+    public void EBWIZARDRY$preventDurabilityLoss(int amount, net.minecraft.server.level.ServerLevel level,
+                                              ServerPlayer user, java.util.function.Consumer<net.minecraft.world.item.Item> onBreak,
+                                              org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
         ConjureData data = Services.OBJECT_DATA.getConjureData(stack);
         if (data != null && data.isSummoned()) {
-            cir.setReturnValue(false);
+            ci.cancel();
         }
     }
 

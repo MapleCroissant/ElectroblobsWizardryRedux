@@ -16,7 +16,7 @@ public class ShatteringRingEffect implements IArtifactEffect {
     @Override
     public void onHurtEntity(LivingEntity user, LivingEntity damagedEntity, DamageSource source, AtomicDouble amount, AtomicBoolean canceled, ArtifactEffectContext context) {
         if (user instanceof Player player && player.level().random.nextFloat() < 0.15f && damagedEntity.getHealth() < 12f
-                && damagedEntity.hasEffect(EBMobEffects.FROST.get()) && !source.isIndirect()) {
+                && damagedEntity.hasEffect(EBMobEffects.FROST.get()) && !(source.getDirectEntity() != source.getEntity())) {
 
             amount.set(12f);
 

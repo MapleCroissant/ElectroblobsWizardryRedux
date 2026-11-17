@@ -80,29 +80,32 @@ public class BookshelfBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        // Older versions wrote a plain name rather than a serialized Component.
+        if (tag.contains("CustomName", Tag.TAG_STRING) && !tag.getString("CustomName").startsWith("{" )
+                && !tag.getString("CustomName").startsWith("\"")) {
+            tag = tag.copy();
+            tag.putString("CustomName", Component.Serializer.toJson(Component.literal(tag.getString("CustomName")), registries));
+        }
+        super.loadAdditional(tag, registries);
         if (inventory == null) this.inventory = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(tag)) {
-            ContainerHelper.loadAllItems(tag, this.inventory);
+            ContainerHelper.loadAllItems(tag, this.inventory, registries);
         }
-        if (tag.contains("CustomName", Tag.TAG_STRING))
-            this.setCustomName(Component.literal(tag.getString("CustomName")));
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (!this.trySaveLootTable(tag)) {
-            ContainerHelper.saveAllItems(tag, this.inventory);
+            ContainerHelper.saveAllItems(tag, this.inventory, registries);
         }
-        if (this.hasCustomName()) tag.putString("CustomName", this.getCustomName().getString());
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag, registries);
         return tag;
     }
 

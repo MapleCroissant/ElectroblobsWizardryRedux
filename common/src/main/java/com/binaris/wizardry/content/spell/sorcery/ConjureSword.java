@@ -23,9 +23,7 @@ public class ConjureSword extends ConjureItemSpell {
     protected ItemStack addItemExtras(PlayerCastContext ctx, ItemStack stack) {
         float potency = ctx.modifiers().getFactor(SpellModifiers.POTENCY);
         double bonusDamage = BASE_DAMAGE * (potency - 1.0F);
-        stack.addAttributeModifier(Attributes.ATTACK_DAMAGE,
-                new AttributeModifier(SWORD_DAMAGE_MODIFIER, "Spectral Sword Damage", bonusDamage, AttributeModifier.Operation.ADDITION),
-                EquipmentSlot.MAINHAND);
+        stack.set(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, stack.getOrDefault(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.world.item.component.ItemAttributeModifiers.EMPTY).withModifierAdded(Attributes.ATTACK_DAMAGE, new AttributeModifier(com.binaris.wizardry.WizardryMainMod.location("modifier/" + SWORD_DAMAGE_MODIFIER), bonusDamage, AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND));
         return super.addItemExtras(ctx, stack);
     }
 }

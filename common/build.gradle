@@ -1,17 +1,6 @@
 plugins {
     id 'multiloader-common'
-    id 'net.neoforged.moddev.legacyforge'
-}
-
-legacyForge {
-    mcpVersion = minecraft_version
-    if (file("src/main/resources/${mod_id}.cfg").exists()) {
-        accessTransformers = ["src/main/resources/${mod_id}.cfg"]
-    }
-    parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
-    }
+    id 'fabric-loom'
 }
 
 repositories {
@@ -22,11 +11,14 @@ repositories {
 }
 
 dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modCompileOnly "net.fabricmc:fabric-loader:${fabric_loader_version}"
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation "net.steppschuh.markdowngenerator:markdowngenerator:${markdowngenerator_version}"
     compileOnly "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
-    compileOnly("io.wispforest:accessories-common:${project.accessories_version}-mojmap")
+    modCompileOnly "io.wispforest:accessories-fabric:${project.accessories_version}"
 }
 
 configurations {

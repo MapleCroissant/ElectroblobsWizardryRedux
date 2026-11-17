@@ -49,16 +49,16 @@ public class ReceptacleBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
-        if (!stack.isEmpty()) tag.put("Stack", stack.save(new CompoundTag()));
+    protected void saveAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if (!stack.isEmpty()) tag.put("Stack", stack.save(registries));
         if (altarPos != null) tag.putLong("AltarPos", altarPos.asLong());
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        if (tag.contains("Stack")) this.stack = ItemStack.of(tag.getCompound("Stack"));
+    public void loadAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("Stack")) this.stack = com.binaris.wizardry.api.content.util.ItemData.load(registries, tag.getCompound("Stack"));
         else this.stack = ItemStack.EMPTY;
         if (tag.contains("AltarPos")) this.altarPos = BlockPos.of(tag.getLong("AltarPos"));
         else this.altarPos = null;

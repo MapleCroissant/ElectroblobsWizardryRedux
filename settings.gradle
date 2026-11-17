@@ -33,4 +33,5 @@ plugins {
 rootProject.name = 'Electroblobs Wizardry Redux'
 include("common")
 include("fabric")
-include("forge")
+// This branch targets Fabric 1.21.1. The preserved Forge sources target 1.20.1
+// and must not be configured against the Fabric branch's Minecraft dependencies.

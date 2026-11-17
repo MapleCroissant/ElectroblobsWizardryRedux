@@ -66,7 +66,7 @@ public class ZombieSpawnerConstruct extends MagicConstructEntity {
                 AttributeInstance attackAttr = zombie.getAttribute(Attributes.ATTACK_DAMAGE);
                 if (attackAttr != null) {
                     attackAttr.addPermanentModifier(
-                            new AttributeModifier(SpellModifiers.POTENCY, damageMultiplier - 1, Operation.MULTIPLY_TOTAL)
+                            new AttributeModifier(com.binaris.wizardry.WizardryMainMod.location(SpellModifiers.POTENCY), damageMultiplier - 1, Operation.ADD_MULTIPLIED_TOTAL)
                     );
                 }
 

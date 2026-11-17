@@ -55,7 +55,7 @@ public class SpellBookItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
         if (level == null) return;
         Spell spell = RegistryUtils.getSpell(stack);
         if (spell == Spells.NONE) return;
@@ -75,6 +75,6 @@ public class SpellBookItem extends Item {
 
     public ResourceLocation getGuiTexture(Spell spell) {
         ResourceLocation l = spell.getTier().getOrCreateLocation();
-        return new ResourceLocation(l.getNamespace(), "textures/gui/spell_book_" + l.getPath() + ".png");
+        return ResourceLocation.fromNamespaceAndPath(l.getNamespace(), "textures/gui/spell_book_" + l.getPath() + ".png");
     }
 }

@@ -24,17 +24,17 @@ public final class EBAdvancementTriggers {
     }
 
     public static void register() {
-        CriteriaAccessor.callRegister(DISCOVER_SPELL);
-        CriteriaAccessor.callRegister(MAX_OUT_WAND);
-        CriteriaAccessor.callRegister(SPECIAL_UPGRADE);
-        CriteriaAccessor.callRegister(ANGER_WIZARD);
-        CriteriaAccessor.callRegister(BUY_MASTER_SPELL);
-        CriteriaAccessor.callRegister(SPELL_FAILURE);
-        CriteriaAccessor.callRegister(WIZARD_TRADE);
-        CriteriaAccessor.callRegister(WAND_LEVELUP);
-        CriteriaAccessor.callRegister(RESTORE_IMBUEMENT_ALTAR);
-        CriteriaAccessor.callRegister(CAST_SPELL);
-        CriteriaAccessor.callRegister(ARCANE_WORKBENCH);
-        CriteriaAccessor.callRegister(IMBUEMENT_ALTAR);
+        CriteriaAccessor.callRegister(DISCOVER_SPELL.getId().toString(), DISCOVER_SPELL);
+        CriteriaAccessor.callRegister(MAX_OUT_WAND.getId().toString(), MAX_OUT_WAND);
+        CriteriaAccessor.callRegister(SPECIAL_UPGRADE.getId().toString(), SPECIAL_UPGRADE);
+        CriteriaAccessor.callRegister(ANGER_WIZARD.getId().toString(), ANGER_WIZARD);
+        CriteriaAccessor.callRegister(BUY_MASTER_SPELL.getId().toString(), BUY_MASTER_SPELL);
+        CriteriaAccessor.callRegister(SPELL_FAILURE.getId().toString(), SPELL_FAILURE);
+        CriteriaAccessor.callRegister(WIZARD_TRADE.getId().toString(), WIZARD_TRADE);
+        CriteriaAccessor.callRegister(WAND_LEVELUP.getId().toString(), WAND_LEVELUP);
+        CriteriaAccessor.callRegister(RESTORE_IMBUEMENT_ALTAR.getId().toString(), RESTORE_IMBUEMENT_ALTAR);
+        CriteriaAccessor.callRegister(CAST_SPELL.getId().toString(), CAST_SPELL);
+        CriteriaAccessor.callRegister(ARCANE_WORKBENCH.getId().toString(), ARCANE_WORKBENCH);
+        CriteriaAccessor.callRegister(IMBUEMENT_ALTAR.getId().toString(), IMBUEMENT_ALTAR);
     }
 }

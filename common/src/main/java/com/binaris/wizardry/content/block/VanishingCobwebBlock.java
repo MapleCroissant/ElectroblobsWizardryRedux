@@ -18,6 +18,10 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
 public class VanishingCobwebBlock extends BaseEntityBlock {
+    public static final com.mojang.serialization.MapCodec<VanishingCobwebBlock> CODEC = simpleCodec(VanishingCobwebBlock::new);
+    @Override
+    protected com.mojang.serialization.MapCodec<VanishingCobwebBlock> codec() { return CODEC; }
+
     public VanishingCobwebBlock(Properties properties) {
         super(properties);
     }

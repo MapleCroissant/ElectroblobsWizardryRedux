@@ -43,12 +43,11 @@ public class PocketFurnace extends Spell {
             stack = ctx.caster().getInventory().getItem(i);
             if (stack.isEmpty()) continue;
 
-            Container dummyInv = new SimpleContainer(1);
-            dummyInv.setItem(0, stack);
-            Optional<SmeltingRecipe> optionalSmeltingRecipe = ctx.world().getRecipeManager().getRecipeFor(RecipeType.SMELTING, dummyInv, ctx.caster().level());
+            net.minecraft.world.item.crafting.SingleRecipeInput dummyInv = new net.minecraft.world.item.crafting.SingleRecipeInput(stack);
+            Optional<net.minecraft.world.item.crafting.RecipeHolder<SmeltingRecipe>> optionalSmeltingRecipe = ctx.world().getRecipeManager().getRecipeFor(RecipeType.SMELTING, dummyInv, ctx.caster().level());
             if (optionalSmeltingRecipe.isEmpty()) continue;
 
-            result = optionalSmeltingRecipe.get().getResultItem(null);
+            result = optionalSmeltingRecipe.get().value().getResultItem(ctx.world().registryAccess());
             if (result.isEmpty() || stack.getItem() instanceof TieredItem || stack.getItem() instanceof ArmorItem)
                 continue;
             if (EBServerConfig.isOnList(EBServerConfig.MELT_ITEMS_BLACKLIST, stack)) continue;
@@ -68,13 +67,12 @@ public class PocketFurnace extends Spell {
                 stack = ctx.caster().getInventory().getItem(i);
                 if (stack.isEmpty()) continue;
 
-                Container dummyInv = new SimpleContainer(1);
-                dummyInv.setItem(0, stack);
-                Optional<SmeltingRecipe> optionalSmeltingRecipe = ctx.world().getRecipeManager().getRecipeFor(RecipeType.SMELTING, dummyInv, ctx.caster().level());
+                net.minecraft.world.item.crafting.SingleRecipeInput dummyInv = new net.minecraft.world.item.crafting.SingleRecipeInput(stack);
+                Optional<net.minecraft.world.item.crafting.RecipeHolder<SmeltingRecipe>> optionalSmeltingRecipe = ctx.world().getRecipeManager().getRecipeFor(RecipeType.SMELTING, dummyInv, ctx.caster().level());
                 if (optionalSmeltingRecipe.isEmpty()) continue;
 
-                optionalSmeltingRecipe.get().assemble(dummyInv, null);
-                result = optionalSmeltingRecipe.get().getResultItem(null);
+                optionalSmeltingRecipe.get().value().assemble(dummyInv, ctx.world().registryAccess());
+                result = optionalSmeltingRecipe.get().value().getResultItem(ctx.world().registryAccess());
                 if (result.isEmpty() || stack.getItem() instanceof TieredItem || stack.getItem() instanceof ArmorItem)
                     continue;
                 if (EBServerConfig.isOnList(EBServerConfig.MELT_ITEMS_BLACKLIST, stack)) continue;

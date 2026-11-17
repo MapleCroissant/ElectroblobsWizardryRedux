@@ -41,7 +41,7 @@ public class ReceptacleBlock extends Block implements EntityBlock {
     protected static final VoxelShape AABB = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
 
     public ReceptacleBlock() {
-        super(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE).strength(0.5F).randomTicks().lightLevel((b) -> 1).sound(SoundType.STONE));
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE).strength(0.5F).randomTicks().lightLevel((b) -> 1).sound(SoundType.STONE));
     }
 
     @Override
@@ -50,8 +50,8 @@ public class ReceptacleBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        if (!(level.getBlockEntity(pos) instanceof ReceptacleBlockEntity blockEntity)) return InteractionResult.PASS;
+    public @NotNull net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack usedStack, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        if (!(level.getBlockEntity(pos) instanceof ReceptacleBlockEntity blockEntity)) return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (blockEntity.getAltarPos() == null) blockEntity.setAltarPos(findAltar(level, pos));
         boolean changed = false;
         ItemStack heldItem = player.getItemInHand(hand);
@@ -60,7 +60,7 @@ public class ReceptacleBlock extends Block implements EntityBlock {
         if (blockEntity.getAltarPos() != null) {
             BlockEntity te = level.getBlockEntity(blockEntity.getAltarPos());
             if (te instanceof ImbuementAltarBlockEntity altar && altar.isCrafting()) {
-                return InteractionResult.PASS;
+                return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
         }
 
@@ -86,7 +86,7 @@ public class ReceptacleBlock extends Block implements EntityBlock {
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return net.minecraft.world.ItemInteractionResult.SUCCESS;
     }
 
     @Override

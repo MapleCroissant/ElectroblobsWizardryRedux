@@ -37,12 +37,12 @@ public class BuffSpell extends Spell {
     /// color of the particles spawned when the spell is cast.
     protected final float r, g, b;
     /// set of mob effects applied by this spell.
-    protected Set<MobEffect> mobEffects = new java.util.HashSet<>();
+    protected Set<net.minecraft.core.Holder<MobEffect>> mobEffects = new java.util.HashSet<>();
     /// amount of particles spawned when the spell is cast.
     protected float particleCount = 10;
 
     @SafeVarargs
-    public BuffSpell(float r, float g, float b, Supplier<MobEffect>... effects) {
+    public BuffSpell(float r, float g, float b, Supplier<net.minecraft.core.Holder<MobEffect>>... effects) {
         this.r = r;
         this.g = g;
         this.b = b;
@@ -124,9 +124,9 @@ public class BuffSpell extends Spell {
     protected boolean applyEffects(CastContext ctx, LivingEntity target) {
         int bonusAmplifier = getStandardBonusAmplifier(ctx.modifiers().getFactor(SpellModifiers.POTENCY));
 
-        for (MobEffect effect : mobEffects) {
+        for (net.minecraft.core.Holder<MobEffect> effect : mobEffects) {
             if (ctx.world().isClientSide) continue;
-            target.addEffect(new MagicMobEffectInstance(effect, effect.isInstantenous() ? 1 :
+            target.addEffect(new MagicMobEffectInstance(effect, effect.value().isInstantenous() ? 1 :
                     (int) (this.property(getEffectDurationProperty(effect)) * ctx.modifiers().getFactor(SpellModifiers.DURATION)),
                     this.property(getEffectStrengthProperty(effect)) + bonusAmplifier,
                     false, true));
@@ -177,8 +177,8 @@ public class BuffSpell extends Spell {
     ///
     /// @param effect the mob effect for which to get the duration property, used to generate the property name.
     /// @return the spell property for the duration of the given mob effect.
-    public static SpellProperty<Integer> getEffectDurationProperty(MobEffect effect) {
-        return SpellProperty.intProperty(effect.getDescriptionId() + "_duration");
+    public static SpellProperty<Integer> getEffectDurationProperty(net.minecraft.core.Holder<MobEffect> effect) {
+        return SpellProperty.intProperty(effect.value().getDescriptionId() + "_duration");
     }
 
     /// Utility method to get the spell property for the strength of a mob effect. The property name is the description
@@ -190,15 +190,15 @@ public class BuffSpell extends Spell {
     ///
     /// @param effect the mob effect for which to get the strength property, used to generate the property name.
     /// @return the spell property for the strength of the given mob effect.
-    public static SpellProperty<Integer> getEffectStrengthProperty(MobEffect effect) {
-        return SpellProperty.intProperty(effect.getDescriptionId() + "_strength");
+    public static SpellProperty<Integer> getEffectStrengthProperty(net.minecraft.core.Holder<MobEffect> effect) {
+        return SpellProperty.intProperty(effect.value().getDescriptionId() + "_strength");
     }
 
     /// Gets the set of mob effects applied by this spell. Used to check if the target already has all the effects before
     /// applying them.
     ///
     /// @return the set of mob effects applied by this spell.
-    public Set<MobEffect> getMobEffects() {
+    public Set<net.minecraft.core.Holder<MobEffect>> getMobEffects() {
         return mobEffects;
     }
 

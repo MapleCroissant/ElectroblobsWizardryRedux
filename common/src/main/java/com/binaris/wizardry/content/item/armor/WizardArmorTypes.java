@@ -17,7 +17,7 @@ import java.util.Map;
 /// Implementation note: This enum implements ArmorMaterial so that the armor material can be accessed directly from
 /// the enum value.
 public enum WizardArmorTypes implements WizardArmorMaterial {
-    WIZARD("wizard", 15, 0.06F, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, new int[]{2, 4, 5, 2}, 15, "hat", "robe", "leggings", "boots"),
+    WIZARD("wizard", 15, 0.06F, 0, SoundEvents.ARMOR_EQUIP_DIAMOND.value(), new int[]{2, 4, 5, 2}, 15, "hat", "robe", "leggings", "boots"),
     SAGE("sage", 15, 0.12f, 0, EBSounds.ITEM_ARMOR_EQUIP_SAGE.get(), new int[]{2, 5, 6, 3}, 15, "hat", "robe", "leggings", "boots"),
     BATTLEMAGE("battlemage", 15, 0.03f, 0.03f, EBSounds.ITEM_ARMOR_EQUIP_BATTLEMAGE.get(), new int[]{3, 6, 8, 3}, 15, "helmet", "chestplate", "leggings", "boots"),
     WARLOCK("warlock", 15, 0.07f, 0.06f, EBSounds.ITEM_ARMOR_EQUIP_WARLOCK.get(), new int[]{2, 4, 5, 2}, 15, "hood", "robe", "leggings", "boots");
@@ -31,6 +31,27 @@ public enum WizardArmorTypes implements WizardArmorMaterial {
     final SoundEvent equipSound;
     final int enchantability;
     final int[] BASE_DURABILITY = new int[]{13, 15, 16, 11};
+    private net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial> material;
+
+    @Override
+    public net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial> material() {
+        if (material == null) {
+            Map<ArmorItem.Type, Integer> defense = new EnumMap<>(ArmorItem.Type.class);
+            for (ArmorItem.Type type : ArmorItem.Type.values()) {
+                defense.put(type, type == ArmorItem.Type.BODY ? protectionValues[1] : getDefenseForType(type));
+            }
+            var value = new net.minecraft.world.item.ArmorMaterial(defense, enchantability,
+                    net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(equipSound),
+                    this::getRepairIngredient,
+                    java.util.List.of(new net.minecraft.world.item.ArmorMaterial.Layer(
+                            com.binaris.wizardry.WizardryMainMod.location(name))),
+                    getToughness(), getKnockbackResistance());
+            material = net.minecraft.core.Registry.registerForHolder(
+                    net.minecraft.core.registries.BuiltInRegistries.ARMOR_MATERIAL,
+                    com.binaris.wizardry.WizardryMainMod.location(name), value);
+        }
+        return material;
+    }
 
     WizardArmorTypes(String name, int durabilityMultiplier, float elementalCostReduction, float cooldownReduction, SoundEvent equipSound, int[] protectionValues, int enchantability, String... armorPieceNames) {
         this.name = name;

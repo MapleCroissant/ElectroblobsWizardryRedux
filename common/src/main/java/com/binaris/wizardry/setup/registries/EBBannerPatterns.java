@@ -23,7 +23,7 @@ public final class EBBannerPatterns {
     }
 
     static DeferredObject<BannerPattern> pattern(String name) {
-        var ret = new DeferredObject<>(() -> new BannerPattern(bannerHash(name)));
+        var ret = new DeferredObject<>(() -> new BannerPattern(WizardryMainMod.location(name), "block.minecraft.banner.ebwizardry." + name));
         PATTERNS_REGISTER.put(name, ret);
         return ret;
     }
@@ -36,8 +36,8 @@ public final class EBBannerPatterns {
     }
 
     // ======= Registry =======
-    public static void register(RegisterFunction<BannerPattern> function) {
+    public static void bootstrap(net.minecraft.data.worldgen.BootstrapContext<BannerPattern> context) {
         PATTERNS_REGISTER.forEach((id, pattern) ->
-                function.register(BuiltInRegistries.BANNER_PATTERN, WizardryMainMod.location(id), pattern.get()));
+                context.register(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.BANNER_PATTERN, WizardryMainMod.location(id)), pattern.get()));
     }
 }

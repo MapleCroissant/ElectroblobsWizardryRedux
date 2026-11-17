@@ -1,5 +1,7 @@
 package com.binaris.wizardry.content.item;
 
+import com.binaris.wizardry.api.content.util.ItemData;
+
 import com.binaris.wizardry.api.content.item.ITierValue;
 import com.binaris.wizardry.api.content.spell.SpellTier;
 import com.binaris.wizardry.api.content.util.RegistryUtils;
@@ -25,7 +27,7 @@ import java.util.List;
 ///
 /// @see RegistryUtils#createArcaneTome(SpellTier) SpellUtil.createArcaneTome(SpellTier)
 /// @see RegistryUtils#getArcaneTome(SpellTier) SpellUtil.getArcaneTome(SpellTier)
-public class ArcaneTomeItem extends Item implements ITierValue {
+public class ArcaneTomeItem extends Item implements ITierValue, com.binaris.wizardry.api.content.item.ICustomRarityItem {
     @Nullable SpellTier tier;
 
     public ArcaneTomeItem() {
@@ -50,7 +52,7 @@ public class ArcaneTomeItem extends Item implements ITierValue {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         SpellTier tier = getTier(stack);
         List<SpellTier> tiers = Services.REGISTRY_UTIL.getTiers().stream().toList();
         int index = tiers.indexOf(tier);
@@ -76,7 +78,7 @@ public class ArcaneTomeItem extends Item implements ITierValue {
     public SpellTier getTier(ItemStack stack) {
         if (this.tier != null) return tier;
 
-        String tierKey = stack.getOrCreateTag().getString("Tier");
+        String tierKey = ItemData.read(stack).getString("Tier");
         SpellTier tier = Services.REGISTRY_UTIL.getTier(ResourceLocation.tryParse(tierKey));
         return tier != null ? tier : SpellTiers.NOVICE;
     }

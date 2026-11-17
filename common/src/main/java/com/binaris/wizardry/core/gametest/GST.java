@@ -29,7 +29,7 @@ public class GST {
     }
 
     public static Player mockPlayer(GameTestHelper helper, Vec3 position) {
-        Player player = helper.makeMockPlayer();
+        Player player = helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
         GST.assertNotNull(helper, "Player is null!", player);
         player.setPos(helper.absoluteVec(position));
         return player;

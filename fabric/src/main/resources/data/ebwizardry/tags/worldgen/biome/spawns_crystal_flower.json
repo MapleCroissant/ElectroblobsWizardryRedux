@@ -1,17 +1,17 @@
 {
   "replace": false,
   "values": [
-    "#c:beach",
-    "#c:swamp",
-    "#c:plains",
-    "#c:forest",
-    "#c:taiga",
-    "#c:jungle",
-    "#c:savanna",
-    "#c:mesa",
-    "#c:floral",
-    "#c:mountain",
-    "#c:snowy",
-    "#c:windswept"
+    "#c:is_beach",
+    "#c:is_swamp",
+    "#c:is_plains",
+    "#c:is_forest",
+    "#c:is_taiga",
+    "#c:is_jungle",
+    "#c:is_savanna",
+    "#c:is_badlands",
+    "#c:is_floral",
+    "#c:is_mountain",
+    "#c:is_snowy",
+    "#c:is_windswept"
   ]
 }

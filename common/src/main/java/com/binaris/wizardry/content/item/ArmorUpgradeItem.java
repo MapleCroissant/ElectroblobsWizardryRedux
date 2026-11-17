@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ArmorUpgradeItem extends Item implements IArmorUpgrade {
+public class ArmorUpgradeItem extends Item implements IArmorUpgrade, com.binaris.wizardry.api.content.item.ICustomRarityItem {
     private final WizardArmorMaterial material;
 
     public ArmorUpgradeItem(Properties properties, WizardArmorMaterial material) {
@@ -33,7 +33,7 @@ public class ArmorUpgradeItem extends Item implements IArmorUpgrade {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, @NotNull List<Component> tooltip, @NotNull TooltipFlag tooltipFlag) {
         String desc = tooltipFlag.isAdvanced() ? ".desc_extended" : ".desc";
 
         tooltip.add(Component.translatable(getOrCreateDescriptionId() + desc).withStyle(ChatFormatting.GRAY));

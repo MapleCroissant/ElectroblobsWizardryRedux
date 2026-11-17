@@ -30,7 +30,7 @@ public class WarlockArmorItem extends WizardArmorItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         super.appendHoverText(stack, world, tooltip, advanced);
         tooltip.add(Component.translatable("item.%s.wizard_armor.full_set".formatted(WizardryMainMod.MOD_ID)).withStyle(ChatFormatting.AQUA));
         tooltip.add(Component.translatable("item.%s.warlock_armor.full_set_bonus".formatted(WizardryMainMod.MOD_ID), (int) (WARLOCK_SPEED_BOOST * 100)).withStyle(ChatFormatting.AQUA));

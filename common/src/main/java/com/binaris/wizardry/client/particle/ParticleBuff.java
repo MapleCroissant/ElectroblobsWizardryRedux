@@ -27,7 +27,7 @@ import static com.binaris.wizardry.WizardryMainMod.MOD_ID;
 // This render logic is one of the worst I've ever written. So any improvements would be greatly appreciated, specially
 // regarding how to handle the linked entity position better, because I'm sure that part can be improved.
 public class ParticleBuff extends ParticleWizardry {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(MOD_ID, "textures/particle/buff.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/particle/buff.png");
     private final boolean mirror;
 
     public ParticleBuff(ClientLevel world, double x, double y, double z, SpriteSet spriteProvider) {
@@ -95,9 +95,9 @@ public class ParticleBuff extends ParticleWizardry {
         float dx = mirror ? -scale : scale;
 
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
+        BufferBuilder buffer;
 
-        buffer.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_TEX_COLOR);
 
         vertex(buffer, x - dx, y - yScale, z - scale, 0 + textureOffset, g);
         vertex(buffer, x - dx, y + yScale, z - scale, 0 + textureOffset, f);
@@ -110,7 +110,7 @@ public class ParticleBuff extends ParticleWizardry {
         vertex(buffer, x - dx, y - yScale, z - scale, 1.0f + textureOffset, g);
         vertex(buffer, x - dx, y + yScale, z - scale, 1.0f + textureOffset, f);
 
-        tesselator.end();
+        com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
@@ -119,10 +119,10 @@ public class ParticleBuff extends ParticleWizardry {
     }
 
     private void vertex(BufferBuilder buffer, float x, float y, float z, float u, float v) {
-        buffer.vertex(x, y, z)
-                .uv(u, v)
-                .color(rCol, gCol, bCol, alpha)
-                .endVertex();
+        buffer.addVertex(x, y, z)
+                .setUv(u, v)
+                .setColor(rCol, gCol, bCol, alpha)
+                ;
     }
 
     @Override

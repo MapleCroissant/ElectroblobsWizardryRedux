@@ -55,9 +55,7 @@ public final class CastItemDataHelper {
     /// empty list is returned.
     public static List<Spell> getSpells(ItemStack stack) {
         ArrayList<Spell> spells = new ArrayList<>();
-        CompoundTag tag = stack.getTag();
-        if (isEmpty(tag)) return spells;
-
+        CompoundTag tag = ItemData.read(stack);
         if (tag.contains(SPELL_ARRAY_KEY)) {
             ListTag list = tag.getList(SPELL_ARRAY_KEY, Tag.TAG_STRING);
             for (Tag element : list) {
@@ -82,7 +80,7 @@ public final class CastItemDataHelper {
     public static void setSpells(ItemStack stack, Collection<Spell> spells) {
         ListTag list = new ListTag();
         spells.forEach(spell -> list.add(StringTag.valueOf(spell.getLocation().toString())));
-        stack.getOrCreateTag().put(SPELL_ARRAY_KEY, list);
+        ItemData.update(stack, data -> data.put(SPELL_ARRAY_KEY, list));
     }
 
     /// Gives the currently selected spell on the stack.
@@ -92,8 +90,8 @@ public final class CastItemDataHelper {
     public static Spell getCurrentSpell(ItemStack stack) {
         List<Spell> spells = getSpells(stack);
         if (spells.isEmpty()) return Spells.NONE;
-        if (isEmpty(stack.getTag())) return Spells.NONE;
-        int selectedIndex = stack.getTag().getInt(SELECTED_SPELL_KEY);
+        if (isEmpty(ItemData.read(stack))) return Spells.NONE;
+        int selectedIndex = ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
 
         // Bounds check
         if (selectedIndex >= 0 && selectedIndex < spells.size()) {
@@ -108,8 +106,8 @@ public final class CastItemDataHelper {
     /// @param stack The ItemStack.
     /// @return The index of the currently selected spell, or 0 if the stack has no tag or no spells are stored/selected.
     public static int getCurrentSpellIndex(ItemStack stack) {
-        if (isEmpty(stack.getTag())) return 0;
-        return stack.getTag().getInt(SELECTED_SPELL_KEY);
+        if (isEmpty(ItemData.read(stack))) return 0;
+        return ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
     }
 
     /// Sets the currently selected spell on the stack based on its location in the list of saved spells.
@@ -118,9 +116,8 @@ public final class CastItemDataHelper {
     /// @param spell The spell to set as currently selected. If the spell is not in the list, the first spell is selected.
     public static void setCurrentSpell(ItemStack stack, Spell spell) {
         List<Spell> spells = getSpells(stack);
-        int index = spells.indexOf(spell);
-        if (index == -1) index = 0;
-        stack.getOrCreateTag().putInt(SELECTED_SPELL_KEY, index);
+        int index = Math.max(0, spells.indexOf(spell));
+        ItemData.update(stack, data -> data.putInt(SELECTED_SPELL_KEY, index));
     }
 
     /// Sets the currently selected spell on the stack by index based on the list of saved spells.
@@ -133,7 +130,7 @@ public final class CastItemDataHelper {
         if (index < 0 || index >= spells.size()) {
             return false;
         }
-        stack.getOrCreateTag().putInt(SELECTED_SPELL_KEY, index);
+        ItemData.update(stack, data -> data.putInt(SELECTED_SPELL_KEY, index));
         return true;
     }
 
@@ -160,9 +157,9 @@ public final class CastItemDataHelper {
     public static void selectNextSpell(ItemStack stack) {
         List<Spell> spells = getSpells(stack);
         if (spells.isEmpty()) return;
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return;
-        int currentIndex = stack.getTag().getInt(SELECTED_SPELL_KEY);
+        int currentIndex = ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
 
         // Bounds check
         if (currentIndex < 0 || currentIndex >= spells.size()) {
@@ -170,7 +167,7 @@ public final class CastItemDataHelper {
         }
 
         int newIndex = (currentIndex + 1) % spells.size();
-        stack.getTag().putInt(SELECTED_SPELL_KEY, newIndex);
+        ItemData.update(stack, data -> data.putInt(SELECTED_SPELL_KEY, newIndex));
     }
 
     /// Selects the previous spell on the stack by decrementing the index, wrapping around if necessary.
@@ -180,9 +177,9 @@ public final class CastItemDataHelper {
     public static void selectPreviousSpell(ItemStack stack) {
         List<Spell> spells = getSpells(stack);
         if (spells.isEmpty()) return;
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return;
-        int currentIndex = stack.getTag().getInt(SELECTED_SPELL_KEY);
+        int currentIndex = ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
 
         // Bounds check
         if (currentIndex < 0 || currentIndex >= spells.size()) {
@@ -190,7 +187,7 @@ public final class CastItemDataHelper {
         }
 
         int newIndex = (currentIndex - 1 + spells.size()) % spells.size();
-        stack.getTag().putInt(SELECTED_SPELL_KEY, newIndex);
+        ItemData.update(stack, data -> data.putInt(SELECTED_SPELL_KEY, newIndex));
     }
 
     /// Gives the wanted Spell on the saved Spells list based on the current selected spell and the offset.
@@ -201,9 +198,9 @@ public final class CastItemDataHelper {
     private static Spell getAdjacentSpell(ItemStack stack, int offset) {
         List<Spell> spells = getSpells(stack);
         if (spells.isEmpty()) return Spells.NONE;
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return Spells.NONE;
-        int currentIndex = stack.getTag().getInt(SELECTED_SPELL_KEY);
+        int currentIndex = ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
 
         // Bounds check
         if (currentIndex < 0 || currentIndex >= spells.size()) {
@@ -219,9 +216,9 @@ public final class CastItemDataHelper {
     /// @param stack The ItemStack.
     /// @return An array of cooldown end times. If the tag is null or empty, returns an empty array.
     public static long[] getCooldownEndTimes(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return new long[0];
-        return stack.getTag().getLongArray(COOLDOWN_END_TIME_ARRAY_KEY);
+        return ItemData.read(stack).getLongArray(COOLDOWN_END_TIME_ARRAY_KEY);
     }
 
     /// Sets the array of cooldown end times (level game time) for each spell on the stack.
@@ -229,9 +226,9 @@ public final class CastItemDataHelper {
     /// @param stack            The ItemStack.
     /// @param cooldownEndTimes The array of cooldown end times to set.
     public static void setCooldownEndTimes(ItemStack stack, long[] cooldownEndTimes) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return;
-        stack.getTag().putLongArray(COOLDOWN_END_TIME_ARRAY_KEY, cooldownEndTimes);
+        ItemData.update(stack, data -> data.putLongArray(COOLDOWN_END_TIME_ARRAY_KEY, cooldownEndTimes));
     }
 
     /// Gives the current cooldown for the currently selected spell on the stack based on game time.
@@ -241,9 +238,9 @@ public final class CastItemDataHelper {
     /// @return The current cooldown remaining for the selected spell. If the tag is null or empty, returns 0.
     public static int getCurrentCooldown(ItemStack stack, long currentGameTime) {
         long[] endTimes = getCooldownEndTimes(stack);
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return 0;
-        int selectedSpellIndex = stack.getTag().getInt(SELECTED_SPELL_KEY);
+        int selectedSpellIndex = ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
 
         if (selectedSpellIndex >= 0 && selectedSpellIndex < endTimes.length) {
             long endTime = endTimes[selectedSpellIndex];
@@ -260,7 +257,7 @@ public final class CastItemDataHelper {
     /// @param cooldown        The cooldown duration in ticks.
     /// @param currentGameTime The current game time from the world.
     public static void setCurrentCooldown(ItemStack stack, int cooldown, long currentGameTime) {
-        int selectedSpell = stack.getOrCreateTag().getInt(SELECTED_SPELL_KEY);
+        int selectedSpell = ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
         int spellCount = getSpells(stack).size();
 
         if (selectedSpell >= spellCount) return;
@@ -282,9 +279,9 @@ public final class CastItemDataHelper {
     /// @param stack The ItemStack.
     /// @return An array of maximum cooldowns, or an empty array if the tag is null or empty.
     public static int[] getMaxCooldowns(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return new int[0];
-        return stack.getTag().getIntArray(MAX_COOLDOWN_ARRAY_KEY);
+        return ItemData.read(stack).getIntArray(MAX_COOLDOWN_ARRAY_KEY);
     }
 
     /// Sets the array of maximum cooldowns for each spell on the stack.
@@ -292,7 +289,7 @@ public final class CastItemDataHelper {
     /// @param stack     The ItemStack.
     /// @param cooldowns The array of maximum cooldowns to set.
     public static void setMaxCooldowns(ItemStack stack, int[] cooldowns) {
-        stack.getOrCreateTag().putIntArray(MAX_COOLDOWN_ARRAY_KEY, cooldowns);
+        ItemData.update(stack, data -> data.putIntArray(MAX_COOLDOWN_ARRAY_KEY, cooldowns));
     }
 
     /// Gives the maximum cooldown for the currently selected spell on the stack.
@@ -300,10 +297,10 @@ public final class CastItemDataHelper {
     /// @param stack The ItemStack.
     /// @return The maximum cooldown for the selected spell, or 0 if not set.
     public static int getCurrentMaxCooldown(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return 0;
         int[] cooldowns = getMaxCooldowns(stack);
-        int selectedSpell = stack.getTag().getInt(SELECTED_SPELL_KEY);
+        int selectedSpell = ItemData.read(stack).getInt(SELECTED_SPELL_KEY);
 
         return (selectedSpell >= 0 && selectedSpell < cooldowns.length) ? cooldowns[selectedSpell] : 0;
     }
@@ -314,12 +311,12 @@ public final class CastItemDataHelper {
     /// @param upgrade The upgrade item.
     /// @return The level of the upgrade, or 0 if the upgrade is not found.
     public static int getUpgradeLevel(ItemStack stack, Item upgrade) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return 0;
 
         for (var entry : WandUpgrades.getWandUpgrades().entrySet()) {
             if (entry.getKey().equals(upgrade)) {
-                return stack.getTag().getCompound(UPGRADES_KEY).getInt(entry.getValue());
+                return ItemData.read(stack).getCompound(UPGRADES_KEY).getInt(entry.getValue());
             }
         }
         return 0;
@@ -330,7 +327,7 @@ public final class CastItemDataHelper {
     /// @param stack The ItemStack.
     /// @return The total number of upgrades, could be 0 if no upgrades are applied.
     public static int getTotalUpgrades(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return 0;
         return WandUpgrades.getWandUpgrades().keySet().stream()
                 .mapToInt(item -> getUpgradeLevel(stack, item))
@@ -342,7 +339,7 @@ public final class CastItemDataHelper {
     /// @param stack   The ItemStack.
     /// @param upgrade The upgrade item.
     public static void applyUpgrade(ItemStack stack, Item upgrade) {
-        CompoundTag upgrades = stack.getOrCreateTag().getCompound(UPGRADES_KEY);
+        CompoundTag upgrades = ItemData.read(stack).getCompound(UPGRADES_KEY);
         if (upgrades.isEmpty()) {
             upgrades = new CompoundTag();
         }
@@ -351,7 +348,7 @@ public final class CastItemDataHelper {
             if (entry.getKey().equals(upgrade)) {
                 String key = entry.getValue();
                 upgrades.putInt(key, upgrades.getInt(key) + 1);
-                stack.getOrCreateTag().put(UPGRADES_KEY, upgrades);
+                ItemData.set(stack, withUpgrades(ItemData.read(stack), upgrades));
                 return;
             }
         }
@@ -362,9 +359,9 @@ public final class CastItemDataHelper {
     /// @param stack The ItemStack.
     /// @return The stack's progression level. If the tag is null or empty, returns 0.
     public static int getProgression(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemData.read(stack);
         if (tag == null || tag.isEmpty()) return 0;
-        return stack.getTag().getInt(PROGRESSION_KEY);
+        return ItemData.read(stack).getInt(PROGRESSION_KEY);
     }
 
     /// Sets the stack's progression level to the specified value.
@@ -372,7 +369,7 @@ public final class CastItemDataHelper {
     /// @param stack       The ItemStack.
     /// @param progression The progression level to set.
     public static void setProgression(ItemStack stack, int progression) {
-        stack.getOrCreateTag().putInt(PROGRESSION_KEY, progression);
+        ItemData.update(stack, data -> data.putInt(PROGRESSION_KEY, progression));
     }
 
     /// Increases the stack's progression level by the specified amount.
@@ -389,6 +386,11 @@ public final class CastItemDataHelper {
     /// @return True if the tag is null or empty, false otherwise.
     private static boolean isEmpty(@Nullable CompoundTag tag) {
         return tag == null || tag.isEmpty();
+    }
+
+    private static CompoundTag withUpgrades(CompoundTag data, CompoundTag upgrades) {
+        data.put(UPGRADES_KEY, upgrades);
+        return data;
     }
 
     private CastItemDataHelper() {

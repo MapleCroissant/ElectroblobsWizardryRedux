@@ -85,7 +85,7 @@ public final class DataEvents {
 
         for (ItemStack stack : EntityUtil.getAllItems(player)) {
             if (stack.isEmpty()) continue;
-            if (EnchantmentHelper.getEnchantments(stack).isEmpty())
+            if (stack.getEnchantments().isEmpty())
                 continue; // An item with no enchantments can't have temporary ones
 
             ImbuementEnchantData data = Services.OBJECT_DATA.getImbuementData(stack);
@@ -94,24 +94,19 @@ public final class DataEvents {
             Map<ResourceLocation, Long> tempEnchants = data.getImbuements();
             if (tempEnchants.isEmpty()) continue;
 
-            Map<Enchantment, Integer> currentEnchants = EnchantmentHelper.getEnchantments(stack);
-            boolean changed = false;
-
             for (Map.Entry<ResourceLocation, Long> entry : tempEnchants.entrySet()) {
                 long expireTime = entry.getValue();
 
                 if (expireTime < 0 || currentGameTime < expireTime) continue;
 
-                Enchantment enchantment = BuiltInRegistries.ENCHANTMENT.get(entry.getKey());
-                if (enchantment != null) {
-                    currentEnchants.remove(enchantment);
-                    data.removeImbuement(enchantment);
-                    changed = true;
-                }
+                var key = net.minecraft.resources.ResourceKey.create(
+                        net.minecraft.core.registries.Registries.ENCHANTMENT, entry.getKey());
+                EnchantmentHelper.updateEnchantments(stack, enchantments ->
+                        enchantments.removeIf(holder -> holder.is(key)));
+                data.removeImbuement(key);
 
             }
 
-            if (changed) EnchantmentHelper.setEnchantments(currentEnchants, stack);
         }
     }
 

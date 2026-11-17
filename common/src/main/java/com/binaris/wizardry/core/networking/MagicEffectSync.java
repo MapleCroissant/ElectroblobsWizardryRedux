@@ -21,7 +21,7 @@ public final class MagicEffectSync {
     /// @param action   what happened to the effect
     public static void sendToTracking(LivingEntity entity, MobEffectInstance instance, MagicEffectSyncS2C.Action action) {
         if (entity.level().isClientSide) return;
-        if (!(instance.getEffect() instanceof MagicMobEffect)) return;
+        if (!(instance.getEffect().value() instanceof MagicMobEffect)) return;
         Services.NETWORK_HELPER.sendToTracking(entity, new MagicEffectSyncS2C(entity.getId(), instance, action));
     }
 
@@ -33,7 +33,7 @@ public final class MagicEffectSync {
     public static void sendAllTo(ServerPlayer player, LivingEntity entity) {
         if (entity.level().isClientSide) return;
         for (MobEffectInstance instance : entity.getActiveEffects()) {
-            if (instance.getEffect() instanceof MagicMobEffect) {
+            if (instance.getEffect().value() instanceof MagicMobEffect) {
                 Services.NETWORK_HELPER.sendTo(player, new MagicEffectSyncS2C(entity.getId(), instance,
                         MagicEffectSyncS2C.Action.ADD));
             }

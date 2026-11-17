@@ -48,7 +48,7 @@ public abstract class SpellInfoScreen extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int left = this.width / 2 - xSize / 2;
         int top = this.height / 2 - this.ySize / 2;
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         this.drawBackgroundLayer(guiGraphics, left, top, mouseX, mouseY);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.drawForegroundLayer(guiGraphics, left, top, mouseX, mouseY);
@@ -68,7 +68,7 @@ public abstract class SpellInfoScreen extends Screen {
         boolean discovered = ClientUtils.shouldDisplayDiscovered(getSpell(), null);
         Font font = discovered ? minecraft.font : minecraft.fontFilterFishy;
 
-        Component spellName = discovered ? ((MutableComponent) getSpell().getDescriptionFormatted()).withStyle(ChatFormatting.BLACK) : Component.literal(SpellGlyphData.getGlyphName(getSpell(), GlyphClientHandler.INSTANCE.getGlyphData())).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")));
+        Component spellName = discovered ? ((MutableComponent) getSpell().getDescriptionFormatted()).withStyle(ChatFormatting.BLACK) : Component.literal(SpellGlyphData.getGlyphName(getSpell(), GlyphClientHandler.INSTANCE.getGlyphData())).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")));
         guiGraphics.drawString(font, spellName, left + 17, top + 15, 0, false);
         guiGraphics.drawString(font, Component.translatable(getSpell().getType().getDisplayName()), left + 17, top + 26, 0x777777, false);
 
@@ -88,7 +88,7 @@ public abstract class SpellInfoScreen extends Screen {
         guiGraphics.drawString(this.font, manaCost, left + 17, top + 69, 0, false);
 
         Component spellDesc = discovered ? ((MutableComponent) getSpell().getDesc()).withStyle(ChatFormatting.BLACK) :
-                Component.literal(SpellGlyphData.getGlyphDescription(getSpell(), GlyphClientHandler.INSTANCE.getGlyphData())).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")));
+                Component.literal(SpellGlyphData.getGlyphDescription(getSpell(), GlyphClientHandler.INSTANCE.getGlyphData())).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")));
         guiGraphics.drawWordWrap(font, spellDesc, left + 17, top + 83, 118, 0);
 
     }

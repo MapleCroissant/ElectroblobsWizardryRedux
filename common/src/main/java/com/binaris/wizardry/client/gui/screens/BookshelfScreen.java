@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class BookshelfScreen extends AbstractContainerScreen<BookshelfMenu> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(WizardryMainMod.MOD_ID, "textures/gui/container/bookshelf.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(WizardryMainMod.MOD_ID, "textures/gui/container/bookshelf.png");
     private final Inventory playerInventory;
 
     public BookshelfScreen(BookshelfMenu menu, Inventory inventory, Component component) {
@@ -31,7 +31,7 @@ public class BookshelfScreen extends AbstractContainerScreen<BookshelfMenu> {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }

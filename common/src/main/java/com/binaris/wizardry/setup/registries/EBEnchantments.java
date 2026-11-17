@@ -16,9 +16,9 @@ public final class EBEnchantments {
     }
 
     // ======= Registry =======
-    public static void register(RegisterFunction<Enchantment> function) {
+    public static void bootstrap(net.minecraft.data.worldgen.BootstrapContext<Enchantment> context) {
         ENCHANTMENTS.forEach(((id, enchantment) ->
-                function.register(BuiltInRegistries.ENCHANTMENT, WizardryMainMod.location(id), enchantment.get())));
+                context.register(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENCHANTMENT, WizardryMainMod.location(id)), enchantment.get())));
     }
 
     // ======= Helpers =======

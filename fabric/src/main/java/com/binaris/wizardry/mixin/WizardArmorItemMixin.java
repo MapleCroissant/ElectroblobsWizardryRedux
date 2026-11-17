@@ -1,25 +1,21 @@
 package com.binaris.wizardry.mixin;
 
 import com.binaris.wizardry.content.item.armor.WizardArmorItem;
-import com.google.common.collect.Multimap;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(WizardArmorItem.class)
-public abstract class WizardArmorItemMixin extends Item {
-    @Unique WizardArmorItem item = (WizardArmorItem) (Object) this;
-
-    public WizardArmorItemMixin(Properties properties) {
-        super(properties);
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        return item.getCustomAttributes(stack, slot);
+/** Empty wizard armor must stop providing protection as soon as its mana runs out. */
+@Mixin(ItemStack.class)
+public abstract class WizardArmorItemMixin {
+    @Inject(method = {
+            "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V",
+            "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V"
+    }, at = @At("HEAD"), cancellable = true)
+    private void ebwizardry$manaAttributes(CallbackInfo ci) {
+        ItemStack stack = (ItemStack) (Object) this;
+        if (stack.getItem() instanceof WizardArmorItem armor && armor.getMana(stack) == 0) ci.cancel();
     }
 }

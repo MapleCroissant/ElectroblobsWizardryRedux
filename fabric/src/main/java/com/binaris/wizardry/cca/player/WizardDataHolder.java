@@ -8,8 +8,8 @@ import com.binaris.wizardry.cca.EBComponents;
 import com.binaris.wizardry.core.config.EBServerConfig;
 import com.binaris.wizardry.core.platform.Services;
 import com.binaris.wizardry.setup.registries.SpellTiers;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class WizardDataHolder implements WizardData, ComponentV3, AutoSyncedComponent {
+public class WizardDataHolder implements WizardData, Component, AutoSyncedComponent {
     public final Set<UUID> allies = new HashSet<>();
     private final Player provider;
     public Set<String> allyNames = new HashSet<>();
@@ -128,7 +128,7 @@ public class WizardDataHolder implements WizardData, ComponentV3, AutoSyncedComp
     }
 
     @Override
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         ResourceLocation tierLocation = ResourceLocation.tryParse(tag.getString("maxTier"));
         if (tierLocation != null) {
             SpellTier tier = Services.REGISTRY_UTIL.getTier(tierLocation);
@@ -182,7 +182,7 @@ public class WizardDataHolder implements WizardData, ComponentV3, AutoSyncedComp
     }
 
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.putString("maxTier", maxTierReached.getOrCreateLocation().toString());
 
         ListTag alliesTag = new ListTag();

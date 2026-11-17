@@ -126,7 +126,7 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
 
             int colour = getColor(entity, partialTicks);
             model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY,
-                    (colour >> 16 & 255) / 255f, (colour >> 8 & 255) / 255f, (colour & 255) / 255f, 1.0f);
+                    0xFF000000 | colour);
         } finally {
             for (ModelPart part : hiddenParts) {
                 part.visible = true;
@@ -166,7 +166,7 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
         if (cube == null) return;
 
         UvCapturingConsumer consumer = new UvCapturingConsumer();
-        cube.compile(new PoseStack().last(), consumer, 0, 0, 1, 1, 1, 1);
+        cube.compile(new PoseStack().last(), consumer, 0, 0, -1);
 
         float uSpan = consumer.maxU - consumer.minU;
         float vSpan = consumer.maxV - consumer.minV;
@@ -236,54 +236,39 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
         }
 
         @Override
-        public @NotNull VertexConsumer vertex(double x, double y, double z) {
-            delegate.vertex(x, y, z);
+        public @NotNull VertexConsumer addVertex(float x, float y, float z) {
+            delegate.addVertex(x, y, z);
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer color(int r, int g, int b, int a) {
-            delegate.color(r, g, b, a);
+        public @NotNull VertexConsumer setColor(int r, int g, int b, int a) {
+            delegate.setColor(r, g, b, a);
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer uv(float u, float v) {
-            delegate.uv(u * scaleX, v * scaleY);
+        public @NotNull VertexConsumer setUv(float u, float v) {
+            delegate.setUv(u * scaleX, v * scaleY);
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer overlayCoords(int u, int v) {
-            delegate.overlayCoords(u, v);
+        public @NotNull VertexConsumer setUv1(int u, int v) {
+            delegate.setUv1(u, v);
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer uv2(int u, int v) {
-            delegate.uv2(u, v);
+        public @NotNull VertexConsumer setUv2(int u, int v) {
+            delegate.setUv2(u, v);
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer normal(float x, float y, float z) {
-            delegate.normal(x, y, z);
+        public @NotNull VertexConsumer setNormal(float x, float y, float z) {
+            delegate.setNormal(x, y, z);
             return this;
-        }
-
-        @Override
-        public void endVertex() {
-            delegate.endVertex();
-        }
-
-        @Override
-        public void defaultColor(int r, int g, int b, int a) {
-            delegate.defaultColor(r, g, b, a);
-        }
-
-        @Override
-        public void unsetDefaultColor() {
-            delegate.unsetDefaultColor();
         }
     }
 
@@ -295,17 +280,17 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
         float minV = Float.MAX_VALUE, maxV = -Float.MAX_VALUE;
 
         @Override
-        public @NotNull VertexConsumer vertex(double x, double y, double z) {
+        public @NotNull VertexConsumer addVertex(float x, float y, float z) {
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer color(int r, int g, int b, int a) {
+        public @NotNull VertexConsumer setColor(int r, int g, int b, int a) {
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer uv(float u, float v) {
+        public @NotNull VertexConsumer setUv(float u, float v) {
             minU = Math.min(minU, u);
             maxU = Math.max(maxU, u);
             minV = Math.min(minV, v);
@@ -314,30 +299,18 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
         }
 
         @Override
-        public @NotNull VertexConsumer overlayCoords(int u, int v) {
+        public @NotNull VertexConsumer setUv1(int u, int v) {
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer uv2(int u, int v) {
+        public @NotNull VertexConsumer setUv2(int u, int v) {
             return this;
         }
 
         @Override
-        public @NotNull VertexConsumer normal(float x, float y, float z) {
+        public @NotNull VertexConsumer setNormal(float x, float y, float z) {
             return this;
-        }
-
-        @Override
-        public void endVertex() {
-        }
-
-        @Override
-        public void defaultColor(int r, int g, int b, int a) {
-        }
-
-        @Override
-        public void unsetDefaultColor() {
         }
     }
 }

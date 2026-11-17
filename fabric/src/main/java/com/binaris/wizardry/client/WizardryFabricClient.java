@@ -38,7 +38,7 @@ public final class WizardryFabricClient implements ClientModInitializer {
             reg.register(p.get(), f::apply);
         });
 
-        HudRenderCallback.EVENT.register(((guiGraphics, delta) -> SpellGUIDisplay.draw(guiGraphics, guiGraphics.pose(), delta)));
+        HudRenderCallback.EVENT.register(((guiGraphics, delta) -> SpellGUIDisplay.draw(guiGraphics, guiGraphics.pose(), delta.getGameTimeDeltaPartialTick(false))));
 
         EBRenderers.createEntityLayers((layer, supplier) -> EntityModelLayerRegistry.registerModelLayer(layer, supplier::get));
         EBArmorRenderFabric.load();
@@ -80,8 +80,8 @@ public final class WizardryFabricClient implements ClientModInitializer {
     }
 
     private void renderContainmentField(WorldRenderContext ctx) {
-        ContainmentFieldRender.render(ctx.camera(), ctx.matrixStack(), ctx.tickDelta());
-        ArcaneLockRender.render(ctx.camera(), ctx.matrixStack(), ctx.tickDelta());
-        WingsRender.render(ctx.camera(), ctx.matrixStack(), ctx.tickDelta());
+        ContainmentFieldRender.render(ctx.camera(), ctx.matrixStack(), ctx.tickCounter().getGameTimeDeltaPartialTick(false));
+        ArcaneLockRender.render(ctx.camera(), ctx.matrixStack(), ctx.tickCounter().getGameTimeDeltaPartialTick(false));
+        WingsRender.render(ctx.camera(), ctx.matrixStack(), ctx.tickCounter().getGameTimeDeltaPartialTick(false));
     }
 }

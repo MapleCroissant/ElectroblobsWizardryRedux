@@ -31,7 +31,7 @@ public final class ArtifactUtils {
     /// null and if it's a living one, and finally check the main hand for seeing the wand element. Quite weird but this
     /// logic is shared for a lot of artifacts
     public static boolean meleeRing(DamageSource source, Element element) {
-        return !source.isIndirect() && source.getEntity() instanceof LivingEntity living && living.getMainHandItem().getItem() instanceof WandItem wand && wand.getElement() == element;
+        return !(source.getDirectEntity() != source.getEntity()) && source.getEntity() instanceof LivingEntity living && living.getMainHandItem().getItem() instanceof WandItem wand && wand.getElement() == element;
     }
 
     /// Helper method that scans through all wands on the given player's hotbar and offhand and casts the given spell if

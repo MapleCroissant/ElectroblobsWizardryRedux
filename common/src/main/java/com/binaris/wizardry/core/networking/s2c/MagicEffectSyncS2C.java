@@ -31,7 +31,7 @@ public class MagicEffectSyncS2C implements Message {
 
     public MagicEffectSyncS2C(int entityId, MobEffectInstance instance, Action action) {
         this.entityId = entityId;
-        this.effectId = BuiltInRegistries.MOB_EFFECT.getKey(instance.getEffect());
+        this.effectId = BuiltInRegistries.MOB_EFFECT.getKey(instance.getEffect().value());
         this.action = action;
         this.duration = instance.getDuration();
         this.amplifier = instance.getAmplifier();

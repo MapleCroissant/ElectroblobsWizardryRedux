@@ -18,6 +18,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SpellPredicate {
+    public static final com.mojang.serialization.Codec<SpellPredicate> CODEC =
+            com.mojang.serialization.Codec.PASSTHROUGH.comapFlatMap(dynamic -> {
+                try {
+                    return com.mojang.serialization.DataResult.success(deserialize(
+                            dynamic.convert(com.mojang.serialization.JsonOps.INSTANCE).getValue()));
+                } catch (RuntimeException exception) {
+                    return com.mojang.serialization.DataResult.error(exception::getMessage);
+                }
+            }, predicate -> new com.mojang.serialization.Dynamic<>(com.mojang.serialization.JsonOps.INSTANCE,
+                    java.util.Objects.requireNonNullElseGet(predicate.serialize(), JsonObject::new)));
     private final Spell spell;
     private final Set<SpellTier> tiers;
     private final Set<Element> elements;
@@ -29,9 +39,9 @@ public class SpellPredicate {
     }
 
     public static SpellPredicate any() {
-        Set<SpellTier> trs = new HashSet<>(Services.REGISTRY_UTIL.getTiers());
-        Set<Element> els = new HashSet<>(Services.REGISTRY_UTIL.getElements());
-        return new SpellPredicate(null, trs, els);
+        // Empty filters mean unrestricted, including while codecs initialize
+        // before the spell registries have been populated.
+        return new SpellPredicate(null, Set.of(), Set.of());
     }
 
     public static SpellPredicate deserialize(@Nullable JsonElement element) {
@@ -70,8 +80,8 @@ public class SpellPredicate {
 
     public boolean test(Spell spell) {
         if (this.spell != null && !this.spell.equals(spell)) return false;
-        if (!this.tiers.contains(spell.getTier())) return false;
-        return this.elements.contains(spell.getElement());
+        if (!this.tiers.isEmpty() && !this.tiers.contains(spell.getTier())) return false;
+        return this.elements.isEmpty() || this.elements.contains(spell.getElement());
     }
 
     public JsonElement serialize() {

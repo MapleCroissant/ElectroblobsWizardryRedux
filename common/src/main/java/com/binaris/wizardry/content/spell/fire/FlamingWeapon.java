@@ -28,8 +28,8 @@ public class FlamingWeapon extends Spell {
         for (ItemStack stack : EntityUtil.getHotBarAndHandItems(ctx.caster())) {
             // If the item isn't a sword or a bow, or if it already has Fire Aspect or Flaming Arrows, skip it
             if ((!ImbueWeapon.isSword(stack) && !ImbueWeapon.isBow(stack)) ||
-                    EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.FLAMING_ARROWS) ||
-                    EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.FIRE_ASPECT))
+                    (com.binaris.wizardry.api.content.util.EnchantmentUtil.itemLevel(ctx.world(), Enchantments.FLAME, stack) > 0) ||
+                    (com.binaris.wizardry.api.content.util.EnchantmentUtil.itemLevel(ctx.world(), Enchantments.FIRE_ASPECT, stack) > 0))
                 continue;
 
             ImbuementEnchantData data = Services.OBJECT_DATA.getImbuementData(stack);
@@ -38,11 +38,11 @@ public class FlamingWeapon extends Spell {
             long duration = (long) (ctx.world().getGameTime() + (ctx.modifiers().get(SpellModifiers.DURATION, property(DefaultProperties.EFFECT_DURATION))));
 
             if (stack.getItem() instanceof SwordItem) {
-                stack.enchant(Enchantments.FIRE_ASPECT, level);
+                stack.enchant(com.binaris.wizardry.api.content.util.EnchantmentUtil.get(ctx.world(), Enchantments.FIRE_ASPECT), level);
                 data.addImbuement(Enchantments.FIRE_ASPECT, duration);
             } else {
-                stack.enchant(Enchantments.FLAMING_ARROWS, level);
-                data.addImbuement(Enchantments.FLAMING_ARROWS, duration);
+                stack.enchant(com.binaris.wizardry.api.content.util.EnchantmentUtil.get(ctx.world(), Enchantments.FLAME), level);
+                data.addImbuement(Enchantments.FLAME, duration);
             }
 
             if (ctx.world().isClientSide) {

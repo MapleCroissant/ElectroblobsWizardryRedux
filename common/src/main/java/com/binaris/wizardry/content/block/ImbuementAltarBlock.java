@@ -36,11 +36,15 @@ import java.util.Arrays;
 
 @SuppressWarnings("deprecation")
 public class ImbuementAltarBlock extends BaseEntityBlock {
+    public static final com.mojang.serialization.MapCodec<ImbuementAltarBlock> CODEC = com.mojang.serialization.MapCodec.unit(ImbuementAltarBlock::new);
+    @Override
+    protected com.mojang.serialization.MapCodec<ImbuementAltarBlock> codec() { return CODEC; }
+
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
     private static final VoxelShape AABB = Shapes.box(0.0, 0.0, 0.0, 1.0, 0.75, 1.0);
 
     public ImbuementAltarBlock() {
-        super(BlockBehaviour.Properties.copy(Blocks.STONE).strength(-1.0F, 6000000.0F).lightLevel((state) -> 1));
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).strength(-1.0F, 6000000.0F).lightLevel((state) -> 1));
         this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVE, false));
     }
 
@@ -50,16 +54,16 @@ public class ImbuementAltarBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public @NotNull net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack usedStack, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof ImbuementAltarBlockEntity entity) || player.isShiftKeyDown()) {
-            return InteractionResult.FAIL;
+            return net.minecraft.world.ItemInteractionResult.FAIL;
         }
 
         ItemStack currentStack = entity.getStack();
         ItemStack toInsert = player.getItemInHand(hand);
 
         if (entity.isCrafting()) {
-            return InteractionResult.FAIL;
+            return net.minecraft.world.ItemInteractionResult.FAIL;
         }
 
         if (currentStack.isEmpty()) {
@@ -68,12 +72,12 @@ public class ImbuementAltarBlock extends BaseEntityBlock {
             entity.setStack(stack, true);
             entity.setLastUser(player);
             if (!player.isCreative()) toInsert.shrink(1);
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         if (currentStack.getItem() instanceof RandomSpellBookItem) {
             RandomSpellBookItem.create(level, player, currentStack);
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         if (!(player.isCreative() && EntityUtil.doesPlayerHaveItem(player, currentStack.getItem()))) {
@@ -85,7 +89,7 @@ public class ImbuementAltarBlock extends BaseEntityBlock {
         entity.setStack(ItemStack.EMPTY, false);
         entity.setLastUser(null);
 
-        return InteractionResult.SUCCESS;
+        return net.minecraft.world.ItemInteractionResult.SUCCESS;
     }
 
     @Override

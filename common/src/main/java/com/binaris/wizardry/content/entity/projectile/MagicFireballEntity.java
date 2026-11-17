@@ -44,7 +44,7 @@ public class MagicFireballEntity extends MagicProjectileEntity {
 
     @Override
     public void onHitTargetExtraEffects(@NotNull EntityHitResult result) {
-        result.getEntity().setSecondsOnFire(Spells.FIREBALL.property(DefaultProperties.EFFECT_DURATION));
+        result.getEntity().igniteForSeconds(Spells.FIREBALL.property(DefaultProperties.EFFECT_DURATION));
     }
 
     @Override

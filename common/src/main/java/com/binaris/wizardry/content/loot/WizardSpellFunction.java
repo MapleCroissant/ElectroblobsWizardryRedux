@@ -34,7 +34,10 @@ import java.util.List;
 /// The serializer reads and writes no additional JSON fields — the function has no
 /// configurable parameters.
 public class WizardSpellFunction extends LootItemConditionalFunction {
-    protected WizardSpellFunction(LootItemCondition[] conditions) {
+    public static final com.mojang.serialization.MapCodec<WizardSpellFunction> CODEC =
+            com.mojang.serialization.codecs.RecordCodecBuilder.mapCodec(instance ->
+                    commonFields(instance).apply(instance, WizardSpellFunction::new));
+    protected WizardSpellFunction(List<LootItemCondition> conditions) {
         super(conditions);
     }
 
@@ -64,35 +67,4 @@ public class WizardSpellFunction extends LootItemConditionalFunction {
         return stack;
     }
 
-    /// Serializer for {@code WizardSpellFunction} that handles JSON (de)serialization
-    /// and is registered as {@code EBLootFunctions.WIZARD_SPELL}.
-    ///
-    /// This function has no configurable JSON parameters, so {@code serialize} writes
-    /// nothing and {@code deserialize} merely instantiates the function with the given
-    /// conditions.
-    public static class Serializer extends LootItemConditionalFunction.Serializer<WizardSpellFunction> {
-        public Serializer() {
-        }
-
-        /// Writes nothing — this function has no configurable JSON data.
-        ///
-        /// @param json the JSON object to write to.
-        /// @param loot the WizardSpellFunction instance being serialized.
-        /// @param context the serialization context.
-        @Override
-        public void serialize(@NotNull JsonObject json, @NotNull WizardSpellFunction loot, @NotNull JsonSerializationContext context) {
-        }
-
-        /// Deserializes a {@code WizardSpellFunction} from JSON, ignoring the object's
-        /// contents since this function has no configurable parameters.
-        ///
-        /// @param object the JSON object, ignored.
-        /// @param context the deserialization context.
-        /// @param conditions the loot conditions applied to this function.
-        /// @return a new WizardSpellFunction with the given conditions.
-        @Override
-        public @NotNull WizardSpellFunction deserialize(@NotNull JsonObject object, @NotNull JsonDeserializationContext context, LootItemCondition @NotNull [] conditions) {
-            return new WizardSpellFunction(conditions);
-        }
-    }
 }

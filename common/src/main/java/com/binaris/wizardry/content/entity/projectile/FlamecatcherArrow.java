@@ -54,7 +54,7 @@ public class FlamecatcherArrow extends MagicArrowEntity {
     @Override
     public void onHitTargetExtraEffects(@NotNull EntityHitResult hitResult) {
         if (hitResult.getEntity() instanceof LivingEntity livingEntity) {
-            livingEntity.setSecondsOnFire(15);
+            livingEntity.igniteForSeconds(15);
         }
     }
 

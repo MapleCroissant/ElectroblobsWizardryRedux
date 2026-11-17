@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
 public class RemnantRenderer extends EntityRenderer<Remnant> {
-    private static final ResourceLocation TEX = new ResourceLocation(WizardryMainMod.MOD_ID, "textures/entity/remnant.png");
+    private static final ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(WizardryMainMod.MOD_ID, "textures/entity/remnant.png");
     private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(TEX);
 
     private final RemnantModel model;
@@ -57,7 +57,7 @@ public class RemnantRenderer extends EntityRenderer<Remnant> {
         VertexConsumer vb = buffer.getBuffer(RENDER_TYPE);
         this.model.renderToBuffer(ps, vb, packedLight,
                 OverlayTexture.NO_OVERLAY,
-                1f, 1f, 1f, 1f);
+                -1);
         ps.popPose();
 
         ps.pushPose();
@@ -67,7 +67,7 @@ public class RemnantRenderer extends EntityRenderer<Remnant> {
         ps.mulPose(Axis.YP.rotationDegrees(age * rotationSpeed));
         this.model.renderToBuffer(ps, vb, packedLight,
                 OverlayTexture.NO_OVERLAY,
-                1f, 1f, 1f, 1f);
+                -1);
         ps.popPose();
 
         ps.popPose();

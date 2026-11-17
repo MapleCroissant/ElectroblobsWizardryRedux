@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class ManaFlaskItem extends Item {
+public class ManaFlaskItem extends Item implements com.binaris.wizardry.api.content.item.ICustomRarityItem {
     public final Size size;
 
     public ManaFlaskItem(Size size) {
@@ -46,7 +46,7 @@ public class ManaFlaskItem extends Item {
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack, int remainingUseDuration) {
         if (livingEntity.level().isClientSide) {
-            float f = remainingUseDuration / (float) getUseDuration(stack);
+            float f = remainingUseDuration / (float) getUseDuration(stack, livingEntity);
             Vec3 pos = livingEntity.getEyePosition(0).subtract(0, 0.2, 0).add(livingEntity.getLookAngle().scale(0.6));
             Vec3 delta = new Vec3(0, 0.2 * f, 0).xRot(remainingUseDuration * 0.5f).yRot((float) Math.toRadians(90 - livingEntity.yHeadRot));
             ParticleBuilder.create(EBParticles.DUST).pos(pos.add(delta))
@@ -96,12 +96,12 @@ public class ManaFlaskItem extends Item {
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack, net.minecraft.world.entity.LivingEntity user) {
         return size.useDuration;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag isAdvanced) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, @NotNull List<Component> tooltip, @NotNull TooltipFlag isAdvanced) {
         super.appendHoverText(stack, level, tooltip, isAdvanced);
         tooltip.add(Component.translatable("item.ebwizardry.mana_flask.desc", size.capacity).withStyle(ChatFormatting.GRAY));
     }

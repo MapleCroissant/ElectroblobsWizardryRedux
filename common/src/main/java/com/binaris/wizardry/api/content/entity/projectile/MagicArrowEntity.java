@@ -34,6 +34,10 @@ import org.jetbrains.annotations.NotNull;
 /// The methods [#aim(LivingEntity, float)] and [#aim(LivingEntity, Entity, float, float)] are used to set
 /// the shooter of the projectile and aim it in the direction they are looking. (Originally copied from Ebwizardry 1.12.2)
 public abstract class MagicArrowEntity extends AbstractArrow {
+    private int knockback;
+    public int getKnockback() { return knockback; }
+    public void setKnockback(int value) { knockback = value; }
+
     public static final double LAUNCH_Y_OFFSET = 0.3;
     public static final float FORWARD_OFFSET = 0.1f;
     public static final int SEEKING_TIME = 15;
@@ -150,7 +154,7 @@ public abstract class MagicArrowEntity extends AbstractArrow {
 
         if (hit instanceof EntityHitResult entityHit && getOwner() instanceof LivingEntity owner && entityHit.getEntity() instanceof LivingEntity entity) {
             if (AllyDesignation.isValidTarget(owner, entity)) {
-                Vec3 direction = new Vec3(entity.xo, entity.yo + entity.getDimensions(entity.getPose()).height / 2, entity.zo).subtract(this.position()).normalize().scale(this.getDeltaMovement().length());
+                Vec3 direction = new Vec3(entity.xo, entity.yo + entity.getDimensions(entity.getPose()).height() / 2, entity.zo).subtract(this.position()).normalize().scale(this.getDeltaMovement().length());
                 this.setDeltaMovement(this.getDeltaMovement().add(direction.subtract(this.getDeltaMovement()).scale(2.0 / SEEKING_TIME)));
             }
         }
@@ -166,7 +170,7 @@ public abstract class MagicArrowEntity extends AbstractArrow {
 
         this.absMoveTo(
                 caster.xo + lookVector.x * FORWARD_OFFSET,
-                caster.getY() + caster.getDimensions(caster.getPose()).height - LAUNCH_Y_OFFSET,
+                caster.getY() + caster.getDimensions(caster.getPose()).height() - LAUNCH_Y_OFFSET,
                 caster.zo + lookVector.z * FORWARD_OFFSET
                 , caster.getYRot(), caster.getXRot());
 
@@ -189,11 +193,11 @@ public abstract class MagicArrowEntity extends AbstractArrow {
     public void aim(LivingEntity caster, Entity target, float speed, float aimingError) {
         if (getOwner() == null) this.setOwner(caster);
 
-        this.yo = caster.yo + (double) caster.getDimensions(caster.getPose()).height * 0.85F - LAUNCH_Y_OFFSET;
+        this.yo = caster.yo + (double) caster.getDimensions(caster.getPose()).height() * 0.85F - LAUNCH_Y_OFFSET;
         double dx = target.xo - caster.xo;
         double dy = !this.isNoGravity() ?
-                target.yo + (double) (target.getDimensions(caster.getPose()).height / 3.0f) - this.yo
-                : target.yo + (double) (target.getDimensions(caster.getPose()).height / 2.0f) - this.yo;
+                target.yo + (double) (target.getDimensions(caster.getPose()).height() / 3.0f) - this.yo
+                : target.yo + (double) (target.getDimensions(caster.getPose()).height() / 2.0f) - this.yo;
         double dz = target.zo - caster.zo;
         double horizontalDistance = Mth.sqrt((float) (dx * dx + dz * dz));
 
@@ -228,8 +232,7 @@ public abstract class MagicArrowEntity extends AbstractArrow {
         }
 
         if (!this.level().isClientSide && getOwner() instanceof LivingEntity arrowOwner) {
-            EnchantmentHelper.doPostHurtEffects(target, arrowOwner);
-            EnchantmentHelper.doPostDamageEffects(arrowOwner, target);
+            EnchantmentHelper.doPostAttackEffects((net.minecraft.server.level.ServerLevel) level(), target, damageSources().arrow(this, arrowOwner));
         }
 
         if (!this.level().isClientSide) {
@@ -249,6 +252,7 @@ public abstract class MagicArrowEntity extends AbstractArrow {
         compound.putInt("ticksInAir", ticksInAir);
         compound.putInt("ticksInGround", ticksInGround);
         compound.putFloat("damageMultiplier", damageMultiplier);
+        compound.putInt("knockback", knockback);
     }
 
     @Override
@@ -257,6 +261,7 @@ public abstract class MagicArrowEntity extends AbstractArrow {
         ticksInAir = compound.getInt("ticksInAir");
         ticksInGround = compound.getInt("ticksInGround");
         damageMultiplier = compound.getFloat("damageMultiplier");
+        knockback = compound.getInt("knockback");
     }
 
     @Override
@@ -270,7 +275,8 @@ public abstract class MagicArrowEntity extends AbstractArrow {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
+    protected @NotNull ItemStack getDefaultPickupItem() {
+        // AbstractArrow persists this stack even for projectiles which cannot be picked up.
+        return new ItemStack(net.minecraft.world.item.Items.ARROW);
     }
 }

@@ -41,8 +41,8 @@ public class ArcaneWorkbenchMenu extends AbstractContainerMenu {
     public static final int UPGRADE_SLOT = 10;
     public static final int SLOT_RADIUS = 42;
     public static final int PLAYER_INVENTORY_SIZE = 36;
-    public static final ResourceLocation ARCANE_WORKBENCH_EMPTY_SLOT_CRYSTAL = new ResourceLocation("item/empty_slot_crystal");
-    public static final ResourceLocation ARCANE_WORKBENCH_EMPTY_SLOT_UPGRADE = new ResourceLocation("item/empty_slot_upgrade");
+    public static final ResourceLocation ARCANE_WORKBENCH_EMPTY_SLOT_CRYSTAL = ResourceLocation.parse("item/empty_slot_crystal");
+    public static final ResourceLocation ARCANE_WORKBENCH_EMPTY_SLOT_UPGRADE = ResourceLocation.parse("item/empty_slot_upgrade");
     public Container container;
     public boolean needsRefresh;
     private final Player player;

@@ -19,10 +19,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RunestonePedestalBlock extends BaseEntityBlock {
+    public static final com.mojang.serialization.MapCodec<RunestonePedestalBlock> CODEC =
+            net.minecraft.resources.ResourceLocation.CODEC.fieldOf("element").xmap(
+                    id -> new RunestonePedestalBlock(com.binaris.wizardry.core.platform.Services.REGISTRY_UTIL.getElement(id)),
+                    block -> block.element.getLocation());
+    @Override
+    protected com.mojang.serialization.MapCodec<RunestonePedestalBlock> codec() { return CODEC; }
     private final Element element;
 
     public RunestonePedestalBlock(Element element) {
-        super(BlockBehaviour.Properties.copy(Blocks.STONE).strength(4));
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).strength(4));
         this.element = element;
     }
 

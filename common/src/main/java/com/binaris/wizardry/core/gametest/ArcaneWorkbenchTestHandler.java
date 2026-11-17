@@ -93,6 +93,9 @@ public class ArcaneWorkbenchTestHandler {
 
     static void putSpellOnBlankScroll(GameTestHelper helper, Spell spell) {
         TestContext ctx = setupTest(helper, EBItems.BLANK_SCROLL.get().getDefaultInstance());
+        // The 1.21 mock player has an explicit survival game mode, so satisfy
+        // the same discovery prerequisite required of a real survival player.
+        com.binaris.wizardry.core.platform.Services.OBJECT_DATA.getSpellManagerData(ctx.player).discoverSpell(spell);
 
         ctx.workbench.setItem(0, RegistryUtils.spellBookItem(spell));
         ctx.workbench.setItem(ArcaneWorkbenchMenu.CRYSTAL_SLOT, new ItemStack(EBItems.MAGIC_CRYSTAL.get(), 10));

@@ -1,5 +1,7 @@
 package com.binaris.wizardry.content.item;
 
+import com.binaris.wizardry.api.content.util.ItemData;
+
 import com.binaris.wizardry.api.client.util.ClientUtils;
 import com.binaris.wizardry.api.content.data.WizardData;
 import com.binaris.wizardry.api.content.event.SpellCastEvent;
@@ -81,7 +83,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
 
         Spell spell = CastItemDataHelper.getCurrentSpell(stack);
         SpellModifiers modifiers = Services.OBJECT_DATA.getWizardData(player).getSpellModifiers();
-        int useTick = stack.getUseDuration() - timeLeft;
+        int useTick = stack.getUseDuration(user) - timeLeft;
         int charge = CastItemUtils.calcCharge(spell, modifiers);
 
         int castingTick;
@@ -153,7 +155,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
         WizardData wizardData = Services.OBJECT_DATA.getWizardData(player);
         modifiers = wizardData.getSpellModifiers();
 
-        int castingTick = stack.getUseDuration() - timeCharged;
+        int castingTick = stack.getUseDuration(livingEntity) - timeCharged;
         int totalCost = CastItemUtils.calcCastCost(spell, modifiers);
         int accumulatedCost = CastItemUtils.getAccumulatedCastCost(spell, castingTick, totalCost);
 
@@ -332,7 +334,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
             }
 
             ItemStack newWand = new ItemStack(RegistryUtils.getWand(nextTier, element));
-            newWand.setTag(wand.getTag());
+            newWand.applyComponents(wand.getComponentsPatch());
             ((IManaItem) newWand.getItem()).setMana(newWand, getMana(wand));
             tomeStack.shrink(1);
             return newWand;
@@ -435,7 +437,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     @Override
     public void onClearButtonPressed(Player player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks) {
         ItemStack stack = centre.getItem();
-        if (!stack.getOrCreateTag().contains(CastItemDataHelper.SPELL_ARRAY_KEY)) return;
+        if (!ItemData.read(stack).contains(CastItemDataHelper.SPELL_ARRAY_KEY)) return;
         List<Spell> spells = CastItemDataHelper.getSpells(stack);
         int expectedSlotCount = BASE_SPELL_SLOTS + CastItemDataHelper.getUpgradeLevel(stack, EBItems.ATTUNEMENT_UPGRADE.get());
         if (spells.size() < expectedSlotCount) spells = new ArrayList<>();
@@ -460,12 +462,12 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
 
     @Override
     public int getCustomMaxDamage(ItemStack stack) {
-        return (int) (this.getMaxDamage() * (1.0f + EBServerConfig.STORAGE_INCREASE_PER_LEVEL.get() * CastItemDataHelper.getUpgradeLevel(stack, EBItems.STORAGE_UPGRADE.get())) + 0.5f);
+        return (int) (this.components().getOrDefault(net.minecraft.core.component.DataComponents.MAX_DAMAGE, 0) * (1.0f + EBServerConfig.STORAGE_INCREASE_PER_LEVEL.get() * CastItemDataHelper.getUpgradeLevel(stack, EBItems.STORAGE_UPGRADE.get())) + 0.5f);
     }
 
     @Override
     public void setCustomDamage(ItemStack stack, int damage) {
-        stack.getOrCreateTag().putInt("Damage", Math.max(0, Math.min(damage, stack.getMaxDamage())));
+        stack.set(net.minecraft.core.component.DataComponents.DAMAGE, Math.max(0, Math.min(damage, stack.getMaxDamage())));
     }
 
     @Override
@@ -485,7 +487,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack, net.minecraft.world.entity.LivingEntity user) {
         return MAX_USE_DURATION;
     }
 

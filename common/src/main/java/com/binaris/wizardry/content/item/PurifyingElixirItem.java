@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PurifyingElixirItem extends Item {
+public class PurifyingElixirItem extends Item implements com.binaris.wizardry.api.content.item.ICustomRarityItem {
     private static final int USE_DURATION = 32;
 
     public PurifyingElixirItem() {
@@ -69,13 +69,13 @@ public class PurifyingElixirItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         String desc = flag.isAdvanced() ? ".desc_extended" : ".desc";
         tooltip.add(Component.translatable(getOrCreateDescriptionId() + desc).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack, net.minecraft.world.entity.LivingEntity user) {
         return USE_DURATION;
     }
 }

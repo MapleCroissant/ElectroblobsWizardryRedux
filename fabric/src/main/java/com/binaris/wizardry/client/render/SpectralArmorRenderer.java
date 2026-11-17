@@ -55,6 +55,6 @@ public class SpectralArmorRenderer implements ArmorRenderer {
 
         float alpha = 0.9f;
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucent(texture));
-        armorModel.renderToBuffer(matrices, consumer, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, alpha);
+        armorModel.renderToBuffer(matrices, consumer, light, OverlayTexture.NO_OVERLAY, ((int) (alpha * 255) << 24) | 0xFFFFFF);
     }
 }

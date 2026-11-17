@@ -113,10 +113,10 @@ public class Remnant extends Monster {
     // ===============================
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACKING, false);
-        this.entityData.define(ELEMENT, Elements.FIRE.getLocation().toString()); // Fire by default
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ATTACKING, false);
+        builder.define(ELEMENT, Elements.FIRE.getLocation().toString()); // Fire by default
     }
 
     @Override
@@ -130,18 +130,18 @@ public class Remnant extends Monster {
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setElement(compound.getString("Element"));
-        if (compound.contains("BoundOrigin")) boundOrigin = NbtUtils.readBlockPos(compound.getCompound("BoundOrigin"));
+        if (compound.contains("BoundOrigin")) boundOrigin = NbtUtils.readBlockPos(compound, "BoundOrigin").orElse(null);
     }
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnData) {
         List<Element> elements = new ArrayList<>(Services.REGISTRY_UTIL.getElements().stream().toList());
         elements.remove(Elements.MAGIC);
 
         this.setElement(elements.get(random.nextInt(elements.size())).getLocation().toString()); // Exclude MAGIC
         this.setBoundOrigin(BlockPos.containing(this.getX(), this.getY(), this.getZ()));
-        return super.finalizeSpawn(level, difficulty, reason, spawnData, dataTag);
+        return super.finalizeSpawn(level, difficulty, reason, spawnData);
     }
 
     public String getElement() {
@@ -154,8 +154,8 @@ public class Remnant extends Monster {
     }
 
     @Override
-    protected @NotNull ResourceLocation getDefaultLootTable() {
-        return lootTable != null ? lootTable : super.getDefaultLootTable();
+    protected @NotNull net.minecraft.resources.ResourceKey<net.minecraft.world.level.storage.loot.LootTable> getDefaultLootTable() {
+        return lootTable != null ? net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, lootTable) : super.getDefaultLootTable();
     }
 
 
@@ -176,7 +176,7 @@ public class Remnant extends Monster {
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 8;
     }
 

@@ -1,5 +1,10 @@
 **Note: This mod is currently in Alpha. For development updates, bug reports, and community discussion, join our [Discord](https://discord.gg/9R3nw3uQTu) and check our [Wiki](https://electroblobs-redux-wiki.pages.dev/)**
 
+This branch targets **Minecraft 1.21.1 Fabric with Java 21**. See the
+[migration record](migration/README.md) for build commands, validation and
+remaining gameplay checks, and [API changes](BREAKING_CHANGES.md) for add-ons.
+Forge sources are retained for reference but are excluded from this branch's build.
+
 ## About
 
 ![Ice wand inside Arcane Workbench block](https://cdn.modrinth.com/data/cached_images/950556ffcccb39aeb9831ce1e991ad94d87bba12.png)
@@ -22,9 +27,9 @@ Start by mining Magic Crystals (though there are "easier" ways to find them if y
 
 ### Fabric
 
-**Required:** Fabric Loader 0.16.9+ (for Minecraft 1.20.1)
+**Required:** Java 21 and Fabric Loader 0.16.14+ (for Minecraft 1.21.1)
 
-**Required:** [Fabric API 0.92.2+](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+**Required:** [Fabric API 0.116.16+1.21.1](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 
 **Optional (Recommended):** Use [Accessories](https://www.curseforge.com/minecraft/mc-mods/accessories) or [Trinkets](https://www.curseforge.com/minecraft/mc-mods/trinkets) for a better experience with the trinkets.
 

@@ -14,30 +14,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Gui.class)
 public abstract class GuiMixin {
-
-    @Redirect(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V", ordinal = 0))
-    public void EBWIZARDRY$customRenderEffects(GuiGraphics instance, ResourceLocation atlasLocation, int x, int y, int uOffset, int vOffset, int uWidth, int vHeight, @Local MobEffectInstance mobeffectinstance){
-        if (mobeffectinstance instanceof MagicMobEffectInstance) {
-            instance.blit(WizardryMainMod.location("textures/gui/effect/mobeffect_curse_blue.png"), x, y, uOffset, vOffset, uWidth, vHeight);
-            return;
-        }
-        if (mobeffectinstance.getEffect() instanceof CurseMobEffect) {
-            instance.blit(WizardryMainMod.location("textures/gui/effect/mobeffect_curse_red.png"), x, y, uOffset, vOffset, uWidth, vHeight);
-            return;
-        }
-        instance.blit(atlasLocation, x, y, uOffset, vOffset, uWidth, vHeight);
-    }
-
-    @Redirect(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V", ordinal = 1))
-    public void EBWIZARDRY$customRenderEffects2(GuiGraphics instance, ResourceLocation atlasLocation, int x, int y, int uOffset, int vOffset, int uWidth, int vHeight, @Local MobEffectInstance mobeffectinstance){
-        if (mobeffectinstance instanceof MagicMobEffectInstance) {
-            instance.blit(WizardryMainMod.location("textures/gui/effect/mobeffect_curse_blue.png"), x, y, uOffset, vOffset, uWidth, vHeight);
-            return;
-        }
-        if (mobeffectinstance.getEffect() instanceof CurseMobEffect) {
-            instance.blit(WizardryMainMod.location("textures/gui/effect/mobeffect_curse_red.png"), x, y, uOffset, vOffset, uWidth, vHeight);
-            return;
-        }
-        instance.blit(atlasLocation, x, y, uOffset, vOffset, uWidth, vHeight);
+    @Redirect(method = "renderEffects", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"))
+    private void ebwizardry$effectBackground(GuiGraphics graphics, ResourceLocation sprite, int x, int y,
+                                             int width, int height, @Local MobEffectInstance effect) {
+        String texture = effect instanceof MagicMobEffectInstance ? "mobeffect_curse_blue" :
+                effect.getEffect().value() instanceof CurseMobEffect ? "mobeffect_curse_red" : null;
+        if (texture == null) graphics.blitSprite(sprite, x, y, width, height);
+        else graphics.blit(WizardryMainMod.location("textures/gui/effect/" + texture + ".png"),
+                x, y, effect.isAmbient() ? 165 : 141, 166, width, height);
     }
 }

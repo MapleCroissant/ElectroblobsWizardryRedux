@@ -9,8 +9,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import org.jetbrains.annotations.NotNull;
 
 public class MagicLecternBlock extends HorizontalDirectionalBlock {
+    public static final com.mojang.serialization.MapCodec<MagicLecternBlock> CODEC = com.mojang.serialization.MapCodec.unit(MagicLecternBlock::new);
+    @Override
+    protected com.mojang.serialization.MapCodec<MagicLecternBlock> codec() { return CODEC; }
+
     public MagicLecternBlock() {
-        super(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD).strength(2.0F, 5.0F).sound(SoundType.WOOD).noOcclusion());
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD).strength(2.0F, 5.0F).sound(SoundType.WOOD).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 

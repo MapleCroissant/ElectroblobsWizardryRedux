@@ -30,9 +30,23 @@ public abstract class WizardItemStackMixin {
         ci.cancel();
     }
 
-    @Inject(method = "hurt", at = @At("TAIL"), cancellable = true)
-    public void EBWIZARDRY$itemHurtBreak(int amount, RandomSource random, ServerPlayer user, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
+    public void EBWIZARDRY$itemHurtBreak(int amount, net.minecraft.server.level.ServerLevel level,
+                                       ServerPlayer user, java.util.function.Consumer<net.minecraft.world.item.Item> onBreak, CallbackInfo ci) {
         if (!(stack.getItem() instanceof ICustomDamageItem customDamageItem)) return;
-        cir.setReturnValue((stack.getDamageValue() >= stack.getMaxDamage()) && customDamageItem.canBreak(stack));
+        if (customDamageItem.canBreak(stack)) return;
+        if (!stack.isDamageableItem() || (user != null && user.hasInfiniteMaterials())) {
+            ci.cancel();
+            return;
+        }
+        var conjure = com.binaris.wizardry.core.platform.Services.OBJECT_DATA.getConjureData(stack);
+        if (conjure == null || !conjure.isSummoned()) {
+            int damage = amount > 0 ? net.minecraft.world.item.enchantment.EnchantmentHelper.processDurabilityChange(level, stack, amount) : amount;
+            if (user != null && damage != 0) {
+                net.minecraft.advancements.CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger(user, stack, stack.getDamageValue() + damage);
+            }
+            stack.setDamageValue(stack.getDamageValue() + damage);
+        }
+        ci.cancel();
     }
 }

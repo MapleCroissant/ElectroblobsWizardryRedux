@@ -49,7 +49,7 @@ public final class EntityUtil {
 
     static {
         List<EquipmentSlot> slots = new ArrayList<>(Arrays.asList(EquipmentSlot.values()));
-        slots.removeIf(slot -> slot.getType() != EquipmentSlot.Type.ARMOR);
+        slots.removeIf(slot -> !slot.isArmor());
         ARMOR_SLOTS = slots.toArray(new EquipmentSlot[0]);
     }
 
@@ -315,7 +315,7 @@ public final class EntityUtil {
             return currentSpell == spell;
         }
 
-        int ticksInUse = caster.getUseItem().getUseDuration() - caster.getUseItemRemainingTicks();
+        int ticksInUse = caster.getUseItem().getUseDuration(caster) - caster.getUseItemRemainingTicks();
         if (ticksInUse >= spell.getChargeUp()) {
             return currentSpell == spell;
         }

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface CriteriaAccessor {
     @SuppressWarnings("all")
     @Invoker
-    static <T extends CriterionTrigger<?>> T callRegister(T object) {
+    static <T extends CriterionTrigger<?>> T callRegister(String id, T object) {
         //throw new AssertionError("Mixin dummy");
         return object;
     }

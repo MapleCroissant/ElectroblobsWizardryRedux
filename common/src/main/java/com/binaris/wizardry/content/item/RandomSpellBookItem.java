@@ -1,5 +1,7 @@
 package com.binaris.wizardry.content.item;
 
+import com.binaris.wizardry.api.content.util.ItemData;
+
 import com.binaris.wizardry.api.content.event.EBItemPickupEvent;
 import com.binaris.wizardry.api.content.util.RegistryUtils;
 import com.binaris.wizardry.core.EBLogger;
@@ -32,7 +34,7 @@ public class RandomSpellBookItem extends Item {
 
     public static void create(Level level, Player player, ItemStack original) {
         ItemStack stack;
-        CompoundTag tag = original.getTag();
+        CompoundTag tag = ItemData.read(original);
         original.shrink(1);
         if (level.isClientSide) return;
 
@@ -53,7 +55,7 @@ public class RandomSpellBookItem extends Item {
             return;
         }
 
-        LootTable lootTable = level.getServer().getLootData().getLootTable(lootTableLocation);
+        LootTable lootTable = level.getServer().reloadableRegistries().getLootTable(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, lootTableLocation));
 
         LootParams lootParams = new LootParams.Builder((ServerLevel) level)
                 .withParameter(LootContextParams.THIS_ENTITY, player)

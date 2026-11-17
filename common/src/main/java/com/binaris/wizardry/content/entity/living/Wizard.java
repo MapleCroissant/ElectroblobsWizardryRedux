@@ -150,7 +150,7 @@ public class Wizard extends AbstractWizard implements Npc, Merchant {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        if (this.trades != null) compoundTag.put("trades", trades.createTag());
+        if (this.trades != null) compoundTag.put("trades", MerchantOffers.CODEC.encodeStart(registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), trades).getOrThrow());
         compoundTag.putInt("wizardXp", this.wizardXp);
         compoundTag.putInt("wizardLevel", this.wizardLevel);
     }
@@ -158,7 +158,22 @@ public class Wizard extends AbstractWizard implements Npc, Merchant {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        if (compoundTag.contains("trades")) this.trades = new MerchantOffers(compoundTag.getCompound("trades"));
+        if (compoundTag.contains("trades")) {
+            CompoundTag offers = compoundTag.getCompound("trades");
+            var recipes = offers.getList("Recipes", net.minecraft.nbt.Tag.TAG_COMPOUND);
+            if (!recipes.isEmpty() && recipes.getCompound(0).getCompound("buy").contains("Count")) {
+                // The custom 'trades' field is not visited by vanilla's entity schema.
+                CompoundTag wrapper = new CompoundTag();
+                wrapper.putString("id", "minecraft:villager");
+                wrapper.put("Offers", offers.copy());
+                var converted = net.minecraft.util.datafix.DataFixers.getDataFixer().update(
+                        net.minecraft.util.datafix.fixes.References.ENTITY,
+                        new com.mojang.serialization.Dynamic<>(net.minecraft.nbt.NbtOps.INSTANCE, wrapper),
+                        3465, net.minecraft.SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+                offers = ((CompoundTag) converted.getValue()).getCompound("Offers");
+            }
+            this.trades = MerchantOffers.CODEC.parse(registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), offers).getOrThrow();
+        }
         this.wizardXp = compoundTag.getInt("wizardXp");
         this.wizardLevel = compoundTag.getInt("wizardLevel");
         if (this.wizardLevel == 0) this.wizardLevel = 1;
@@ -460,7 +475,7 @@ public class Wizard extends AbstractWizard implements Npc, Merchant {
 
 
     private MerchantOffer createTrade(ItemStack cost1, ItemStack cost2, ItemStack result, int maxUses, int xp, float priceMultiplier) {
-        return new MerchantOffer(cost1, cost2, result, maxUses, xp, priceMultiplier);
+        return new MerchantOffer(itemCost(cost1), cost2.isEmpty() ? java.util.Optional.empty() : java.util.Optional.of(itemCost(cost2)), result, maxUses, xp, priceMultiplier);
     }
 
     @Override
@@ -529,5 +544,9 @@ public class Wizard extends AbstractWizard implements Npc, Merchant {
     @Override
     public boolean isClientSide() {
         return level().isClientSide();
+    }
+    private static net.minecraft.world.item.trading.ItemCost itemCost(ItemStack stack) {
+        return new net.minecraft.world.item.trading.ItemCost(stack.getItemHolder(), stack.getCount(),
+                net.minecraft.core.component.DataComponentPredicate.allOf(stack.getComponents()));
     }
 }

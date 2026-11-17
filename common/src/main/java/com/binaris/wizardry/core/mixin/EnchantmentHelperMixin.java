@@ -11,10 +11,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EnchantmentHelper.class)
 public abstract class EnchantmentHelperMixin {
 
-    @Inject(method = "getFireAspect", at = @At("HEAD"), cancellable = true)
-    private static void EBWIZARDRY$getFireAspect(LivingEntity player, CallbackInfoReturnable<Integer> cir){
+    @Inject(method = "doPostAttackEffects", at = @At("TAIL"))
+    private static void EBWIZARDRY$flamingAxe(net.minecraft.server.level.ServerLevel level,
+                                           net.minecraft.world.entity.Entity target,
+                                           net.minecraft.world.damagesource.DamageSource source,
+                                           org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        if (!(source.getEntity() instanceof LivingEntity player)) return;
+        if (source.getDirectEntity() != player) return;
         if (player.getOffhandItem().getItem() instanceof FlamingAxeItem || player.getMainHandItem().getItem() instanceof FlamingAxeItem) {
-            cir.setReturnValue(1);
+            target.igniteForSeconds(4);
         }
     }
 }

@@ -3,121 +3,34 @@ package com.binaris.wizardry.content.advancement;
 import com.binaris.wizardry.WizardryMainMod;
 import com.binaris.wizardry.api.content.event.DiscoverSpellEvent;
 import com.binaris.wizardry.api.content.spell.Spell;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import net.minecraft.advancements.CriterionTrigger;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.Locale;
 
-public class SpellDiscoveryTrigger implements CriterionTrigger<SpellDiscoveryTrigger.TriggerInstance> {
-    static final ResourceLocation ID = WizardryMainMod.location("discover_spell");
-    private final Map<PlayerAdvancements, Listeners> listeners = Maps.newHashMap();
-
-    public SpellDiscoveryTrigger() {
-    }
-
-    public @NotNull ResourceLocation getId() {
-        return ID;
-    }
-
-    public void addPlayerListener(@NotNull PlayerAdvancements advancements, @NotNull Listener<TriggerInstance> listener) {
-        this.listeners.computeIfAbsent(advancements, Listeners::new).add(listener);
-    }
-
-    public void removePlayerListener(@NotNull PlayerAdvancements advancements, @NotNull Listener<TriggerInstance> listener) {
-        Listeners li = this.listeners.get(advancements);
-        if (li == null) return;
-
-        li.remove(listener);
-        if (li.isEmpty()) this.listeners.remove(advancements);
-    }
-
-    public void removePlayerListeners(@NotNull PlayerAdvancements advancements) {
-        this.listeners.remove(advancements);
-    }
-
-    public @NotNull SpellDiscoveryTrigger.TriggerInstance createInstance(@NotNull JsonObject json, @NotNull DeserializationContext context) {
-        String s = GsonHelper.getAsString(json, "source");
-
-        DiscoverSpellEvent.Sources source = DiscoverSpellEvent.Sources.byName(s);
-        if (source == null) throw new JsonSyntaxException("No such spell discovery source: " + s);
-        return new TriggerInstance(SpellPredicate.deserialize(json.get("spell")), source, json, context);
-    }
-
+public class SpellDiscoveryTrigger extends SimpleCriterionTrigger<SpellDiscoveryTrigger.TriggerInstance> {
+    public ResourceLocation getId() { return WizardryMainMod.location("discover_spell"); }
+    @Override public Codec<TriggerInstance> codec() { return TriggerInstance.CODEC; }
     public void trigger(ServerPlayer player, Spell spell, DiscoverSpellEvent.Source source) {
-        Optional.ofNullable(this.listeners.get(player.getAdvancements())).ifPresent(listeners -> listeners.trigger(spell, source));
+        trigger(player, instance -> instance.spell().test(spell) && instance.source() == source);
     }
-
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final SpellPredicate spell;
-        private final DiscoverSpellEvent.Source source;
-
-        public TriggerInstance(SpellPredicate spell, DiscoverSpellEvent.Source source, JsonObject json, DeserializationContext context) {
-            super(ID, EntityPredicate.fromJson(json, "player", context));
-            this.spell = spell;
-            this.source = source;
-        }
-
-        public TriggerInstance(SpellPredicate spell, DiscoverSpellEvent.Source source) {
-            super(ID, ContextAwarePredicate.ANY);
-            this.spell = spell;
-            this.source = source;
-        }
-
+    private static final Codec<DiscoverSpellEvent.Source> SOURCE_CODEC = Codec.STRING.comapFlatMap(name -> {
+        DiscoverSpellEvent.Source source = DiscoverSpellEvent.Sources.byName(name);
+        return source == null ? DataResult.error(() -> "Unknown spell discovery source: " + name) : DataResult.success(source);
+    }, source -> source.getName().toLowerCase(Locale.ROOT));
+    public record TriggerInstance(Optional<ContextAwarePredicate> player, SpellPredicate spell,
+                                  DiscoverSpellEvent.Source source) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                SpellPredicate.CODEC.optionalFieldOf("spell", SpellPredicate.any()).forGetter(TriggerInstance::spell),
+                SOURCE_CODEC.fieldOf("source").forGetter(TriggerInstance::source)
+        ).apply(instance, TriggerInstance::new));
         public static TriggerInstance discoverSpell(DiscoverSpellEvent.Source source) {
-            return new TriggerInstance(SpellPredicate.any(), source);
-        }
-
-        public boolean test(Spell spell, DiscoverSpellEvent.Source source) {
-            return this.spell.test(spell) && source == this.source;
-        }
-
-        @Override
-        public @NotNull JsonObject serializeToJson(@NotNull SerializationContext conditions) {
-            JsonObject jsonobject = super.serializeToJson(conditions);
-            jsonobject.addProperty("source", this.source.getName().toLowerCase());
-            JsonElement spellJson = this.spell.serialize();
-            if (spellJson != null) jsonobject.add("spell", spellJson);
-            return jsonobject;
-        }
-    }
-
-    static class Listeners {
-        private final PlayerAdvancements playerAdvancements;
-        private final Set<Listener<TriggerInstance>> listeners = Sets.newHashSet();
-
-        public Listeners(PlayerAdvancements advancements) {
-            this.playerAdvancements = advancements;
-        }
-
-        public boolean isEmpty() {
-            return this.listeners.isEmpty();
-        }
-
-        public void add(Listener<TriggerInstance> listener) {
-            this.listeners.add(listener);
-        }
-
-        public void remove(Listener<TriggerInstance> listener) {
-            this.listeners.remove(listener);
-        }
-
-        public void trigger(Spell spell, DiscoverSpellEvent.Source source) {
-            List<Listener<TriggerInstance>> list = this.listeners.stream()
-                    .filter(li -> li.getTriggerInstance().test(spell, source)).toList();
-            list.forEach(li -> li.run(this.playerAdvancements));
+            return new TriggerInstance(Optional.empty(), SpellPredicate.any(), source);
         }
     }
 }

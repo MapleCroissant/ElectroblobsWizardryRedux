@@ -31,7 +31,7 @@ public class RemoveCurse extends BuffSpell {
         List<MobEffectInstance> effectsCopy = new ArrayList<>(caster.getActiveEffects());
 
         for (MobEffectInstance effect : effectsCopy) {
-            if (effect.getEffect() instanceof CurseMobEffect) {
+            if (effect.getEffect().value() instanceof CurseMobEffect) {
                 caster.removeEffect(effect.getEffect());
                 flag = true;
             }

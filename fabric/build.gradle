@@ -14,10 +14,11 @@ javadoc {
         encoding = 'UTF-8'
         charSet = 'UTF-8'
         addStringOption('Xdoclint:none', '-quiet')
-    }}
+    }
+}
 
 base {
-    archivesName = 'electroblobs-wizardry-redux'
+    archivesName = "electroblobs-wizardry-redux-${minecraft_version}"
 }
 
 repositories {
@@ -42,22 +43,25 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
+    // Keep shared and loader sources in the same mapping namespace.
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"))
-    include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"))
-    include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-item:${project.cca_version}"))
-    include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-block:${project.cca_version}"))
+    include(modImplementation("org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"))
+    include(modImplementation("org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"))
+    // CCA 6 replaces its item module with vanilla data components.
+    include(modImplementation("org.ladysnake.cardinal-components-api:cardinal-components-block:${project.cca_version}"))
 
-    implementation "net.steppschuh.markdowngenerator:markdowngenerator:${markdowngenerator_version}"
+    include(implementation("net.steppschuh.markdowngenerator:markdowngenerator:${markdowngenerator_version}"))
     modCompileOnly "io.wispforest:accessories-fabric:${property("accessories_version")}"
 
     modCompileOnly "dev.emi:trinkets:${property("trinkets_version")}"
-    modRuntimeOnly "dev.emi:trinkets:${property("trinkets_version")}"
+    if (!providers.gradleProperty('withoutTrinkets').isPresent()) {
+        modRuntimeOnly "dev.emi:trinkets:${property("trinkets_version")}"
+    }
+    if (providers.gradleProperty('withAccessories').isPresent()) {
+        modRuntimeOnly "io.wispforest:accessories-fabric:${property("accessories_version")}"
+    }
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude group: 'net.fabricmc', module: 'fabric-loader'
     }
@@ -67,8 +71,31 @@ dependencies {
     modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
 
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation project(":common")
 
+}
+
+fabricApi {
+    configureDataGeneration {
+        // Export to a reviewable build directory instead of overwriting curated inputs.
+        outputDirectory = file('build/generated-data')
+        addToResources = false
+    }
+}
+
+// Offline migration tooling is kept out of the distributable mod JAR.
+sourceSets {
+    migration {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+
+tasks.register('migrateStructureTemplates', JavaExec) {
+    dependsOn tasks.named('migrationClasses')
+    classpath = sourceSets.migration.runtimeClasspath
+    mainClass = 'com.binaris.wizardry.migration.StructureMigrationTool'
+    args project(':common').file('src/main/resources/data/ebwizardry/structure').absolutePath,
+            layout.buildDirectory.dir('migrated-structures').get().asFile.absolutePath
 }
 
 sourceSets.main.resources {
@@ -120,7 +147,7 @@ publishMods {
     curseforge {
         accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
         projectId = "1405790"
-        minecraftVersions.add("1.20.1")
+        minecraftVersions.add(minecraft_version)
 
         client = true
         server = true
@@ -133,7 +160,7 @@ publishMods {
     modrinth {
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         projectId = "s5qOekOc"
-        minecraftVersions.add("1.20.1")
+        minecraftVersions.add(minecraft_version)
 
         environment = CLIENT_AND_SERVER
 

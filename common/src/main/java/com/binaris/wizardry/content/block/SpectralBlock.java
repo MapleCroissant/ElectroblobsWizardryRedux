@@ -27,6 +27,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SpectralBlock extends BaseEntityBlock {
+    public static final com.mojang.serialization.MapCodec<SpectralBlock> CODEC = com.mojang.serialization.MapCodec.unit(SpectralBlock::new);
+    @Override
+    protected com.mojang.serialization.MapCodec<SpectralBlock> codec() { return CODEC; }
+
 
     public SpectralBlock() {
         // I'm a literal copy of the glass, hi!

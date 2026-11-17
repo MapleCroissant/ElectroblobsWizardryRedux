@@ -1,0 +1,86 @@
+{
+    "pools":  [
+                  {
+                      "name":  "wizardry",
+                      "rolls":  {
+                                    "min":  3,
+                                    "max":  7
+                                },
+                      "entries":  [
+                                      {
+                                          "type":  "minecraft:loot_table",
+                                          "weight":  3,
+                                          "value":  "ebwizardry:subsets/elemental_crystals"
+                                      },
+                                      {
+                                          "type":  "minecraft:loot_table",
+                                          "weight":  6,
+                                          "value":  "ebwizardry:subsets/wizard_armor"
+                                      },
+                                      {
+                                          "type":  "minecraft:loot_table",
+                                          "weight":  5,
+                                          "value":  "ebwizardry:subsets/arcane_tomes"
+                                      },
+                                      {
+                                          "type":  "minecraft:loot_table",
+                                          "weight":  2,
+                                          "value":  "ebwizardry:subsets/wand_upgrades"
+                                      },
+                                      {
+                                          "type":  "minecraft:loot_table",
+                                          "weight":  2,
+                                          "value":  "ebwizardry:subsets/armor_upgrades"
+                                      },
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "ebwizardry:magic_crystal",
+                                          "weight":  5,
+                                          "functions":  [
+                                                            {
+                                                                "function":  "set_count",
+                                                                "count":  {
+                                                                              "min":  1,
+                                                                              "max":  4
+                                                                          }
+                                                            }
+                                                        ]
+                                      },
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "ebwizardry:spell_book",
+                                          "weight":  20,
+                                          "functions":  [
+                                                            {
+                                                                "function":  "ebwizardry:random_spell",
+                                                                "undiscovered_bias":  0.3
+                                                            }
+                                                        ]
+                                      },
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "ebwizardry:scroll",
+                                          "weight":  7,
+                                          "functions":  [
+                                                            {
+                                                                "function":  "ebwizardry:random_spell",
+                                                                "undiscovered_bias":  0.3
+                                                            },
+                                                            {
+                                                                "function":  "set_count",
+                                                                "count":  {
+                                                                              "min":  1,
+                                                                              "max":  5
+                                                                          }
+                                                            }
+                                                        ]
+                                      },
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "ebwizardry:identification_scroll",
+                                          "weight":  3
+                                      }
+                                  ]
+                  }
+              ]
+}

@@ -48,7 +48,7 @@ public class ShieldEntity extends Entity {
     }
 
     @Override
-    public void lerpTo(double par1, double par3, double par5, float par7, float par8, int par9, boolean p_19902_) {
+    public void lerpTo(double par1, double par3, double par5, float par7, float par8, int par9) {
         this.setPos(par1, par3, par5);
         this.setRot(par7, par8);
     }
@@ -73,7 +73,7 @@ public class ShieldEntity extends Entity {
 //    }
 
     @Override
-    protected void defineSynchedData() {
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
 
     }
 

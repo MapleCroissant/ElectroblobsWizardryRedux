@@ -27,7 +27,7 @@ public class FireSkinMobEffect extends MagicMobEffect {
     @Override
     public void onUserHurt(LivingEntity user, DamageSource source, AtomicDouble amount, AtomicBoolean canceled, MobEffectContext context) {
         if (source.getEntity() == null) return;
-        source.getEntity().setSecondsOnFire(Spells.FIRE_BREATH.property(DefaultProperties.EFFECT_DURATION) * 20);
+        source.getEntity().igniteForSeconds(Spells.FIRE_BREATH.property(DefaultProperties.EFFECT_DURATION) * 20);
     }
 
     @Override
@@ -36,12 +36,13 @@ public class FireSkinMobEffect extends MagicMobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity livingEntity, int i) {
+    public boolean applyEffectTick(LivingEntity livingEntity, int i) {
         livingEntity.clearFire();
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int i, int j) {
+    public boolean shouldApplyEffectTickThisTick(int i, int j) {
         return true;
     }
 }

@@ -33,8 +33,8 @@ public class ContainmentEffect extends MagicMobEffect {
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity target, int amplifier) {
-        if (!target.isAlive()) return;
+    public boolean applyEffectTick(@NotNull LivingEntity target, int amplifier) {
+        if (!target.isAlive()) return true;
         float maxDistance = getContainmentDistance(amplifier);
         ContainmentData data = Services.OBJECT_DATA.getContainmentData(target);
 
@@ -65,13 +65,14 @@ public class ContainmentEffect extends MagicMobEffect {
         }
 
         // need to check the -1, being the infinite duration case
-        if (target.hasEffect(this) && target.getEffect(this).getDuration() <= 1 && target.getEffect(this).getDuration() != -1) {
+        if (target.hasEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this)) && target.getEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this)).getDuration() <= 1 && target.getEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this)).getDuration() != -1) {
             data.setContainmentPos(null);
         }
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 

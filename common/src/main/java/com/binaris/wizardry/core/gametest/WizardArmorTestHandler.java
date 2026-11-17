@@ -17,7 +17,7 @@ public final class WizardArmorTestHandler {
         IManaItem manaItem = (IManaItem) stack.getItem();
         Player player = GST.mockPlayer(helper, PLAYER_POS);
 
-        stack.hurtAndBreak(9999, player, (a) -> {});
+        stack.hurtAndBreak(9999, player, armorItem.getEquipmentSlot());
 
         GST.assertFalse(helper, "Armor should never be destroyed regardless of damage applied", stack.isEmpty());
         GST.assertTrue(helper, "after applied a lot of damage, the armor mana should be 0", manaItem.getMana(stack) == 0);
@@ -29,7 +29,7 @@ public final class WizardArmorTestHandler {
         ItemStack stack = armorItem.getDefaultInstance();
         WizardArmorItem item = (WizardArmorItem) stack.getItem();
         var modifiers = item.getCustomAttributes(stack, EquipmentSlot.FEET);
-        GST.assertFalse(helper, "Armor should provide protection attributes when mana is full", modifiers.get(Attributes.ARMOR).isEmpty());
+        GST.assertFalse(helper, "Armor should provide protection attributes when mana is full", modifiers.get(Attributes.ARMOR.value()).isEmpty());
         helper.succeed();
     }
 
@@ -41,7 +41,7 @@ public final class WizardArmorTestHandler {
 
         var modifiers = item.getCustomAttributes(stack, EquipmentSlot.HEAD);
 
-        GST.assertTrue(helper, "Armor should NOT provide protection attributes when mana is 0", modifiers.get(Attributes.ARMOR).isEmpty());
+        GST.assertTrue(helper, "Armor should NOT provide protection attributes when mana is 0", modifiers.get(Attributes.ARMOR.value()).isEmpty());
 
         helper.succeed();
     }

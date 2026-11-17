@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class WandUpgradeItem extends Item {
+public class WandUpgradeItem extends Item implements com.binaris.wizardry.api.content.item.ICustomRarityItem {
     public static final float RING_SIPHONING_BONUS = 1.3f;
 
     public WandUpgradeItem(Properties properties) {
@@ -54,7 +54,7 @@ public class WandUpgradeItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, List<Component> tooltip, @NotNull TooltipFlag flag) {
         tooltip.add(Component.translatable(getOrCreateDescriptionId() + ".desc").withStyle(ChatFormatting.GRAY));
     }
 }

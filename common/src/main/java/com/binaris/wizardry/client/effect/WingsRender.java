@@ -19,7 +19,7 @@ import org.joml.Matrix4f;
 import static com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX;
 
 public final class WingsRender {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(WizardryMainMod.MOD_ID, "textures/entity/wing.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(WizardryMainMod.MOD_ID, "textures/entity/wing.png");
 
     // No first person in here because you can never see the wings on your back!
 
@@ -69,25 +69,25 @@ public final class WingsRender {
         poseStack.mulPose(Axis.YP.rotationDegrees(flapDegrees));
 
         Matrix4f matrix = poseStack.last().pose();
-        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        BufferBuilder buffer;
 
-        buffer.begin(VertexFormat.Mode.QUADS, POSITION_TEX);
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, POSITION_TEX);
 
-        buffer.vertex(matrix, 0, 2, 0).uv(0, 0).endVertex();
-        buffer.vertex(matrix, 2, 2, 0).uv(1, 0).endVertex();
-        buffer.vertex(matrix, 2, 0, 0).uv(1, 1).endVertex();
-        buffer.vertex(matrix, 0, 0, 0).uv(0, 1).endVertex();
+        buffer.addVertex(matrix, 0, 2, 0).setUv(0, 0);
+        buffer.addVertex(matrix, 2, 2, 0).setUv(1, 0);
+        buffer.addVertex(matrix, 2, 0, 0).setUv(1, 1);
+        buffer.addVertex(matrix, 0, 0, 0).setUv(0, 1);
 
-        BufferUploader.drawWithShader(buffer.end());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-        buffer.begin(VertexFormat.Mode.QUADS, POSITION_TEX);
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, POSITION_TEX);
 
-        buffer.vertex(matrix, 0, 2, 0).uv(0, 0).endVertex();
-        buffer.vertex(matrix, 0, 0, 0).uv(0, 1).endVertex();
-        buffer.vertex(matrix, 2, 0, 0).uv(1, 1).endVertex();
-        buffer.vertex(matrix, 2, 2, 0).uv(1, 0).endVertex();
+        buffer.addVertex(matrix, 0, 2, 0).setUv(0, 0);
+        buffer.addVertex(matrix, 0, 0, 0).setUv(0, 1);
+        buffer.addVertex(matrix, 2, 0, 0).setUv(1, 1);
+        buffer.addVertex(matrix, 2, 2, 0).setUv(1, 0);
 
-        BufferUploader.drawWithShader(buffer.end());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         poseStack.popPose();
     }

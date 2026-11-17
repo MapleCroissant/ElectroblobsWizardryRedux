@@ -1,5 +1,7 @@
 package com.binaris.wizardry.content.item;
 
+import com.binaris.wizardry.api.content.util.ItemData;
+
 import com.binaris.wizardry.api.content.data.ConjureData;
 import com.binaris.wizardry.content.entity.projectile.FlamecatcherArrow;
 import com.binaris.wizardry.content.spell.fire.Flamecatcher;
@@ -34,24 +36,24 @@ public class FlameCatcherItem extends BowItem {
         if (!(entity instanceof Player player)) return;
         if (level.isClientSide) return;
 
-        int charge = this.getUseDuration(stack) - timeLeft;
+        int charge = this.getUseDuration(stack, entity) - timeLeft;
         if (charge < 0) return;
 
         // Check shots (in case the flamecatcher is from the spell)
         ConjureData data = Services.OBJECT_DATA.getConjureData(stack);
         if (data != null && data.isSummoned()) {
             int count = Spells.FLAMECATCHER.property(Flamecatcher.SHOT_COUNT);
-            if (!stack.hasTag()) stack.getOrCreateTag();
-            if (!stack.getTag().contains("ShotsLeft")) stack.getTag().putInt("ShotsLeft", count);
 
-            int shotsLeft = stack.getOrCreateTag().getInt("ShotsLeft");
+            if (!ItemData.read(stack).contains("ShotsLeft")) ItemData.update(stack, itemData -> itemData.putInt("ShotsLeft", count));
+
+            int shotsLeft = ItemData.read(stack).getInt("ShotsLeft");
 
             if (shotsLeft <= 0) {
                 data.setSummoned(false);
                 stack.shrink(1);
                 return; // Don't continue processing an expired item
             }
-            stack.getOrCreateTag().putInt("ShotsLeft", shotsLeft - 1);
+            ItemData.update(stack, itemData -> itemData.putInt("ShotsLeft", shotsLeft - 1));
         }
 
         // Arrow!!
@@ -64,8 +66,7 @@ public class FlameCatcherItem extends BowItem {
         level.playSound(null, player.getX(), player.getY(), player.getZ(), EBSounds.ITEM_FLAMECATCHER_SHOOT.get(), SoundSource.PLAYERS, 1, 1);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), EBSounds.ITEM_FLAMECATCHER_FLAME.get(), SoundSource.PLAYERS, 1, 1);
 
-        stack.hurtAndBreak(this.getUseDuration(stack) - timeLeft, player, (p) ->
-                p.broadcastBreakEvent(p.getUsedItemHand()));
+        stack.hurtAndBreak(this.getUseDuration(stack, entity) - timeLeft, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(player.getUsedItemHand()));
     }
 
 

@@ -154,7 +154,7 @@ public class RunestonePedestalBlockEntity extends BlockEntity {
             return;
         }
 
-        container.setLootTable(EBLootTables.SHRINE, pedestal.level.getRandom().nextLong());
+        container.setLootTable(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, EBLootTables.SHRINE), pedestal.level.getRandom().nextLong());
         ArcaneLockData data = Services.OBJECT_DATA.getArcaneLockData(container);
         if (data != null) data.setArcaneLockOwner(UUID.randomUUID().toString());
         pedestal.sync();
@@ -204,7 +204,7 @@ public class RunestonePedestalBlockEntity extends BlockEntity {
             BlockPos spawnPos = findSpawnPositionWizard(level.random.nextFloat() * 2 * (float) Math.PI);
             wizard.setPos(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
             wizard.setElement(getBlockState().getBlock() instanceof RunestonePedestalBlock runestone ? runestone.getElement() : Elements.FIRE);
-            wizard.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.STRUCTURE, null, null);
+            wizard.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.STRUCTURE, null);
             level.addFreshEntity(wizard);
             spawnedWizards.add(wizard.getUUID());
         }
@@ -298,8 +298,8 @@ public class RunestonePedestalBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (linkedPos != null) tag.put("LinkedPos", NbtUtils.writeBlockPos(linkedPos));
         tag.putBoolean("Natural", natural);
         tag.putBoolean("Activated", activated);
@@ -310,9 +310,9 @@ public class RunestonePedestalBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        this.linkedPos = tag.contains("LinkedPos") ? NbtUtils.readBlockPos(tag.getCompound("LinkedPos")) : null;
+    public void loadAdditional(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.linkedPos = tag.contains("LinkedPos") ? NbtUtils.readBlockPos(tag, "LinkedPos").orElse(null) : null;
         this.natural = tag.getBoolean("Natural");
         this.activated = tag.getBoolean("Activated");
         this.conquered = tag.getBoolean("Conquered");
@@ -347,9 +347,9 @@ public class RunestonePedestalBlockEntity extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        saveAdditional(tag);
+    public @NotNull CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        saveAdditional(tag, registries);
         return tag;
     }
 

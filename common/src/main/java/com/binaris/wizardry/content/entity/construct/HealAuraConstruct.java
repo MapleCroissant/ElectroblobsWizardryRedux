@@ -13,7 +13,7 @@ import com.binaris.wizardry.setup.registries.client.EBParticles;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
+
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class HealAuraConstruct extends ScaledConstructEntity {
                 continue;
             }
 
-            if (target.getMobType() == MobType.UNDEAD && this.tickCount % 10 == 1) {
+            if (target.getType().is(net.minecraft.tags.EntityTypeTags.UNDEAD) && this.tickCount % 10 == 1) {
                 EntityUtil.attackEntityWithoutKnockback(target, this.getCaster() != null ?
                                 MagicDamageSource.causeIndirectMagicDamage(this, getCaster(), EBDamageSources.RADIANT) :
                                 MagicDamageSource.causeDirectMagicDamage(this, EBDamageSources.SORCERY),

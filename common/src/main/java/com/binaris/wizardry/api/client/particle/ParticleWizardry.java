@@ -277,11 +277,11 @@ public abstract class ParticleWizardry extends TextureSheetParticle {
             scratch.rotate(rotation);
             scratch.mul(size);
             scratch.add(x, y, z);
-            buffer.vertex(scratch.x, scratch.y, scratch.z)
-                    .uv(u, v)
-                    .color(this.rCol, this.gCol, this.bCol, this.alpha)
-                    .uv2(light)
-                    .endVertex();
+            buffer.addVertex(scratch.x, scratch.y, scratch.z)
+                    .setUv(u, v)
+                    .setColor(this.rCol, this.gCol, this.bCol, this.alpha)
+                    .setLight(light)
+                    ;
         }
     }
 
