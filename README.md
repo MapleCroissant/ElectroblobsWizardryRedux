@@ -1,9 +1,11 @@
 **Note: This mod is currently in Alpha. For development updates, bug reports, and community discussion, join our [Discord](https://discord.gg/9R3nw3uQTu) and check our [Wiki](https://electroblobs-redux-wiki.pages.dev/)**
 
-This branch targets **Minecraft 1.21.1 Fabric with Java 21**. See the
+This branch builds **Minecraft 1.21.1 Fabric and NeoForge with Java 21**. See the
 [migration record](migration/README.md) for build commands, validation and
 remaining gameplay checks, and [API changes](BREAKING_CHANGES.md) for add-ons.
-Forge sources are retained for reference but are excluded from this branch's build.
+The [NeoForge status report](migration/NEOFORGE-STATUS.md) records its build,
+integration and packaged-JAR validation. Legacy Forge sources remain a 1.20.1
+reference and are excluded from this branch's build.
 
 ## About
 
@@ -35,7 +37,16 @@ Start by mining Magic Crystals (though there are "easier" ways to find them if y
 
 **Important (WHEN USING ACCESSORIES):** If any other mods in your modpack list use 'Trinkets' as a dependency, download [Accessories Compatibility Layer](https://www.curseforge.com/minecraft/mc-mods/accessories-tc-layer) **instead** of Trinkets itself (this mod acts as a bridge to help mods with Accessories and Trinkets work together).
 
-### Forge
+### NeoForge
+
+**Required:** Minecraft 1.21.1, Java 21 and NeoForge 21.1.266 or newer within 21.1.
+
+Install the `-neoforge.jar` artifact. It bundles MarkdownGenerator and does not
+require Fabric API or Cardinal Components. JEI, Cloth Config, Curios and
+Accessories are optional. Tested versions and commands are in the
+[NeoForge status report](migration/NEOFORGE-STATUS.md).
+
+### Legacy Forge (1.20.1 reference)
 
 **Required:** Forge Loader 47.2.30+ (for Minecraft 1.20.1)
 

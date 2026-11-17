@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="ebwizardry"
+version="0.8.10-neoforge"
+displayName="Electroblob's Wizardry Redux"
+description='''Magic, spells, wands and wizardry for Minecraft 1.21.1.'''
+[[dependencies.ebwizardry]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.266,21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.ebwizardry]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+[[mixins]]
+config="ebwizardry.mixins.json"
+[[mixins]]
+config="ebwizardry.neoforge.mixins.json"

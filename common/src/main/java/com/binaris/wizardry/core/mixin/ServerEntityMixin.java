@@ -23,7 +23,9 @@ public abstract class ServerEntityMixin {
 
     @Inject(method = "sendPairingData", at = @At("TAIL"))
     private void EBWIZARDRY$sendMagicEffectsOnPair(ServerPlayer player,
-                                                    Consumer<Packet<ClientGamePacketListener>> consumer, CallbackInfo ci) {
+                                                    @org.spongepowered.asm.mixin.injection.Coerce Object packetAcceptor, CallbackInfo ci) {
+        // NeoForge's tracking event runs after its spawn bundle has been sent.
+        if (com.binaris.wizardry.core.platform.Services.PLATFORM.getPlatformName().equals("NeoForge")) return;
         if (!(entity instanceof LivingEntity living)) return;
         MagicEffectSync.sendAllTo(player, living);
     }

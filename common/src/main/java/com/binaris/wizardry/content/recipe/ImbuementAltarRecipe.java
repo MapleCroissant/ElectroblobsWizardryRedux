@@ -245,6 +245,15 @@ public class ImbuementAltarRecipe implements Recipe<ImbuementAltarRecipe.Input> 
         return poll != null;
     }
 
+    /** Read-only display inputs for recipe viewers, preserving weighted output NBT. */
+    public List<TagKey<Item>> getPollTags() {
+        return poll == null ? List.of() : List.copyOf(poll);
+    }
+
+    public List<ItemStack> getPossibleResults() {
+        return results == null ? List.of(output.copy()) : results.values().stream().map(ItemStack::copy).toList();
+    }
+
     /// Rolls a winning poll tag using each receptacle item as a vote for every tag it matches.
     ///
     /// Each receptacle stack increments the weight of each poll tag whose items accept it, so the

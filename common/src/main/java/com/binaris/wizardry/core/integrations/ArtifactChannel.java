@@ -73,7 +73,7 @@ public final class ArtifactChannel {
             return AccessoriesIntegration.INSTANCE;
         }
 
-        if (Services.PLATFORM.getPlatformName().equals("Forge") && Services.PLATFORM.isModLoaded("curios")) {
+        if ((Services.PLATFORM.getPlatformName().equals("Forge") || Services.PLATFORM.getPlatformName().equals("NeoForge")) && Services.PLATFORM.isModLoaded("curios")) {
             return Services.PLATFORM.getArtifactIntegration();
         }
 

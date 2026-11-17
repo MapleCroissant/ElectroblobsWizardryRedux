@@ -1,0 +1,570 @@
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" setlocal
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DIRNAME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\" == "" set DIRNAME=. 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_BASE_NAME=gradlew 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>for %i in ("C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\") do set APP_HOME=%~fi 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m" 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if defined JAVA_HOME goto findJavaFromJavaHome 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_EXE=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if exist "C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" goto execute 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set CLASSPATH=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>"C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" "-Xmx64m" "-Xms64m"   "-Dorg.gradle.appname=gradlew" -classpath "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain :neoforge:build :neoforge:runGameTestJarSmoke :neoforge:runClientJarSmoke -PwithoutOptionalIntegrations --console=plain 
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy NO-SOURCE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :common
+Fabric Loom: 1.9.2
+
+> Configure project :fabric
+Fabric Loom: 1.9.2
+
+> Task :neoforge:createMinecraftArtifacts UP-TO-DATE
+
+> Task :neoforge:compileJava
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\neoforge\src\main\java\com\binaris\wizardry\WizardryForgeEvents.java:92: warning: [removal] bus() in EventBusSubscriber has been deprecated and marked for removal
+    @EventBusSubscriber(modid = WizardryMainMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+                                                        ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\neoforge\src\main\java\com\binaris\wizardry\WizardryForgeEvents.java:92: warning: [removal] Bus in EventBusSubscriber has been deprecated and marked for removal
+    @EventBusSubscriber(modid = WizardryMainMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+                                                                                ^
+2 warnings
+
+> Task :neoforge:processResources UP-TO-DATE
+> Task :neoforge:classes
+> Task :neoforge:jarJar UP-TO-DATE
+> Task :neoforge:jar
+
+> Task :neoforge:javadoc
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\mixin\HumanoidModelMixin.java:23: warning: no @param for <T>
+public abstract class HumanoidModelMixin<T> {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:49: warning: no comment
+public abstract class AbstractWizard extends PathfinderMob implements ISpellCaster {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:68: warning: no comment
+    protected List<Spell> spells = new ArrayList<>(4);
+                          ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:70: warning: no comment
+    public AbstractWizard(EntityType<? extends PathfinderMob> type, Level world) {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:74: warning: no comment
+    public static AttributeSupplier.Builder createAttributes() {
+                                            ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:193: warning: no comment
+    public void equipArmorAndDisableDrops(Element element) {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\entity\living\ISpellCaster.java:51: warning: no comment
+    default Spell getContinuousSpell() {
+                  ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:286: warning: no comment
+    public @Nullable Element getElement() {
+                             ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\entity\living\ISpellCaster.java:73: warning: no comment
+    default int getSpellCounter() {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\entity\living\ISpellCaster.java:29: warning: no comment
+    List<Spell> getSpells();
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:332: warning: no comment
+    public int getSpellTargetId() {
+               ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:294: warning: no comment
+    public int getTextureIndex() {
+               ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:206: warning: no comment
+    public void  prepareWandWithSpells(Element element, SpellTier maxTier) {
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\entity\living\ISpellCaster.java:62: warning: no comment
+    default void setContinuousSpell(Spell spell) {
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:290: warning: no comment
+    public void setElement(Element element) {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\entity\living\ISpellCaster.java:83: warning: no comment
+    default void setSpellCounter(int count) {
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:307: warning: no comment
+    public void setSpells(List<Spell> spells) {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:336: warning: no comment
+    public void setSpellTargetId(int targetId) {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\entity\living\AbstractWizard.java:298: warning: no comment
+    public void setTextureIndex(int index) {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesArtifactImpl.java:16: warning: no comment
+public class AccessoriesArtifactImpl implements ArtifactIntegration {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesArtifactImpl.java:17: warning: no comment
+    public static final ArtifactIntegration INSTANCE = new AccessoriesArtifactImpl();
+                                            ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesArtifactImpl.java:16: warning: use of default constructor, which does not provide a comment
+public class AccessoriesArtifactImpl implements ArtifactIntegration {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\ArtifactIntegration.java:30: warning: no comment
+    Item createArtifact(Rarity rarity, IArtifactEffect effect);
+         ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\ArtifactIntegration.java:36: warning: no comment
+    List<ItemStack> getEquippedArtifacts(Player player);
+                    ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\ArtifactIntegration.java:43: warning: no comment
+    boolean isEquipped(Player player, Item item);
+            ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\ArtifactIntegration.java:23: warning: no comment
+    boolean isLoaded();
+            ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesArtifactItem.java:9: warning: no comment
+public class AccessoriesArtifactItem extends ArtifactItem implements io.wispforest.accessories.api.Accessory {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesArtifactItem.java:10: warning: no comment
+    public AccessoriesArtifactItem(Rarity rarity) {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesArtifactItem.java:15: warning: no comment
+    public AccessoriesArtifactItem(Rarity rarity, IArtifactEffect effect) {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesIntegration.java:15: warning: no comment
+public class AccessoriesIntegration implements ArtifactIntegration {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\integrations\accessories\AccessoriesIntegration.java:16: warning: no comment
+    public static final AccessoriesIntegration INSTANCE = new AccessoriesIntegration();
+                                               ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell_tier\AdvancedTier.java:6: warning: no comment
+public class AdvancedTier extends SpellTier {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell_tier\AdvancedTier.java:7: warning: no comment
+    public AdvancedTier() {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\command\AllyCommand.java:15: warning: no comment
+public final class AllyCommand {
+             ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\command\AllyCommand.java:16: warning: no comment
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
+                       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:27: warning: no comment
+public final class AllyDesignation {
+             ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:37: warning: no comment
+    public static boolean isAllied(LivingEntity allyOf, Entity possibleAlly) {
+                          ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:65: warning: no comment
+    public static boolean isMinionAlly(LivingEntity allyOf, Mob possibleAlly) {
+                          ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:160: warning: no comment
+    public static boolean isOwnerAlly(Player allyOf, OwnableEntity ownable) {
+                          ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:146: warning: no comment
+    public static boolean isPlayerAlly(Player allyOf, UUID possibleAlly) {
+                          ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:136: warning: no comment
+    public static boolean isPlayerAlly(Player allyOf, Player possibleAlly) {
+                          ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:86: warning: no comment
+    public static boolean isValidTarget(@Nullable Entity attacker, @Nullable Entity target) {
+                          ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\AllyDesignation.java:117: warning: no comment
+    public static void onLivingHurt(EBLivingHurtEvent event) {
+                       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\AmuletPotentialEffect.java:13: warning: no comment
+public class AmuletPotentialEffect implements IArtifactEffect {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\AmuletPotentialEffect.java:14: warning: no comment
+    public static float PROBABILITY_EFFECT = 0.2F;
+                        ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\AmuletPotentialEffect.java:13: warning: use of default constructor, which does not provide a comment
+public class AmuletPotentialEffect implements IArtifactEffect {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\IEventEffect.java:56: warning: no comment
+    default void onUserHurt(LivingEntity user, DamageSource source, AtomicDouble amount, AtomicBoolean canceled, C context) {
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell_tier\ApprenticeTier.java:6: warning: no comment
+public class ApprenticeTier extends SpellTier {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell_tier\ApprenticeTier.java:7: warning: no comment
+    public ApprenticeTier() {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\lightning\Arc.java:22: warning: no comment
+public class Arc extends RaySpell {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\lightning\Arc.java:24: warning: no comment
+    public Arc() {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\abstr\RaySpell.java:213: warning: no comment
+    protected abstract boolean onBlockHit(CastContext ctx, BlockHitResult blockHit, Vec3 origin);
+                               ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\abstr\RaySpell.java:201: warning: no comment
+    protected abstract boolean onEntityHit(CastContext ctx, EntityHitResult entityHit, Vec3 origin);
+                               ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\abstr\RaySpell.java:225: warning: no comment
+    protected abstract boolean onMiss(CastContext ctx, Vec3 origin, Vec3 direction);
+                               ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\spell\Spell.java:286: warning: no comment
+    protected abstract @NotNull SpellProperties properties();
+                                                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\ArcaneDefenseAmuletEffect.java:11: warning: no comment
+public class ArcaneDefenseAmuletEffect implements IArtifactEffect {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\ArcaneDefenseAmuletEffect.java:12: warning: no comment
+    public static final int MANA_RECHARGE_INTERVAL_TICKS = 300;
+                            ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\ArcaneDefenseAmuletEffect.java:11: warning: use of default constructor, which does not provide a comment
+public class ArcaneDefenseAmuletEffect implements IArtifactEffect {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\IEventEffect.java:23: warning: no comment
+    default void onTick(LivingEntity user, Level level, C context) {
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\ArcaneFrostRingEffect.java:11: warning: no comment
+public class ArcaneFrostRingEffect implements IArtifactEffect {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\artifact\ArcaneFrostRingEffect.java:11: warning: use of default constructor, which does not provide a comment
+public class ArcaneFrostRingEffect implements IArtifactEffect {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\IEventEffect.java:33: warning: no comment
+    default void onKillEntity(LivingEntity user, LivingEntity deadEntity, DamageSource source, C context) {
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\healing\ArcaneJammer.java:20: warning: no comment
+public class ArcaneJammer extends RaySpell {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\healing\ArcaneJammer.java:21: warning: no comment
+    public ArcaneJammer() {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\abstr\RaySpell.java:291: warning: no comment
+    protected void spawnParticle(CastContext ctx, double x, double y, double z, double vx, double vy, double vz) {
+                   ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\effect\ArcaneJammerMobEffect.java:15: warning: no comment
+public class ArcaneJammerMobEffect extends CurseMobEffect {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\effect\ArcaneJammerMobEffect.java:21: warning: no comment
+    public ArcaneJammerMobEffect() {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\core\IEventEffect.java:64: warning: no comment
+    default void onSpellPreCast(SpellCastEvent.Pre event, C context) {
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\data\ArcaneLockData.java:16: warning: no comment
+public interface ArcaneLockData {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\data\ArcaneLockData.java:17: warning: no comment
+    String NBT_KEY = "arcaneLockOwner";
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\data\ArcaneLockData.java:32: warning: no comment
+    void clearArcaneLockOwner();
+         ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\data\ArcaneLockData.java:37: warning: no comment
+    @Nullable UUID getArcaneLockOwnerUUID();
+                   ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\data\ArcaneLockData.java:23: warning: no comment
+    boolean isArcaneLocked();
+            ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\data\ArcaneLockData.java:28: warning: no comment
+    void setArcaneLockOwner(String ownerUUID);
+         ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\neoforge\src\main\java\com\binaris\wizardry\attachments\blockentity\ArcaneLockDataHolder.java:13: warning: no comment
+public class ArcaneLockDataHolder implements ArcaneLockData, com.binaris.wizardry.attachments.PersistentData {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\neoforge\src\main\java\com\binaris\wizardry\attachments\blockentity\ArcaneLockDataHolder.java:17: warning: no comment
+    public ArcaneLockDataHolder(BaseContainerBlockEntity provider) {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\neoforge\src\main\java\com\binaris\wizardry\attachments\PersistentData.java:8: warning: no comment
+    void readFromNbt(CompoundTag tag, HolderLookup.Provider registries);
+         ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\neoforge\src\main\java\com\binaris\wizardry\attachments\blockentity\ArcaneLockDataHolder.java:21: warning: no comment
+    public void sync() {
+                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\neoforge\src\main\java\com\binaris\wizardry\attachments\PersistentData.java:9: warning: no comment
+    void writeToNbt(CompoundTag tag, HolderLookup.Provider registries);
+         ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\client\effect\ArcaneLockRender.java:31: warning: no comment
+public final class ArcaneLockRender {
+             ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\client\effect\ArcaneLockRender.java:31: warning: use of default constructor, which does not provide a comment
+public final class ArcaneLockRender {
+             ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\client\effect\ArcaneLockRender.java:47: warning: no comment
+    public static void markDirty() {
+                       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\client\effect\ArcaneLockRender.java:152: warning: no comment
+    public static void onJoin(EBEntityJoinLevelEvent event) {
+                       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\client\effect\ArcaneLockRender.java:51: warning: no comment
+    public static void render(Camera camera, PoseStack poseStack, float partialTicks) {
+                       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\sorcery\ArcaneLockSpell.java:31: warning: no comment
+public class ArcaneLockSpell extends RaySpell {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\spell\sorcery\ArcaneLockSpell.java:31: warning: use of default constructor, which does not provide a comment
+public class ArcaneLockSpell extends RaySpell {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\ArcaneTomeItem.java:30: warning: no comment
+public class ArcaneTomeItem extends Item implements ITierValue, com.binaris.wizardry.api.content.item.ICustomRarityItem {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\ArcaneTomeItem.java:33: warning: no comment
+    public ArcaneTomeItem() {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\ArcaneTomeItem.java:38: warning: no comment
+    public ArcaneTomeItem(@Nullable SpellTier tier) {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\item\ICustomRarityItem.java:8: warning: no comment
+    Rarity getRarity(ItemStack stack);
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\api\content\item\ITierValue.java:12: warning: no comment
+    SpellTier getTier(ItemStack stack);
+              ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\block\ArcaneWorkbenchBlock.java:27: warning: no comment
+public class ArcaneWorkbenchBlock extends BaseEntityBlock {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\block\ArcaneWorkbenchBlock.java:28: warning: no comment
+    public static final com.mojang.serialization.MapCodec<ArcaneWorkbenchBlock> CODEC = simpleCodec(ArcaneWorkbenchBlock::new);
+                                                                                ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\block\ArcaneWorkbenchBlock.java:32: warning: no comment
+    public static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 12, 16);
+                                   ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\block\ArcaneWorkbenchBlock.java:34: warning: no comment
+    public ArcaneWorkbenchBlock(Properties properties) {
+           ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\block\ArcaneWorkbenchBlock.java:39: warning: no comment
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> type, BlockEntityType<ArcaneWorkbenchBlockEntity> entityType) {
+                                                                  ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\blockentity\ArcaneWorkbenchBlockEntity.java:36: warning: no comment
+public class ArcaneWorkbenchBlockEntity extends BaseContainerBlockEntity {
+       ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\blockentity\ArcaneWorkbenchBlockEntity.java:39: warning: no comment
+    public float oRot;
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\blockentity\ArcaneWorkbenchBlockEntity.java:38: warning: no comment
+    public float rot;
+                 ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\blockentity\ArcaneWorkbenchBlockEntity.java:37: warning: no comment
+    public float timer = 0;
+                 ^
+100 warnings
+
+> Task :neoforge:javadocJar
+> Task :neoforge:sourcesJar
+> Task :neoforge:assemble
+> Task :neoforge:compileTestJava NO-SOURCE
+> Task :neoforge:processTestResources NO-SOURCE
+> Task :neoforge:testClasses UP-TO-DATE
+> Task :neoforge:test NO-SOURCE
+> Task :neoforge:check UP-TO-DATE
+> Task :neoforge:build
+> Task :neoforge:downloadAssets UP-TO-DATE
+> Task :neoforge:writeGameTestJarSmokeLegacyClasspath UP-TO-DATE
+> Task :neoforge:prepareGameTestJarSmokeRun UP-TO-DATE
+> Task :neoforge:preparePackagedSmoke
+
+> Task :neoforge:runGameTestJarSmoke
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[14:58:57] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.266, --fml.neoFormVersion, 20240808.144430]
+[14:58:57] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.8+9-LTS
+[14:58:57] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.8 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[14:58:57] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[14:58:57] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/C:/Users/Migue/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[14:58:58] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 3 dependencies adding them to mods collection
+[14:58:58] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Electroblob's Wizardry Redux 0.8.10-neoforge (ebwizardry)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.266 (neoforge)
+[14:58:58] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[14:58:58] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[14:58:58] [main/WARN] [mixin/]: Reference map 'ebwizardry.refmap.json' for ebwizardry.mixins.json could not be read. If this is a development environment you can ignore this message
+[14:58:59] [main/WARN] [os.dr.wi.pe.PerfmonDisabled/]: Invalid registry value type detected for PerfOS counters. Should be REG_DWORD. Ignoring: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfOS\Performance\Disable Performance Counters.
+[14:58:59] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[14:59:03] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14:59:03] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14:59:03] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[14:59:03] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[14:59:03] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14:59:03] [modloading-worker-0/INFO] [co.bi.wi.co.EBLogger/]: Packaged NeoForge mod origin: union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/run-packaged-smoke/mods/electroblobs-wizardry-redux-1.21.1-0.8.10-neoforge.jar%23127!/
+[14:59:03] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.266, for MC 1.21.1
+[14:59:03] [modloading-worker-0/INFO] [co.bi.wi.co.EBLogger/]: Electroblob's Wizardry Started
+[14:59:03] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[14:59:04] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/build/moddev/artifacts/neoforge-21.1.266.jar%23125!/assets/.mcassetsroot' uses unexpected schema
+[14:59:04] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/build/moddev/artifacts/neoforge-21.1.266.jar%23125!/data/.mcassetsroot' uses unexpected schema
+[14:59:04] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [ebwizardry]
+[14:59:04] [main/INFO] [minecraft/RecipeManager]: Loaded 1492 recipes
+[14:59:04] [main/INFO] [minecraft/AdvancementTree]: Loaded 1510 advancements
+[14:59:05] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[14:59:05] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[14:59:05] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 169 ms
+[14:59:05] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[14:59:05] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[14:59:05] [Server thread/INFO] [minecraft/GameTestServer]: 42 tests are now running at position 10052856, -59, -14021399!
+[14:59:05] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (42 tests)...
+[14:59:05] [Server thread/INFO] [minecraft/GameTestServer]: [                                          ]
+[14:59:06] [Server thread/INFO] [co.bi.wi.co.EBLogger/]: 
+
+| Cases                   | Lifetime | Cooldown  | Cost      | Chargeup | Modifiers                                                               |
+| ----------------------- | -------- | --------- | --------- | -------- | ----------------------------------------------------------------------- |
+| Vanilla Player          | 900.0    | 150.0     | 100.0     | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@428d18e  |
+| Player Wizard Armor     | 900.0    | 150.0     | 47.59203  | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@63b6b661 |
+| Player Sage Armor       | 900.0    | 150.0     | 21.567118 | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@35056f0e |
+| Player Battlemage Armor | 900.0    | 117.56152 | 69.384254 | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@48ff17fe |
+| Player Warlock Armor    | 900.0    | 91.43533  | 41.85963  | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@3308930f |
+[14:59:06] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++_+++++++++++++++_+++++++_+++++++  ]
+[14:59:06] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++_+++++++++++++++_+++++++_+++++++++]
+[14:59:06] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++_+++++++++++++++_+++++++++++++++++]
+[14:59:06] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++++++++++++++++++++]
+[14:59:06] [Server thread/INFO] [minecraft/GameTestServer]: ========= 42 GAME TESTS COMPLETE IN 1.256 s ======================
+[14:59:06] [Server thread/INFO] [minecraft/GameTestServer]: All 42 required tests passed :)
+[14:59:06] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[14:59:06] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[14:59:06] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[14:59:06] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[14:59:06] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[14:59:07] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[14:59:07] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[14:59:07] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (packaged-migration-smoke): All chunks are saved
+[14:59:07] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[14:59:07] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[14:59:07] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[14:59:07] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :neoforge:writeClientJarSmokeLegacyClasspath UP-TO-DATE
+> Task :neoforge:prepareClientJarSmokeRun UP-TO-DATE
+> Task :neoforge:preparePackagedClient
+
+> Task :neoforge:runClientJarSmoke
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[14:59:08] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientdev, --version, 21.1.266, --assetIndex, 17, --assetsDir, C:\\Users\\Migue\\.gradle\\caches\\neoformruntime\\assets, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.266, --fml.neoFormVersion, 20240808.144430, --quickPlaySingleplayer, neoforge-packaged-client-isolated]
+[14:59:08] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.8+9-LTS
+[14:59:08] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.8 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[14:59:09] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[14:59:09] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[14:59:09] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
+[14:59:09] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/C:/Users/Migue/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%23138!/ Service=ModLauncher Env=CLIENT
+[14:59:09] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2 GL version 4.6.0 NVIDIA 610.88, NVIDIA Corporation
+[14:59:09] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 3 dependencies adding them to mods collection
+[14:59:09] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Electroblob's Wizardry Redux 0.8.10-neoforge (ebwizardry)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.266 (neoforge)
+[14:59:10] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[14:59:10] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientdev' with arguments [--version, 21.1.266, --gameDir, ., --assetsDir, C:\Users\Migue\.gradle\caches\neoformruntime\assets, --assetIndex, 17, --quickPlaySingleplayer, neoforge-packaged-client-isolated]
+[14:59:10] [main/WARN] [mixin/]: Reference map 'ebwizardry.refmap.json' for ebwizardry.mixins.json could not be read. If this is a development environment you can ignore this message
+[14:59:10] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[14:59:11] [Datafixer Bootstrap/INFO] [mojang/DataFixerBuilder]: 229 Datafixer optimizations took 262 milliseconds
+[14:59:11] [main/WARN] [os.dr.wi.pe.PerfmonDisabled/]: Invalid registry value type detected for PerfOS counters. Should be REG_DWORD. Ignoring: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfOS\Performance\Disable Performance Counters.
+[14:59:14] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14:59:14] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14:59:14] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[14:59:14] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[14:59:14] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14:59:15] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/build/moddev/artifacts/neoforge-21.1.266.jar%23189!/assets/.mcassetsroot' uses unexpected schema
+[14:59:15] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/build/moddev/artifacts/neoforge-21.1.266.jar%23189!/data/.mcassetsroot' uses unexpected schema
+[14:59:15] [Render thread/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[14:59:15] [Render thread/INFO] [minecraft/Minecraft]: Setting user: Dev
+[14:59:15] [Render thread/INFO] [minecraft/Minecraft]: Backend library: LWJGL version 3.3.3+5
+[14:59:15] [modloading-worker-0/INFO] [co.bi.wi.co.EBLogger/]: Packaged NeoForge mod origin: union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/run-packaged-smoke/mods/electroblobs-wizardry-redux-1.21.1-0.8.10-neoforge.jar%23191!/
+[14:59:15] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.266, for MC 1.21.1
+[14:59:15] [modloading-worker-0/INFO] [co.bi.wi.co.EBLogger/]: Electroblob's Wizardry Started
+[14:59:15] [Render thread/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: []
+[14:59:16] [Render thread/INFO] [minecraft/ReloadableResourceManager]: Reloading ResourceManager: vanilla, mod_resources, mod/neoforge, mod/ebwizardry
+[14:59:16] [Worker-Main-23/INFO] [minecraft/UnihexProvider]: Found unifont_all_no_pua-15.1.05.hex, loading
+[14:59:16] [Worker-Main-13/INFO] [minecraft/UnihexProvider]: Found unifont_jp_patch-15.1.05.hex, loading
+[14:59:16] [Worker-Main-7/WARN] [minecraft/ModelManager]: Missing textures in model ebwizardry:lightning_hammer#inventory:
+    minecraft:textures/atlas/blocks.png:ebwizardry:entity/lightning_hammer
+[14:59:17] [Render thread/ERROR] [minecraft/SoundManager]: Missing subtitle translation{key='subtitles.ebwizardry.block.imbuement_altar.imbue', args=[]} for sound event: ebwizardry:block.imbuement_altar.imbue
+[14:59:17] [Render thread/ERROR] [minecraft/SoundManager]: Missing subtitle translation{key='subtitles.ebwizardry.misc.discover_spell', args=[]} for sound event: ebwizardry:misc.discover_spell
+[14:59:17] [Render thread/ERROR] [minecraft/SoundManager]: Missing subtitle translation{key='subtitles.ebwizardry.misc.spell_fail', args=[]} for sound event: ebwizardry:misc.spell_fail
+[14:59:17] [Render thread/ERROR] [minecraft/SoundManager]: Missing subtitle translation{key='subtitles.ebwizardry.misc.freeze', args=[]} for sound event: ebwizardry:misc.freeze
+[14:59:17] [Render thread/ERROR] [minecraft/SoundManager]: Missing subtitle translation{key='subtitles.ebwizardry.misc.page_turn', args=[]} for sound event: ebwizardry:misc.page_turn
+[14:59:17] [Render thread/ERROR] [minecraft/SoundManager]: Missing subtitle translation{key='subtitles.ebwizardry.misc.book_open', args=[]} for sound event: ebwizardry:misc.book_open
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:item.goat_horn.play
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: ebwizardry:spell.lightning_bolt
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: ebwizardry:spell.frost_barrier
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: ebwizardry:forfeit.ice_spikes
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: ebwizardry:forfeit.lightning
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: ebwizardry:spell.none
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: ebwizardry:forfeit.uproot_plants
+[14:59:17] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: ebwizardry:spell.mine
+[14:59:17] [Render thread/INFO] [mojang/Library]: OpenAL initialized on device OpenAL Soft on SteelSeries Sonar - Gaming (SteelSeries Sonar Virtual Audio Device)
+[14:59:17] [Render thread/INFO] [minecraft/SoundEngine]: Sound engine started
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x1024x4 minecraft:textures/atlas/blocks.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x0 minecraft:textures/atlas/particles.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[14:59:17] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[14:59:17] [Render thread/WARN] [minecraft/ShaderInstance]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[14:59:17] [Render thread/INFO] [ne.ne.ne.cl.en.an.js.AnimationLoader/]: Loaded 0 entity animations
+[14:59:18] [Render thread/INFO] [minecraft/RecipeManager]: Loaded 1492 recipes
+[14:59:18] [Render thread/INFO] [minecraft/AdvancementTree]: Loaded 1510 advancements
+[14:59:18] [Render thread/INFO] [co.bi.wi.co.EBLogger/]: Restoring local configuration values...
+[14:59:18] [Server thread/INFO] [minecraft/IntegratedServer]: Starting integrated minecraft server version 1.21.1
+[14:59:18] [Server thread/INFO] [minecraft/MinecraftServer]: Generating keypair
+[14:59:18] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[14:59:18] [progressListener/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[14:59:18] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[14:59:18] [progressListener/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 286 ms
+[14:59:18] [Server thread/INFO] [minecraft/IntegratedServer]: Changing view distance to 12, from 10
+[14:59:18] [Server thread/INFO] [minecraft/IntegratedServer]: Changing simulation distance to 12, from 0
+[14:59:19] [Server thread/INFO] [minecraft/PlayerList]: Dev[local:E:dab208d5] logged in with entity id 7 at (4.5, 130.0, -9.5)
+[14:59:19] [Server thread/INFO] [minecraft/MinecraftServer]: Dev joined the game
+[14:59:19] [Server thread/INFO] [co.bi.wi.co.EBLogger/]: Synchronising spell glyph data for Dev
+[14:59:20] [Render thread/INFO] [co.bi.wi.co.EBLogger/]: Synced config for provider: ebwizardry-common
+[14:59:20] [Render thread/INFO] [co.bi.wi.co.EBLogger/]: Synced config for provider: ebwizardry-server
+[14:59:20] [Render thread/INFO] [minecraft/AdvancementTree]: Loaded 17 advancements
+[14:59:29] [Render thread/INFO] [co.bi.wi.co.EBLogger/]: NeoForge integrated-world smoke test completed after 200 client ticks
+[14:59:29] [Render thread/INFO] [minecraft/Minecraft]: Stopping!
+[14:59:29] [Render thread/INFO] [co.bi.wi.co.EBLogger/]: Restoring local configuration values...
+[14:59:29] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: Dev lost connection: Disconnected
+[14:59:29] [Server thread/INFO] [minecraft/MinecraftServer]: Dev left the game
+[14:59:29] [Server thread/INFO] [minecraft/ServerCommonPacketListenerImpl]: Stopping singleplayer server as player logged out
+[14:59:29] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[14:59:29] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[14:59:29] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[14:59:29] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[14:59:30] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[14:59:30] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[14:59:30] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (neoforge-packaged-client-isolated): All chunks are saved
+[14:59:30] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[14:59:30] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[14:59:30] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[Incubating] Problems report is available at: file:///C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 51s
+24 actionable tasks: 9 executed, 15 up-to-date
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if 0 EQU 0 goto mainEnd 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" endlocal

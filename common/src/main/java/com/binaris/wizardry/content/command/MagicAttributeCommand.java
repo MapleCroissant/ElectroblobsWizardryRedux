@@ -30,9 +30,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public final class MagicAttributeCommand {
-    private static final DynamicCommandExceptionType ERROR_NOT_LIVING_ENTITY = new DynamicCommandExceptionType((p_212443_) -> Component.translatable("commands.attribute.failed.entity", new Object[]{p_212443_}));
-    private static final Dynamic2CommandExceptionType ERROR_NO_SUCH_ATTRIBUTE = new Dynamic2CommandExceptionType((p_212445_, p_212446_) -> Component.translatable("commands.attribute.failed.no_attribute", new Object[]{p_212445_, p_212446_}));
-    private static final Dynamic3CommandExceptionType ERROR_MODIFIER_ALREADY_PRESENT = new Dynamic3CommandExceptionType((p_136497_, p_136498_, p_136499_) -> Component.translatable("commands.attribute.failed.modifier_already_present", new Object[]{p_136499_, p_136498_, p_136497_}));
+    private static final DynamicCommandExceptionType ERROR_NOT_LIVING_ENTITY = new DynamicCommandExceptionType((p_212443_) -> Component.translatableEscape("commands.attribute.failed.entity", new Object[]{p_212443_}));
+    private static final Dynamic2CommandExceptionType ERROR_NO_SUCH_ATTRIBUTE = new Dynamic2CommandExceptionType((p_212445_, p_212446_) -> Component.translatableEscape("commands.attribute.failed.no_attribute", new Object[]{p_212445_, p_212446_}));
+    private static final Dynamic3CommandExceptionType ERROR_MODIFIER_ALREADY_PRESENT = new Dynamic3CommandExceptionType((p_136497_, p_136498_, p_136499_) -> Component.translatableEscape("commands.attribute.failed.modifier_already_present", new Object[]{p_136499_, p_136498_, p_136497_}));
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandBuildContext) {
         dispatcher.register(Commands.literal("magic_attribute")
@@ -103,7 +103,7 @@ public final class MagicAttributeCommand {
             throw ERROR_MODIFIER_ALREADY_PRESENT.create(target.getName(), getAttributeDescription(attribute), uuid);
         } else {
             instance.addPermanentModifier(attributeModifier);
-            ctx.getSource().sendSuccess(() -> Component.translatable("commands.attribute.modifier.add.success", uuid, getAttributeDescription(attribute), target.getName()), false);
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.attribute.modifier.add.success", uuid.toString(), getAttributeDescription(attribute), target.getName()), false);
             return 1;
         }
     }

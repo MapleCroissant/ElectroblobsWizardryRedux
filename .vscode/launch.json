@@ -96,6 +96,204 @@
       },
       "console": "internalConsole",
       "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - Client",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 0
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003debwizardry%%C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - ClientJarSmoke",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 1
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\clientJarSmokeRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\clientJarSmokeRunVmArgs.txt",
+        "-Dfml.modFolders\u003d"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run-packaged-smoke",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - ClientSmoke",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 2
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\clientSmokeRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\clientSmokeRunVmArgs.txt",
+        "-Dfml.modFolders\u003debwizardry%%C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - Data",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 3
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003debwizardry%%C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - GameTestJarSmoke",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 4
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\gameTestJarSmokeRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\gameTestJarSmokeRunVmArgs.txt",
+        "-Dfml.modFolders\u003d"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run-packaged-smoke",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - GameTestServer",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 5
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003debwizardry%%C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - Server",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 6
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003debwizardry%%C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - ServerJarSmoke",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 7
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\serverJarSmokeRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\serverJarSmokeRunVmArgs.txt",
+        "-Dfml.modFolders\u003d"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run-packaged-smoke",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "neoforge - ServerSmoke",
+      "presentation": {
+        "group": "Mod Development - neoforge",
+        "order": 8
+      },
+      "projectName": "neoforge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\serverSmokeRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\moddev\\serverSmokeRunVmArgs.txt",
+        "-Dfml.modFolders\u003debwizardry%%C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\neoforge\\run-server-smoke",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
     }
   ]
 }

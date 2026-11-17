@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.binaris.wizardry.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["LootPoolAccessor", "LootTableAccessor", "WizardArmorItemMixin", "WizardItemStackMixin", "LegacyEntityDataMixin", "LegacyBlockDataMixin"],
+  "client": ["SpectralArmorItemMixin", "WizardArmorRenderMixin"],
+  "injectors": {"defaultRequire": 1}
+}

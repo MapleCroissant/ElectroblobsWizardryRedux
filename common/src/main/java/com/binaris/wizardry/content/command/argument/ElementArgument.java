@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 public class ElementArgument implements ArgumentType<Element> {
     private static final Collection<String> EXAMPLES = Arrays.asList("ebwizardry:fire", "ebwizardry:ice");
     private static final DynamicCommandExceptionType ERROR_NOT_FOUND = new DynamicCommandExceptionType(
-            id -> Component.translatable("argument.ebwizardry.element.notfound", id)
+            id -> Component.translatable("argument.ebwizardry.element.notfound", id.toString())
     );
 
     public ElementArgument() {

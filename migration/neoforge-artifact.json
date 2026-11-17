@@ -1,0 +1,12 @@
+{
+    "Path":  "C:\\Users\\Migue\\OneDrive\\Desktop\\Electroblob 1.21.1\\ElectroblobsWizardryRedux\\neoforge\\build\\libs\\electroblobs-wizardry-redux-1.21.1-0.8.10-neoforge.jar",
+    "Bytes":  9121460,
+    "SHA256":  "44F4F5ED38738E523144650B826E41F393244A9E0A6410CE4370957E36CCF872",
+    "JavaClassVersion":  65,
+    "NeoForgeMetadata":  true,
+    "FabricMetadata":  false,
+    "BundledJars":  [
+                        "META-INF/jarjar/markdowngenerator-1.3.1.1.jar"
+                    ],
+    "Structures":  30
+}

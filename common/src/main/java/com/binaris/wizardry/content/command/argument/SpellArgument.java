@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 public class SpellArgument implements ArgumentType<Spell> {
     private static final Collection<String> EXAMPLES = Arrays.asList("ebwizardry:magic_missile", "ebwizardry:fireball");
     private static final DynamicCommandExceptionType ERROR_SPELL_NOT_FOUND = new DynamicCommandExceptionType(
-            id -> Component.translatable("argument.ebwizardry.spell.notfound", id)
+            id -> Component.translatable("argument.ebwizardry.spell.notfound", id.toString())
     );
 
     public SpellArgument() {

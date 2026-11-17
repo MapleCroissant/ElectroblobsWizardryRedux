@@ -1,0 +1,224 @@
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" setlocal
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DIRNAME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\" == "" set DIRNAME=. 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_BASE_NAME=gradlew 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>for %i in ("C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\") do set APP_HOME=%~fi 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m" 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if defined JAVA_HOME goto findJavaFromJavaHome 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_EXE=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if exist "C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" goto execute 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set CLASSPATH=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>"C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" "-Xmx64m" "-Xms64m"   "-Dorg.gradle.appname=gradlew" -classpath "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain :common:compileJava :fabric:build :fabric:runDatagen --console=plain 
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy NO-SOURCE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :common
+Fabric Loom: 1.9.2
+
+> Configure project :fabric
+Fabric Loom: 1.9.2
+
+> Task :common:compileJava
+warning: unknown enum constant Level.FULL
+  reason: class file for com.google.j2objc.annotations.ReflectionSupport$Level not found
+warning: unknown enum constant Level.FULL
+  reason: class file for com.google.j2objc.annotations.ReflectionSupport$Level not found
+warning: unknown enum constant Level.FULL
+  reason: class file for com.google.j2objc.annotations.ReflectionSupport$Level not found
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\armor\WizardArmorItem.java:195: warning: [removal] validForReceptacle() in IElementValue has been deprecated and marked for removal
+    public boolean validForReceptacle() {
+                   ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\SpectralDustItem.java:24: warning: [removal] validForReceptacle() in IElementValue has been deprecated and marked for removal
+    public boolean validForReceptacle() {
+                   ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\WandItem.java:574: warning: [removal] validForReceptacle() in IElementValue has been deprecated and marked for removal
+    public boolean validForReceptacle() {
+                   ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+6 warnings
+
+> Task :fabric:compileJava UP-TO-DATE
+> Task :fabric:processResources UP-TO-DATE
+> Task :fabric:classes UP-TO-DATE
+> Task :fabric:jar
+
+> Task :fabric:javadoc
+warning: unknown enum constant Level.FULL
+  reason: class file for com.google.j2objc.annotations.ReflectionSupport$Level not found
+1 warning
+
+> Task :fabric:javadocJar
+> Task :fabric:compileMigrationJava UP-TO-DATE
+> Task :fabric:compileTestJava NO-SOURCE
+> Task :fabric:processIncludeJars UP-TO-DATE
+> Task :fabric:sourcesJar
+> Task :fabric:processTestResources NO-SOURCE
+> Task :fabric:testClasses UP-TO-DATE
+> Task :fabric:test NO-SOURCE
+> Task :fabric:validateAccessWidener UP-TO-DATE
+> Task :fabric:check UP-TO-DATE
+> Task :fabric:generateLog4jConfig UP-TO-DATE
+> Task :fabric:generateRemapClasspath
+> Task :fabric:generateDLIConfig
+> Task :fabric:configureLaunch
+
+> Task :fabric:runDatagen
+[03:06:21] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.21.1 with Fabric Loader 0.16.14
+[03:06:21] [main/WARN] (FabricLoader/Resolution) Warnings were found!
+ - Mod 'Electroblob's Wizardry Redux' (ebwizardry) 0.8.10 recommends any version of accessories, which is missing!
+	 - You should install any version of accessories for the optimal experience.
+[03:06:21] [main/INFO] (FabricLoader) Loading 51 mods:
+	- cardinal-components-base 6.1.3
+	- cardinal-components-block 6.1.3
+	- cardinal-components-entity 6.1.3
+	- cloth-basic-math 0.6.1
+	- cloth-config 15.0.140
+	- ebwizardry 0.8.10
+	- fabric-api 0.116.16+1.21.1
+	- fabric-api-base 0.4.42+6573ed8cd1
+	- fabric-api-lookup-api-v1 1.6.72+7b3d111d19
+	- fabric-biome-api-v1 13.0.31+d527f9fd19
+	- fabric-block-api-v1 1.1.0+0bc3503219
+	- fabric-block-view-api-v2 1.0.11+ebb2264e19
+	- fabric-command-api-v1 1.2.49+f71b366f19
+	- fabric-command-api-v2 2.2.28+6ced4dd919
+	- fabric-commands-v0 0.2.66+df3654b319
+	- fabric-content-registries-v0 8.0.19+b559734419
+	- fabric-convention-tags-v1 2.1.7+7f945d5b19
+	- fabric-convention-tags-v2 2.12.0+c3656daa19
+	- fabric-crash-report-info-v1 0.2.29+0af3f5a719
+	- fabric-data-attachment-api-v1 1.4.7+5b36e0f719
+	- fabric-data-generation-api-v1 20.3.0+1eb36c0719
+	- fabric-dimensions-v1 4.0.1+65213ef819
+	- fabric-entity-events-v1 1.8.0+2b27e0a419
+	- fabric-events-interaction-v0 0.7.14+ba9dae0619
+	- fabric-game-rule-api-v1 1.0.53+6ced4dd919
+	- fabric-gametest-api-v1 2.0.5+6fc22b9919
+	- fabric-item-api-v1 11.3.0+467044f319
+	- fabric-item-group-api-v1 4.1.7+def88e3a19
+	- fabric-lifecycle-events-v1 2.6.0+0865547519
+	- fabric-loot-api-v2 3.0.15+3f89f5a519
+	- fabric-loot-api-v3 1.0.3+3f89f5a519
+	- fabric-message-api-v1 6.0.14+8aaf3aca19
+	- fabric-networking-api-v1 4.3.1+d30f6a7919
+	- fabric-object-builder-api-v1 15.2.1+40875a9319
+	- fabric-particles-v1 4.0.2+6573ed8c19
+	- fabric-recipe-api-v1 5.0.16+2475392c19
+	- fabric-registry-sync-v0 5.3.2+e3eddc2119
+	- fabric-rendering-data-attachment-v1 0.3.49+73761d2e19
+	- fabric-rendering-fluids-v1 3.1.6+1daea21519
+	- fabric-resource-conditions-api-v1 4.3.0+8dc279b119
+	- fabric-resource-loader-v0 1.3.1+5b5275af19
+	- fabric-screen-handler-api-v1 1.3.91+b559734419
+	- fabric-tag-api-v1 1.3.0+1eb36c0719
+	- fabric-transfer-api-v1 5.4.4+7b3d111d19
+	- fabric-transitive-access-wideners-v1 6.2.0+45b9699719
+	- fabricloader 0.16.14
+	- java 21
+	- jei 19.21.1.304
+	- minecraft 1.21.1
+	- mixinextras 0.4.1
+	- trinkets 3.10.0
+[03:06:21] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/Users/Migue/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.5+mixin.0.8.7/22f9eb729e216a091673a574a5906dc1b9027fb3/sponge-mixin-0.15.5+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[03:06:21] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[03:06:21] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[03:06:21] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_21
+
+> Task :fabric:remapJar
+
+> Task :fabric:runDatagen
+[03:06:22] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[03:06:23] [main/WARN] (PerfmonDisabled) Invalid registry value type detected for PerfOS counters. Should be REG_DWORD. Ignoring: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfOS\Performance\Disable Performance Counters.
+[03:06:28] [main/INFO] (EBLogger) Electroblob's Wizardry Started
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:remnant
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:evil_wizard
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:wizard
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:spark_bomb
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:boulder
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:thunderbolt
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:decay
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_wraith
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:flamecatcher_arrow
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:lightning_sigil
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:heal_aura
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:dart
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:iceball
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:force_orb
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ring_of_fire
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:magic_fireball
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_spikes
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:magic_missile
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:spark
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:bubble
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:lightning_wraith
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_charge
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:darkness_orb
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:shadow_wraith
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:frost_sigil
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:tornado
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:blizzard
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_giant
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:storm_elemental
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:firebolt
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:poison_bomb
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:meteor
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_barrier
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:lightning_arrow
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:arrow_rain
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:hailstorm
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:combustion_rune
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_lance
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:smoke_bomb
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:magic_slime
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:firebomb
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:zombie_spawner
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:force_arrow
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_shard
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:fire_sigil
+[03:06:29] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:conjured_arrow
+[03:06:29] [main/INFO] (FabricDataGenHelper) Running data generator for ebwizardry
+[03:06:29] [main/INFO] (Minecraft) Starting provider: Electroblob's Wizardry Redux/Wizardry canonical resource export and spell defaults
+[03:06:29] [main/INFO] (Minecraft) Electroblob's Wizardry Redux/Wizardry canonical resource export and spell defaults finished after 480 ms
+[03:06:29] [main/INFO] (Minecraft) All providers took: 481 ms
+[03:06:29] [main/INFO] (Minecraft) Caching: total files: 1245, old count: 1245, new count: 1246, removed stale: 0, written: 0
+
+> Task :fabric:remapSourcesJar
+> Task :fabric:assemble
+> Task :fabric:build
+[Incubating] Problems report is available at: file:///C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 34s
+23 actionable tasks: 10 executed, 13 up-to-date
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if 0 EQU 0 goto mainEnd 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" endlocal

@@ -1,0 +1,24 @@
+{
+    "ComparedRegistries":  28,
+    "RegistryDifferences":  [
+
+                            ],
+    "Spells":  125,
+    "Items":  352,
+    "Entities":  46,
+    "FabricResources":  2541,
+    "NeoForgeResources":  2546,
+    "MissingFabricResources":  [
+
+                               ],
+    "ChangedFabricResources":  [
+
+                               ],
+    "ExtraNeoForgeResources":  [
+                                   "data/ebwizardry/curios/entities/player.json",
+                                   "data/ebwizardry/curios/slots/ring.json",
+                                   "data/ebwizardry/neoforge/biome_modifier/crystal_flower.json",
+                                   "data/ebwizardry/neoforge/biome_modifier/crystal_ore.json",
+                                   "data/ebwizardry/neoforge/biome_modifier/evil_wizard.json"
+                               ]
+}

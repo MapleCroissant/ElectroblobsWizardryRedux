@@ -1,0 +1,250 @@
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" setlocal
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DIRNAME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\" == "" set DIRNAME=. 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_BASE_NAME=gradlew 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>for %i in ("C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\") do set APP_HOME=%~fi 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m" 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if defined JAVA_HOME goto findJavaFromJavaHome 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_EXE=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if exist "C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" goto execute 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set CLASSPATH=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>"C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" "-Xmx64m" "-Xms64m"   "-Dorg.gradle.appname=gradlew" -classpath "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain :fabric:runGameTest -PwithoutTrinkets -PwithAccessories --console=plain 
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy NO-SOURCE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :common
+Fabric Loom: 1.9.2
+
+> Configure project :fabric
+Fabric Loom: 1.9.2
+
+> Task :fabric:compileJava
+warning: unknown enum constant Level.FULL
+  reason: class file for com.google.j2objc.annotations.ReflectionSupport$Level not found
+warning: unknown enum constant Level.FULL
+  reason: class file for com.google.j2objc.annotations.ReflectionSupport$Level not found
+warning: unknown enum constant Level.FULL
+  reason: class file for com.google.j2objc.annotations.ReflectionSupport$Level not found
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\armor\WizardArmorItem.java:195: warning: [removal] validForReceptacle() in IElementValue has been deprecated and marked for removal
+    public boolean validForReceptacle() {
+                   ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\SpectralDustItem.java:24: warning: [removal] validForReceptacle() in IElementValue has been deprecated and marked for removal
+    public boolean validForReceptacle() {
+                   ^
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\common\src\main\java\com\binaris\wizardry\content\item\WandItem.java:574: warning: [removal] validForReceptacle() in IElementValue has been deprecated and marked for removal
+    public boolean validForReceptacle() {
+                   ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+6 warnings
+
+> Task :fabric:processResources UP-TO-DATE
+> Task :fabric:classes
+> Task :fabric:generateLog4jConfig UP-TO-DATE
+> Task :fabric:generateRemapClasspath
+> Task :fabric:generateDLIConfig
+> Task :fabric:configureLaunch
+
+> Task :fabric:runGameTest
+[03:04:04] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.21.1 with Fabric Loader 0.16.14
+[03:04:05] [main/WARN] (FabricLoader/Resolution) Warnings were found!
+ - Mod 'Electroblob's Wizardry Redux' (ebwizardry) 0.8.10 recommends any version of trinkets, which is missing!
+	 - You should install any version of trinkets for the optimal experience.
+[03:04:05] [main/INFO] (FabricLoader) Loading 52 mods:
+	- accessories 1.1.0-beta.52+1.21.1
+	- cardinal-components-base 6.1.3
+	- cardinal-components-block 6.1.3
+	- cardinal-components-entity 6.1.3
+	- cloth-basic-math 0.6.1
+	- cloth-config 15.0.140
+	- ebwizardry 0.8.10
+	- fabric-api 0.116.16+1.21.1
+	- fabric-api-base 0.4.42+6573ed8cd1
+	- fabric-api-lookup-api-v1 1.6.72+7b3d111d19
+	- fabric-biome-api-v1 13.0.31+d527f9fd19
+	- fabric-block-api-v1 1.1.0+0bc3503219
+	- fabric-block-view-api-v2 1.0.11+ebb2264e19
+	- fabric-command-api-v1 1.2.49+f71b366f19
+	- fabric-command-api-v2 2.2.28+6ced4dd919
+	- fabric-commands-v0 0.2.66+df3654b319
+	- fabric-content-registries-v0 8.0.19+b559734419
+	- fabric-convention-tags-v1 2.1.7+7f945d5b19
+	- fabric-convention-tags-v2 2.12.0+c3656daa19
+	- fabric-crash-report-info-v1 0.2.29+0af3f5a719
+	- fabric-data-attachment-api-v1 1.4.7+5b36e0f719
+	- fabric-data-generation-api-v1 20.3.0+1eb36c0719
+	- fabric-dimensions-v1 4.0.1+65213ef819
+	- fabric-entity-events-v1 1.8.0+2b27e0a419
+	- fabric-events-interaction-v0 0.7.14+ba9dae0619
+	- fabric-game-rule-api-v1 1.0.53+6ced4dd919
+	- fabric-gametest-api-v1 2.0.5+6fc22b9919
+	- fabric-item-api-v1 11.3.0+467044f319
+	- fabric-item-group-api-v1 4.1.7+def88e3a19
+	- fabric-lifecycle-events-v1 2.6.0+0865547519
+	- fabric-loot-api-v2 3.0.15+3f89f5a519
+	- fabric-loot-api-v3 1.0.3+3f89f5a519
+	- fabric-message-api-v1 6.0.14+8aaf3aca19
+	- fabric-networking-api-v1 4.3.1+d30f6a7919
+	- fabric-object-builder-api-v1 15.2.1+40875a9319
+	- fabric-particles-v1 4.0.2+6573ed8c19
+	- fabric-recipe-api-v1 5.0.16+2475392c19
+	- fabric-registry-sync-v0 5.3.2+e3eddc2119
+	- fabric-rendering-data-attachment-v1 0.3.49+73761d2e19
+	- fabric-rendering-fluids-v1 3.1.6+1daea21519
+	- fabric-resource-conditions-api-v1 4.3.0+8dc279b119
+	- fabric-resource-loader-v0 1.3.1+5b5275af19
+	- fabric-screen-handler-api-v1 1.3.91+b559734419
+	- fabric-tag-api-v1 1.3.0+1eb36c0719
+	- fabric-transfer-api-v1 5.4.4+7b3d111d19
+	- fabric-transitive-access-wideners-v1 6.2.0+45b9699719
+	- fabricloader 0.16.14
+	- java 21
+	- jei 19.21.1.304
+	- minecraft 1.21.1
+	- mixinextras 0.4.1
+	- owo 0.12.15.4+1.21
+[03:04:05] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/Users/Migue/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.5+mixin.0.8.7/22f9eb729e216a091673a574a5906dc1b9027fb3/sponge-mixin-0.15.5+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[03:04:05] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[03:04:05] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[03:04:05] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_21
+[03:04:06] [main/WARN] (FabricLoader/Mixin) Error loading class: com/mojang/blaze3d/vertex/BufferBuilder (java.lang.RuntimeException: Cannot load class com.mojang.blaze3d.vertex.BufferBuilder in environment type SERVER)
+[03:04:06] [main/WARN] (FabricLoader/Mixin) @Mixin target com.mojang.blaze3d.vertex.BufferBuilder was not found owo.mixins.json:BufferBuilderAccessor from mod owo
+[03:04:06] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/client/gui/screens/Screen (java.lang.RuntimeException: Cannot load class net.minecraft.client.gui.screens.Screen in environment type SERVER)
+[03:04:06] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.client.gui.screens.Screen was not found owo.mixins.json:ScreenAccessor from mod owo
+[03:04:06] [main/WARN] (FabricLoader/Mixin) Error loading class: xyz/nucleoid/server/translations/impl/language/SystemDelegatedLanguage (java.lang.ClassNotFoundException: xyz/nucleoid/server/translations/impl/language/SystemDelegatedLanguage)
+[03:04:06] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[03:04:06] [main/WARN] (FabricLoader/Mixin) Error loading class: org/quiltmc/loader/impl/game/minecraft/Hooks (java.lang.ClassNotFoundException: org/quiltmc/loader/impl/game/minecraft/Hooks)
+[03:04:07] [main/WARN] (PerfmonDisabled) Invalid registry value type detected for PerfOS counters. Should be REG_DWORD. Ignoring: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfOS\Performance\Disable Performance Counters.
+[03:04:12] [main/INFO] (DataLoaderBase) Registering Listeners!
+[03:04:12] [main/INFO] (EBLogger) Electroblob's Wizardry Started
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:remnant
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:evil_wizard
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:wizard
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:spark_bomb
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:boulder
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:thunderbolt
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:decay
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_wraith
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:flamecatcher_arrow
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:lightning_sigil
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:heal_aura
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:dart
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:iceball
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:force_orb
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ring_of_fire
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:magic_fireball
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_spikes
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:magic_missile
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:spark
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:bubble
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:lightning_wraith
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_charge
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:darkness_orb
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:shadow_wraith
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:frost_sigil
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:tornado
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:blizzard
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_giant
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:storm_elemental
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:firebolt
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:poison_bomb
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:meteor
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_barrier
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:lightning_arrow
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:arrow_rain
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:hailstorm
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:combustion_rune
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_lance
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:smoke_bomb
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:magic_slime
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:firebomb
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:zombie_spawner
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:force_arrow
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:ice_shard
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:fire_sigil
+[03:04:12] [main/ERROR] (Minecraft) No data fixer registered for ebwizardry:conjured_arrow
+[03:04:12] [main/INFO] (owo) Don't trust naschhorn, the Master of Taglocks, around you or your bed
+[03:04:12] [main/INFO] (owo) Services frozen by 'net.minecraft.server.Main'
+[03:04:12] [main/INFO] (Minecraft) Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[03:04:12] [main/INFO] (FabricGameTestHelper) Starting test server
+[03:04:14] [main/INFO] (Minecraft) Loaded 1492 recipes
+[03:04:14] [main/INFO] (Minecraft) Loaded 1510 advancements
+[03:04:15] [main/INFO] (BiomeModificationImpl) Applied 138 biome modifications to 51 of 64 new biomes in 8.951 ms
+[03:04:15] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[03:04:15] [Worker-Main-14/INFO] (Minecraft) Preparing spawn area: 2%
+[03:04:15] [Server thread/INFO] (Minecraft) Time elapsed: 473 ms
+[03:04:15] [Server thread/INFO] (Minecraft) Started game test server
+[03:04:15] [Server thread/WARN] (TranslationConventionLogWarnings) 
+	Dev warning - Untranslated Item Tags detected. Please translate your item tags so other mods such as recipe viewers can properly display your tag's name.
+	The format desired is tag.item.<namespace>.<path> for the translation key with slashes in path turned into periods.
+	To disable this message, set this system property in your runs: `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=SILENCED`.
+	To see individual untranslated item tags found, set the system property to `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=VERBOSE`.
+	Default is `SHORT`.
+
+[03:04:15] [Server thread/INFO] (Minecraft) 36 tests are now running at position 11593881, -59, -5304922!
+[03:04:16] [Server thread/INFO] (Minecraft) Running test batch 'defaultBatch:0' (36 tests)...
+[03:04:16] [Server thread/INFO] (Minecraft) [                                    ]
+[03:04:16] [Server thread/INFO] (EBLogger) 
+
+| Cases                   | Lifetime | Cooldown  | Cost      | Chargeup | Modifiers                                                               |
+| ----------------------- | -------- | --------- | --------- | -------- | ----------------------------------------------------------------------- |
+| Vanilla Player          | 900.0    | 150.0     | 100.0     | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@5048e27a |
+| Player Wizard Armor     | 900.0    | 150.0     | 47.59203  | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@5709d4a7 |
+| Player Sage Armor       | 900.0    | 150.0     | 21.567118 | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@21140d2d |
+| Player Battlemage Armor | 900.0    | 117.56152 | 69.384254 | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@5194d659 |
+| Player Warlock Armor    | 900.0    | 91.43533  | 41.85963  | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@2756012  |
+[03:04:16] [Server thread/INFO] (Minecraft) [+++++++ +++++   ++_+_               ]
+[03:04:17] [Server thread/INFO] (Minecraft) [++++++++++++++++++_+__++++++++++++++]
+[03:04:17] [Server thread/INFO] (Minecraft) [++++++++++++++++++++__++++++++++++++]
+[03:04:17] [Server thread/INFO] (Minecraft) [+++++++++++++++++++++_++++++++++++++]
+[03:04:17] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++++++++++++]
+[03:04:17] [Server thread/INFO] (Minecraft) ========= 36 GAME TESTS COMPLETE IN 1.696 s ======================
+[03:04:17] [Server thread/INFO] (Minecraft) All 36 required tests passed :)
+[03:04:17] [Server thread/INFO] (Minecraft) ====================================================
+[03:04:17] [Server thread/INFO] (Minecraft) Stopping server
+[03:04:17] [Server thread/INFO] (Minecraft) Saving players
+[03:04:17] [Server thread/INFO] (Minecraft) Saving worlds
+[03:04:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[03:04:18] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[03:04:18] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[03:04:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (world): All chunks are saved
+[03:04:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[03:04:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[03:04:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
+[03:04:18] [Server thread/INFO] (Minecraft) Game test server shutting down
+[Incubating] Problems report is available at: file:///C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 36s
+13 actionable tasks: 4 executed, 9 up-to-date
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if 0 EQU 0 goto mainEnd 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" endlocal

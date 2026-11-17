@@ -1,0 +1,187 @@
+package com.binaris.wizardry.attachments.entity;
+
+import com.binaris.wizardry.api.client.ParticleBuilder;
+import com.binaris.wizardry.api.content.data.MinionData;
+import com.binaris.wizardry.attachments.EBComponents;
+import com.binaris.wizardry.setup.registries.client.EBParticles;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
+
+public class MinionDataHolder implements MinionData, com.binaris.wizardry.attachments.PersistentData {
+    Mob provider;
+    private int lifetime = -1;
+    private boolean summoned = false;
+    private boolean shouldDeleteGoals = false;
+    private UUID ownerUUID = null;
+    private boolean shouldFollowOwner = false;
+    private boolean restartGoals;
+    private boolean searchNearbyTargets = true;
+    private int pickUpLootPosibility = 0;
+    private boolean dirty = false;
+
+    public MinionDataHolder(Mob provider) {
+        this.provider = provider;
+    }
+
+    public void sync() {
+        if (provider.level().isClientSide() || !dirty) return;
+        EBComponents.MINION_DATA.sync(provider);
+        dirty = false;
+    }
+
+    @Override
+    public Mob getProvider() {
+        return this.provider;
+    }
+
+    @Override
+    public void tick() {
+        if (!summoned) return;
+
+        if (goalRestart()) {
+            updateGoals();
+            markGoalRestart(false);
+        }
+
+        if (provider.tickCount > this.getLifetime() && this.getLifetime() > 0) {
+            this.provider.discard();
+        }
+
+        if (provider.level().isClientSide && provider.level().random.nextInt(8) == 0) {
+            ParticleBuilder.create(EBParticles.DARK_MAGIC).pos(provider.xo, provider.yo + (provider.level().random.nextDouble() * 1.5 + 1), provider.zo).color(0.1f, 0.0f, 0.0f).spawn(provider.level());
+        }
+
+        sync();
+    }
+
+    @Override
+    public int getLifetime() {
+        return lifetime;
+    }
+
+    @Override
+    public void setLifetime(int lifetime) {
+        this.lifetime = lifetime;
+        this.dirty = true;
+    }
+
+    @Override
+    public boolean isSummoned() {
+        return summoned;
+    }
+
+    @Override
+    public void setSummoned(boolean summoned) {
+        this.summoned = summoned;
+        this.dirty = true;
+    }
+
+    @Override
+    public boolean shouldDeleteGoals() {
+        return shouldDeleteGoals;
+    }
+
+    @Override
+    public void setShouldDeleteGoals(boolean shouldDeleteGoals) {
+        this.shouldDeleteGoals = shouldDeleteGoals;
+        this.dirty = true;
+    }
+
+    @Override
+    public boolean shouldFollowOwner() {
+        return shouldFollowOwner;
+    }
+
+    @Override
+    public void setShouldFollowOwner(boolean shouldFollowOwner) {
+        this.shouldFollowOwner = shouldFollowOwner;
+        this.dirty = true;
+    }
+
+    @Override
+    public boolean searchNearbyTargets() {
+        return searchNearbyTargets;
+    }
+
+    @Override
+    public void setSearchNearbyTargets(boolean searchNearbyTargets) {
+        this.searchNearbyTargets = searchNearbyTargets;
+        this.dirty = true;
+    }
+
+    @Override
+    public int getPickUpLootPosibility() {
+        return pickUpLootPosibility;
+    }
+
+    @Override
+    public void setPickUpLootPosibility(int pickUpLootPosibility) {
+        this.pickUpLootPosibility = pickUpLootPosibility;
+        this.dirty = true;
+    }
+
+    @Override
+    public UUID getOwnerUUID() {
+        return ownerUUID;
+    }
+
+    @Override
+    public void setOwnerUUID(UUID ownerUUID) {
+        this.ownerUUID = ownerUUID;
+        this.dirty = true;
+    }
+
+    @Override
+    public @Nullable LivingEntity getOwner() {
+        if (ownerUUID == null) return null;
+        if (provider.level().isClientSide()) return null;
+
+        return provider.getServer().getLevel(provider.level().dimension()).getEntity(ownerUUID) instanceof LivingEntity livingEntity ? livingEntity : null;
+    }
+
+    @Override
+    public void setOwner(LivingEntity owner) {
+        this.ownerUUID = owner.getUUID();
+        this.dirty = true;
+    }
+
+    @Override
+    public void markGoalRestart(boolean shouldRestartGoals) {
+        this.restartGoals = shouldRestartGoals;
+    }
+
+    @Override
+    public boolean goalRestart() {
+        return restartGoals;
+    }
+
+    @Override
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        this.lifetime = tag.getInt("lifetime");
+        this.summoned = tag.getBoolean("summoned");
+        this.shouldDeleteGoals = tag.getBoolean("shouldDeleteGoals");
+        this.shouldFollowOwner = tag.getBoolean("shouldFollowOwner");
+        this.pickUpLootPosibility = tag.getInt("pickUpLootPosibility");
+        if (tag.contains("ownerUUID")) {
+            this.ownerUUID = tag.getUUID("ownerUUID");
+        }
+        this.dirty = true;
+    }
+
+    @Override
+    public void writeToNbt(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        tag.putInt("lifetime", lifetime);
+        tag.putBoolean("summoned", summoned);
+        tag.putBoolean("shouldDeleteGoals", shouldDeleteGoals);
+        tag.putBoolean("shouldFollowOwner", shouldFollowOwner);
+        tag.putInt("pickUpLootPosibility", pickUpLootPosibility);
+        if (ownerUUID != null) {
+            tag.putUUID("ownerUUID", ownerUUID);
+        }
+    }
+}

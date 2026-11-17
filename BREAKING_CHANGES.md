@@ -29,3 +29,22 @@ Existing gameplay registration names are retained.
 Back up worlds before upgrading. Native data fixing handles vanilla inventory
 conversion; explicit adapters cover mod-owned item fields and wizard trades.
 This is not a guarantee that every historical mod/world combination upgrades.
+
+## NeoForge 1.21.1
+
+The independent `neoforge/` module compiles the same common sources with Java 21
+and official runtime names. Its service providers use native registries,
+attachments and typed payloads; it has no Fabric API or CCA runtime requirement.
+Player attachments persist and copy on death; entity/block attachment updates
+are synchronized to tracking players. Retained legacy CCA/Forge fields can be
+imported without overriding already-saved native attachments.
+
+NeoForge registers commands and advancement triggers at loader events, and
+resynchronizes existing magic effects after the entity spawn bundle. Its patched
+living-entity durability overload is handled separately to retain unbreakable
+wizard armor and conjured items. Fabric keeps its existing paths.
+
+Optional Curios uses the live equipped inventory for immediate artifact removal;
+Accessories remains the preferred integration when installed. NeoForge-specific
+JEI categories show altar recipes, weighted outputs, workbench spell binding and
+tier upgrades; item subtypes distinguish spell-bearing books, scrolls and wands.

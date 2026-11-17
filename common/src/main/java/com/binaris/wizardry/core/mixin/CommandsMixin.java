@@ -25,6 +25,9 @@ public abstract class CommandsMixin {
             "<init>(Lnet/minecraft/commands/Commands$CommandSelection;Lnet/minecraft/commands/CommandBuildContext;)V",
             at = @At(value = "RETURN"))
     public void EBWIZARDRY$commands(Commands.CommandSelection commandSelection, CommandBuildContext commandBuildContext, CallbackInfo ci) {
+        // NeoForge validates vanilla commands before constructing mods; its event
+        // registers our commands after argument serializers have been registered.
+        if (Services.PLATFORM.getPlatformName().equals("NeoForge")) return;
         EBCommands.COMMANDS_TO_REGISTER.forEach(c -> c.accept(dispatcher, commandBuildContext));
         if (Services.PLATFORM.isDevelopmentEnvironment() || EBCommonConfig.ENABLE_DEBUG_COMMANDS.get()) {
             EBCommands.DEBUG_COMMANDS.forEach(c -> c.accept(dispatcher, commandBuildContext));

@@ -1,0 +1,136 @@
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" setlocal
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DIRNAME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\" == "" set DIRNAME=. 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_BASE_NAME=gradlew 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>for %i in ("C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\") do set APP_HOME=%~fi 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set APP_HOME=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\ 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m" 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if defined JAVA_HOME goto findJavaFromJavaHome 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set JAVA_EXE=C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if exist "C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" goto execute 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>set CLASSPATH=C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>"C:\Program Files\Eclipse Adoptium\jdk-21.0.8.9-hotspot/bin/java.exe" "-Xmx64m" "-Xms64m"   "-Dorg.gradle.appname=gradlew" -classpath "C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux\\gradle\wrapper\gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain :neoforge:runGameTestServer -PwithCurios --console=plain 
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy NO-SOURCE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :common
+Fabric Loom: 1.9.2
+
+> Configure project :fabric
+Fabric Loom: 1.9.2
+
+> Task :neoforge:createMinecraftArtifacts UP-TO-DATE
+> Task :neoforge:compileJava UP-TO-DATE
+> Task :neoforge:processResources UP-TO-DATE
+> Task :neoforge:classes UP-TO-DATE
+> Task :neoforge:downloadAssets UP-TO-DATE
+> Task :neoforge:writeGameTestServerLegacyClasspath UP-TO-DATE
+> Task :neoforge:prepareGameTestServerRun UP-TO-DATE
+
+> Task :neoforge:runGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[15:00:34] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.266, --fml.neoFormVersion, 20240808.144430]
+[15:00:34] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.8+9-LTS
+[15:00:34] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.8 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[15:00:34] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[15:00:34] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/C:/Users/Migue/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2395!/ Service=ModLauncher Env=SERVER
+[15:00:35] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[15:00:35] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Cloth Config v15 API 15.0.140 (cloth_config)
+		Curios API 9.5.1+1.21.1 (curios)
+		Electroblob's Wizardry Redux 0.8.10-neoforge (ebwizardry)
+		Just Enough Items 19.21.1.304 (jei)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.266 (neoforge)
+[15:00:35] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[15:00:35] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[15:00:35] [main/WARN] [mixin/]: Reference map 'curios.refmap.json' for curios.neoforge.mixins.json could not be read. If this is a development environment you can ignore this message
+[15:00:35] [main/WARN] [mixin/]: Reference map 'curios.refmap.json' for curios.mixins.json could not be read. If this is a development environment you can ignore this message
+[15:00:35] [main/WARN] [mixin/]: Reference map 'ebwizardry.refmap.json' for ebwizardry.mixins.json could not be read. If this is a development environment you can ignore this message
+[15:00:36] [main/WARN] [os.dr.wi.pe.PerfmonDisabled/]: Invalid registry value type detected for PerfOS counters. Should be REG_DWORD. Ignoring: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfOS\Performance\Disable Performance Counters.
+[15:00:36] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[15:00:40] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:00:40] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:00:40] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:00:40] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:00:40] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:00:40] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.266, for MC 1.21.1
+[15:00:40] [modloading-worker-0/INFO] [co.bi.wi.co.EBLogger/]: Electroblob's Wizardry Started
+[15:00:40] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[15:00:41] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/build/moddev/artifacts/neoforge-21.1.266.jar%23127!/assets/.mcassetsroot' uses unexpected schema
+[15:00:41] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/C:/Users/Migue/OneDrive/Desktop/Electroblob%201.21.1/ElectroblobsWizardryRedux/neoforge/build/moddev/artifacts/neoforge-21.1.266.jar%23127!/data/.mcassetsroot' uses unexpected schema
+[15:00:41] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [ebwizardry]
+[15:00:41] [main/INFO] [minecraft/RecipeManager]: Loaded 1492 recipes
+[15:00:41] [main/INFO] [minecraft/AdvancementTree]: Loaded 1510 advancements
+[15:00:41] [main/INFO] [Curios API/]: Loaded 10 curio slots
+[15:00:41] [main/INFO] [Curios API/]: Loaded 1 curio entities
+[15:00:42] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[15:00:42] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[15:00:42] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 108 ms
+[15:00:42] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[15:00:42] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[15:00:42] [Server thread/INFO] [minecraft/GameTestServer]: 42 tests are now running at position -6451284, -59, 4009825!
+[15:00:42] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (42 tests)...
+[15:00:42] [Server thread/INFO] [minecraft/GameTestServer]: [                                          ]
+[15:00:43] [Server thread/INFO] [co.bi.wi.co.EBLogger/]: 
+
+| Cases                   | Lifetime | Cooldown  | Cost      | Chargeup | Modifiers                                                               |
+| ----------------------- | -------- | --------- | --------- | -------- | ----------------------------------------------------------------------- |
+| Vanilla Player          | 900.0    | 150.0     | 100.0     | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@67976184 |
+| Player Wizard Armor     | 900.0    | 150.0     | 47.59203  | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@1742bd34 |
+| Player Sage Armor       | 900.0    | 150.0     | 21.567118 | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@722b50a6 |
+| Player Battlemage Armor | 900.0    | 117.56152 | 69.384254 | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@44df5840 |
+| Player Warlock Armor    | 900.0    | 91.43533  | 41.85963  | 20.0     | com.binaris.wizardry.api.content.spell.internal.SpellModifiers@21cf31cb |
+[15:00:43] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++_+++++++++++++++_+++++++          ]
+[15:00:43] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++_+++++++++++++++_+++++++_+++++++++]
+[15:00:43] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++_+++++++++++++++_+++++++++++++++++]
+[15:00:43] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++++++++++++++++++++]
+[15:00:43] [Server thread/INFO] [minecraft/GameTestServer]: ========= 42 GAME TESTS COMPLETE IN 1.318 s ======================
+[15:00:43] [Server thread/INFO] [minecraft/GameTestServer]: All 42 required tests passed :)
+[15:00:43] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[15:00:43] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[15:00:43] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[15:00:43] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[15:00:44] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[15:00:44] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[15:00:44] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[15:00:44] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[15:00:44] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[15:00:44] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[15:00:44] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[15:00:44] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+BUILD SUCCESSFUL in 18s
+14 actionable tasks: 1 executed, 13 up-to-date
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if 0 EQU 0 goto mainEnd 
+
+C:\Users\Migue\OneDrive\Desktop\Electroblob 1.21.1\ElectroblobsWizardryRedux>if "Windows_NT" == "Windows_NT" endlocal

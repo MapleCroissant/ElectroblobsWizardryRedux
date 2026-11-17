@@ -31,3 +31,6 @@ common/src/generated/resources/.cache/
 /migration/errors*.txt
 /migration/api-signatures*.txt
 /migration/sources.log
+/migration/neoforge-*-api.txt
+/neoforge/run-server-smoke/
+/neoforge/run-packaged-smoke/

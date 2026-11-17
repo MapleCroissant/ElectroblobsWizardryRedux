@@ -1,0 +1,144 @@
+package com.binaris.wizardry.attachments.player;
+
+import com.binaris.wizardry.api.content.data.CastCommandData;
+import com.binaris.wizardry.api.content.event.SpellCastEvent;
+import com.binaris.wizardry.api.content.spell.NoneSpell;
+import com.binaris.wizardry.api.content.spell.Spell;
+import com.binaris.wizardry.api.content.spell.internal.PlayerCastContext;
+import com.binaris.wizardry.api.content.spell.internal.SpellModifiers;
+import com.binaris.wizardry.api.content.util.CastItemUtils;
+import com.binaris.wizardry.attachments.EBComponents;
+import com.binaris.wizardry.core.event.WizardryEventBus;
+import com.binaris.wizardry.core.platform.Services;
+import com.binaris.wizardry.setup.registries.Spells;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+
+public class CastCommandDataHolder implements CastCommandData, com.binaris.wizardry.attachments.PersistentData {
+    private final Player provider;
+
+    private Spell castCommandSpell = Spells.NONE;
+    private int castCommandTick;
+    private SpellModifiers castCommandModifiers = new SpellModifiers();
+    private int castCommandDuration;
+
+    public CastCommandDataHolder(Player provider) {
+        this.provider = provider;
+    }
+
+    private void sync() {
+        EBComponents.CAST_COMMAND_DATA.sync(provider);
+    }
+
+    @Override
+    public void startCastingContinuousSpell(Spell spell, SpellModifiers modifiers, int duration) {
+        this.castCommandSpell = spell;
+        this.castCommandModifiers = modifiers;
+        this.castCommandDuration = duration;
+        this.castCommandTick = 0;
+        sync();
+    }
+
+    @Override
+    public void stopCastingContinuousSpell() {
+        if (isCommandCasting() && !castCommandSpell.isInstantCast()) {
+            PlayerCastContext ctx = new PlayerCastContext(provider.level(), provider, InteractionHand.MAIN_HAND, this.castCommandTick, this.castCommandModifiers);
+            WizardryEventBus.fireEvent(new SpellCastEvent.Finish(SpellCastEvent.Sources.COMMAND, castCommandSpell, ctx));
+            castCommandSpell.endCast(ctx);
+        }
+
+        this.castCommandSpell = Spells.NONE;
+        this.castCommandTick = 0;
+        this.castCommandDuration = 0;
+        this.castCommandModifiers.reset();
+        sync();
+    }
+
+    @Override
+    public void tick() {
+        if (!isCommandCasting()) return;
+
+        if (castCommandSpell == null || castCommandSpell instanceof NoneSpell || castCommandSpell.isInstantCast()) {
+            this.stopCastingContinuousSpell();
+            return;
+        }
+
+        if (castCommandTick >= castCommandDuration) {
+            this.stopCastingContinuousSpell();
+            return;
+        }
+
+        PlayerCastContext ctx = new PlayerCastContext(provider.level(), provider, InteractionHand.MAIN_HAND, this.castCommandTick, this.castCommandModifiers);
+
+        if (WizardryEventBus.fireEvent(new SpellCastEvent.Tick(SpellCastEvent.Sources.COMMAND, castCommandSpell, ctx))) {
+            this.stopCastingContinuousSpell();
+            return;
+        }
+
+        if (this.castCommandSpell.cast(ctx)) {
+            if (this.castCommandTick == 0) {
+                WizardryEventBus.fireEvent(new SpellCastEvent.Post(SpellCastEvent.Sources.COMMAND, castCommandSpell, ctx));
+            }
+            CastItemUtils.sendSpellCastPacket(provider, castCommandSpell, ctx);
+        }
+
+        castCommandTick++;
+    }
+
+    @Override
+    public boolean isCommandCasting() {
+        return this.castCommandSpell != null && this.castCommandSpell != Spells.NONE;
+    }
+
+    @Override
+    public Spell getSpell() {
+        return this.castCommandSpell;
+    }
+
+    @Override
+    public SpellModifiers getModifiers() {
+        return this.castCommandModifiers;
+    }
+
+    @Override
+    public int getCastingTick() {
+        return this.castCommandTick;
+    }
+
+    @Override
+    public int getDuration() {
+        return this.castCommandDuration;
+    }
+
+    @Override
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        ResourceLocation spellLocation = ResourceLocation.tryParse(tag.getString("castCommandSpell"));
+        Spell spell = Services.REGISTRY_UTIL.getSpell(spellLocation);
+        if (spell != null) {
+            this.castCommandSpell = spell;
+        } else {
+            this.castCommandSpell = Spells.NONE;
+        }
+        this.castCommandDuration = tag.getInt("castCommandDuration");
+        this.castCommandTick = tag.getInt("castCommandTick");
+        Tag modifiersTag = tag.get("castCommandModifiers");
+        if (modifiersTag instanceof CompoundTag) {
+            this.castCommandModifiers = SpellModifiers.fromTag((CompoundTag) modifiersTag);
+        } else {
+            this.castCommandModifiers = new SpellModifiers();
+        }
+    }
+
+    @Override
+    public void writeToNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        tag.put("castCommandSpell", StringTag.valueOf(castCommandSpell.getLocation().toString()));
+        tag.putInt("castCommandDuration", castCommandDuration);
+        tag.putInt("castCommandTick", castCommandTick);
+        tag.put("castCommandModifiers", castCommandModifiers.toTag());
+    }
+}

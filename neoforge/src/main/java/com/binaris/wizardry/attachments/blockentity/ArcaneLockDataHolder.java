@@ -1,0 +1,71 @@
+package com.binaris.wizardry.attachments.blockentity;
+
+import com.binaris.wizardry.api.content.data.ArcaneLockData;
+import com.binaris.wizardry.attachments.EBComponents;
+import com.binaris.wizardry.client.effect.ArcaneLockRender;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
+
+public class ArcaneLockDataHolder implements ArcaneLockData, com.binaris.wizardry.attachments.PersistentData {
+    private final BaseContainerBlockEntity provider;
+    private UUID ownerUUID = null;
+
+    public ArcaneLockDataHolder(BaseContainerBlockEntity provider) {
+        this.provider = provider;
+    }
+
+    public void sync() {
+        EBComponents.ARCANE_LOCK_DATA.sync(provider);
+    }
+
+
+    @Override
+    public boolean isArcaneLocked() {
+        return ownerUUID != null;
+    }
+
+    @Override
+    public void setArcaneLockOwner(String ownerUUID) {
+        if (ownerUUID == null) {
+            this.ownerUUID = null;
+        } else {
+            this.ownerUUID = UUID.fromString(ownerUUID);
+        }
+        sync();
+    }
+
+    @Override
+    public void clearArcaneLockOwner() {
+        this.ownerUUID = null;
+        sync();
+    }
+
+    @Override
+    public @Nullable UUID getArcaneLockOwnerUUID() {
+        return ownerUUID;
+    }
+
+    @Override
+    public void readFromNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        if (tag.contains(NBT_KEY)) {
+            this.ownerUUID = UUID.fromString(tag.getString(NBT_KEY));
+        } else {
+            this.ownerUUID = null;
+        }
+
+        if (provider.getLevel() != null && provider.getLevel().isClientSide()) {
+            ArcaneLockRender.markDirty();
+        }
+    }
+
+    @Override
+    public void writeToNbt(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        if (this.ownerUUID != null) {
+            tag.putString(NBT_KEY, this.ownerUUID.toString());
+        }
+    }
+}

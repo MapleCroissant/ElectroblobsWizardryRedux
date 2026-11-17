@@ -1,0 +1,147 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev'
+}
+
+base { archivesName = "electroblobs-wizardry-redux-${minecraft_version}" }
+java { withSourcesJar() }
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.wispforest.io/releases' }
+    maven { url = 'https://maven.su5ed.dev/releases' }
+    maven { url = 'https://maven.shedaniel.me/' }
+    maven { url = 'https://maven.theillusivec4.top/' }
+}
+neoForge {
+    version = '21.1.266'
+    runs {
+        client { client() }
+        clientSmoke {
+            client()
+            systemProperty 'ebwizardry.migrationSmoke', 'true'
+            programArguments.addAll '--quickPlaySingleplayer', 'neoforge-migration-smoke'
+        }
+        server { server(); programArgument '--nogui' }
+        serverSmoke {
+            server()
+            gameDirectory = file('run-server-smoke')
+            programArgument '--nogui'
+            systemProperty 'ebwizardry.migrationServerSmoke', 'true'
+        }
+        serverJarSmoke {
+            server()
+            loadedMods = []
+            gameDirectory = file('run-packaged-smoke')
+            programArgument '--nogui'
+            systemProperty 'ebwizardry.migrationServerSmoke', 'true'
+            systemProperty 'ebwizardry.migrationJarSmoke', 'true'
+        }
+        gameTestJarSmoke {
+            type = 'gameTestServer'
+            loadedMods = []
+            gameDirectory = file('run-packaged-smoke')
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+            systemProperty 'ebwizardry.migrationJarSmoke', 'true'
+        }
+        clientJarSmoke {
+            client()
+            loadedMods = []
+            gameDirectory = file('run-packaged-smoke')
+            systemProperty 'ebwizardry.migrationSmoke', 'true'
+            systemProperty 'ebwizardry.migrationJarSmoke', 'true'
+            programArguments.addAll '--quickPlaySingleplayer', 'neoforge-packaged-client-isolated'
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+        }
+        data {
+            data()
+            programArguments.addAll '--mod', mod_id, '--all', '--output',
+                    layout.buildDirectory.dir('generated-data').get().asFile.absolutePath,
+                    '--existing', rootProject.project(':common').file('src/main/resources').absolutePath
+        }
+    }
+    mods { ebwizardry { sourceSet sourceSets.main } }
+}
+tasks.register('prepareClientSmoke') {
+    doLast {
+        def sourceWorld = file('run/world')
+        def targetWorld = file('run/saves/neoforge-migration-smoke')
+        if (!targetWorld.exists()) {
+            if (!new File(sourceWorld, 'level.dat').exists()) throw new GradleException('Run NeoForge GameTests first to create the smoke-test world')
+            copy { from sourceWorld; into targetWorld; exclude 'session.lock' }
+        }
+    }
+}
+tasks.named('runClientSmoke') { dependsOn tasks.named('prepareClientSmoke') }
+tasks.register('prepareServerSmoke') {
+    doLast {
+        def target = file('run-server-smoke')
+        target.mkdirs()
+        if (!new File(target, 'eula.txt').exists()) new File(target, 'eula.txt').text = 'eula=true\n'
+        if (!new File(target, 'server.properties').exists()) new File(target, 'server.properties').text =
+                'server-ip=127.0.0.1\nserver-port=0\nonline-mode=false\nview-distance=3\nsimulation-distance=3\nlevel-name=migration-smoke-world\n'
+    }
+}
+tasks.named('runServerSmoke') { dependsOn tasks.named('prepareServerSmoke') }
+tasks.register('preparePackagedSmoke') {
+    dependsOn tasks.named('jar')
+    doLast {
+        def target = file('run-packaged-smoke')
+        target.mkdirs()
+        if (!new File(target, 'eula.txt').exists()) new File(target, 'eula.txt').text = 'eula=true\n'
+        if (!new File(target, 'server.properties').exists()) new File(target, 'server.properties').text =
+                'server-ip=127.0.0.1\nserver-port=0\nonline-mode=false\nview-distance=3\nsimulation-distance=3\nlevel-name=packaged-migration-smoke\n'
+        copy { from tasks.named('jar').get().archiveFile; into new File(target, 'mods') }
+    }
+}
+tasks.named('runServerJarSmoke') { dependsOn tasks.named('preparePackagedSmoke') }
+tasks.named('runGameTestJarSmoke') { dependsOn tasks.named('preparePackagedSmoke') }
+tasks.register('preparePackagedClient') {
+    dependsOn tasks.named('preparePackagedSmoke')
+    doLast {
+        def options = file('run-packaged-smoke/options.txt')
+        if (!options.exists()) options.text = 'version:3955\nonboardAccessibility:false\n'
+        def target = file('run-packaged-smoke/saves/neoforge-packaged-client-isolated')
+        if (!target.exists()) {
+            // Use the world generated with the same packaged/optional-mod profile.
+            copy { from file('run-packaged-smoke/packaged-migration-smoke'); into target; exclude 'session.lock' }
+        }
+    }
+}
+tasks.named('runClientJarSmoke') { dependsOn tasks.named('preparePackagedClient') }
+dependencies {
+    implementation 'com.google.code.findbugs:jsr305:3.0.1'
+    implementation "net.steppschuh.markdowngenerator:markdowngenerator:${markdowngenerator_version}"
+    jarJar "net.steppschuh.markdowngenerator:markdowngenerator:${markdowngenerator_version}"
+    // Development runs need the plain Java library explicitly. The packaged run
+    // loads the embedded copy and must not add a second module with the same name.
+    ['client', 'clientSmoke', 'server', 'serverSmoke', 'gameTestServer', 'data'].each { run ->
+        add("${run}AdditionalRuntimeClasspath", "net.steppschuh.markdowngenerator:markdowngenerator:${markdowngenerator_version}")
+    }
+    compileOnly "io.wispforest:accessories-neoforge:${accessories_version}"
+    compileOnly "me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    if (!providers.gradleProperty('withoutOptionalIntegrations').isPresent()) {
+        runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}"
+        runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    }
+    compileOnly 'top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1'
+    if (providers.gradleProperty('withCurios').isPresent()) {
+        runtimeOnly 'top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1'
+    }
+    if (providers.gradleProperty('withAccessories').isPresent()) {
+        runtimeOnly "io.wispforest:accessories-neoforge:${accessories_version}"
+    }
+}
+sourceSets.main.resources {
+    srcDir rootProject.project(':common').file('src/generated/resources')
+    exclude '.cache/**', 'docs/spells/ebwizardry/**', 'ebwizardry.accesswidener'
+}
+processResources {
+    // NeoForge uses official runtime names; Fabric keeps its Loom-generated refmap.
+    filesMatching('ebwizardry.mixins.json') {
+        filter { line -> line.contains('"refmap"') ? null : line }
+    }
+}

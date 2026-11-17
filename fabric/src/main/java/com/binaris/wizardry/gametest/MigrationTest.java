@@ -125,6 +125,7 @@ public class MigrationTest {
 
     @GameTest(template = "ebwizardry:empty")
     public static void allRegisteredEntitiesSaveAndLoad(GameTestHelper helper) {
+        com.binaris.wizardry.core.gametest.ContentInventory.write(helper.getLevel());
         int checked = 0;
         for (var type : net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE) {
             var id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(type);

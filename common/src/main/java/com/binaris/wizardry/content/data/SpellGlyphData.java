@@ -72,11 +72,13 @@ public class SpellGlyphData extends SavedData {
     }
 
     public static String getGlyphName(Spell spell, SpellGlyphData data) {
+        if (data == null) return ""; // Recipe viewers can query names before world glyph synchronization.
         Map<Spell, String> names = data.randomNames;
         return names == null ? "" : names.getOrDefault(spell, "");
     }
 
     public static String getGlyphDescription(Spell spell, SpellGlyphData data) {
+        if (data == null) return "";
         Map<Spell, String> descriptions = data.randomDescriptions;
         return descriptions == null ? "" : descriptions.getOrDefault(spell, "");
     }

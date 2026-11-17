@@ -1,0 +1,82 @@
+package com.binaris.wizardry.platform;
+
+import com.binaris.wizardry.api.content.data.*;
+import com.binaris.wizardry.attachments.EBComponents;
+import com.binaris.wizardry.attachments.player.SpellManagerDataHolder;
+import com.binaris.wizardry.attachments.stack.ConjureDataHolder;
+import com.binaris.wizardry.attachments.stack.ImbuementEnchantDataHolder;
+import com.binaris.wizardry.api.content.util.RegistryUtils;
+import net.minecraft.world.item.TieredItem;
+import com.binaris.wizardry.content.spell.abstr.ConjureItemSpell;
+import com.binaris.wizardry.core.platform.services.IObjectData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+
+public class ForgeObjectData implements IObjectData {
+    @Override
+    public WizardData getWizardData(Player player) {
+        return EBComponents.WIZARD_DATA.get(player);
+    }
+
+    @Override
+    public MinionData getMinionData(Mob mob) {
+        return EBComponents.MINION_DATA.get(mob);
+    }
+
+    @Override
+    public ContainmentData getContainmentData(LivingEntity entity) {
+        return EBComponents.CONTAINMENT_DATA.get(entity);
+    }
+
+    @Override
+    public boolean isMinion(Entity entity) {
+        return entity instanceof Mob mob && EBComponents.MINION_DATA.get(mob).isSummoned();
+    }
+
+    @Override
+    public @Nullable ConjureData getConjureData(ItemStack stack) {
+        if (!ConjureItemSpell.isSummonableItem(stack.getItem())) return null;
+        return new ConjureDataHolder(stack);
+    }
+
+    @Override
+    public @Nullable ImbuementEnchantData getImbuementData(ItemStack stack) {
+        if (!(stack.getItem() instanceof TieredItem) || !RegistryUtils.isSafelyEnchantable(stack.getItem())) return null;
+        return new ImbuementEnchantDataHolder(stack);
+    }
+
+    @Override
+    public CastCommandData getCastCommandData(Player player) {
+        return EBComponents.CAST_COMMAND_DATA.get(player);
+    }
+
+    @Override
+    public SpellManagerData getSpellManagerData(Player player) {
+        return EBComponents.SPELL_MANAGER_DATA.get(player);
+    }
+
+    @Override
+    public void syncPlayerData(Player player) {
+        if (player.level().isClientSide()) return;
+        EBComponents.WIZARD_DATA.sync(player);
+        EBComponents.CAST_COMMAND_DATA.sync(player);
+        EBComponents.SPELL_MANAGER_DATA.sync(player);
+    }
+
+    @Override
+    public void spellStoredVariables(IStoredSpellVar<?>... variables) {
+        SpellManagerDataHolder.storedVariables.addAll(Arrays.asList(variables));
+    }
+
+    @Override
+    public ArcaneLockData getArcaneLockData(BlockEntity blockEntity) {
+        return EBComponents.ARCANE_LOCK_DATA.get(blockEntity);
+    }
+}

@@ -24,7 +24,7 @@ public final class WizardryMainMod {
         ConfigManager.register(EBServerConfig.INSTANCE);
         EBEventHelper.register();
         ForfeitRegistry.register();
-        EBAdvancementTriggers.register();
+        if (!Services.PLATFORM.getPlatformName().equals("NeoForge")) EBAdvancementTriggers.register();
         EBArgumentTypeRegistry.init();
 
         EBLogger.info("Electroblob's Wizardry Started");
