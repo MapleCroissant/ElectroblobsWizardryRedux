@@ -41,9 +41,11 @@ public final class EBRenderers {
         consumer.accept(WizardModel.LAYER_LOCATION, WizardModel::createBodyLayer);
         consumer.accept(IceGiantModel.LAYER_LOCATION, IceGiantModel::createBodyLayer);
         consumer.accept(BoulderModel.LAYER_LOCATION, BoulderModel::createBodyLayer);
+        consumer.accept(IceBarrierRenderer.LAYER, IceBarrierRenderer::createLayer);
     }
 
     public static void registerRenderers() {
+        registerEntityRender(EBEntities.ICE_BARRIER, IceBarrierRenderer::new);
         registerEntityRender(EBEntities.METEOR, MeteorRenderer::new);
         registerEntityRender(EBEntities.ARROW_RAIN, BlankRenderer::new);
         registerEntityRender(EBEntities.FIRE_BOMB, ThrownItemRenderer::new);
@@ -61,6 +63,18 @@ public final class EBRenderers {
         registerEntityRender(EBEntities.FORCE_ARROW, ForceArrowRenderer::new);
         registerEntityRender(EBEntities.CONJURED_ARROW, ConjureArrowRenderer::new);
         registerEntityRender(EBEntities.FLAME_CATCHER_ARROW, (ctx -> new MagicArrowRenderer<>(ctx, WizardryMainMod.location("textures/entity/flamecatcher_arrow.png"))));
+        registerEntityRender(EBEntities.STORMCLOUD, BlankRenderer::new);
+        registerEntityRender(EBEntities.LIGHTNING_HAMMER, LightningHammerRenderer::new);
+        registerEntityRender(EBEntities.SHIELD, ShieldRenderer::new);
+        registerEntityRender(EBEntities.FORCEFIELD, ForcefieldRenderer::new);
+        registerEntityRender(EBEntities.BLACK_HOLE, BlackHoleRenderer::new);
+        registerEntityRender(EBEntities.EARTHQUAKE, BlankRenderer::new);
+        registerEntityRender(EBEntities.DECOY, DecoyRenderer::new);
+        registerEntityRender(EBEntities.PHOENIX, PhoenixRenderer::new);
+        registerEntityRender(EBEntities.RADIANT_TOTEM, TotemRenderer::new);
+        registerEntityRender(EBEntities.WITHERING_TOTEM, TotemRenderer::new);
+        registerEntityRender(EBEntities.EMBER, context -> new MagicProjectileRenderer<>(context,
+                com.binaris.wizardry.WizardryMainMod.location("textures/entity/ember.png"), 0.15f, false));
         registerEntityRender(EBEntities.BLIZZARD, BlankRenderer::new);
         registerEntityRender(EBEntities.ICE_SPICKES, IceSpikeRenderer::new);
         registerEntityRender(EBEntities.TORNADO, BlankRenderer::new);
@@ -75,6 +89,8 @@ public final class EBRenderers {
         registerEntityRender(EBEntities.FIRE_BOLT, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/firebolt.png"), 0.2f, false)));
         registerEntityRender(EBEntities.SPARK, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/spark.png"), 0.4f, true)));
         registerEntityRender(EBEntities.ICE_CHARGE, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/ice_charge.png"), 0.6f, false)));
+        registerEntityRender(EBEntities.LARGE_MAGIC_FIREBALL, ctx ->
+                new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/fireball.png"), 1.5f, false));
         registerEntityRender(EBEntities.MAGIC_FIREBALL, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/magic_fireball.png"))));
         registerEntityRender(EBEntities.ICE_BALL, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/iceball.png"))));
         registerEntityRender(EBEntities.DARKNESS_ORB, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/darkness_orb.png"), 0.6f, true)));
@@ -109,6 +125,10 @@ public final class EBRenderers {
 
 
         registerEntityRender(EBEntities.SHADOW_WRAITH, BlankRenderer::new);
+        registerEntityRender(EBEntities.SILVERFISH_MINION, net.minecraft.client.renderer.entity.SilverfishRenderer::new);
+        registerEntityRender(EBEntities.SPIRIT_HORSE, SpiritHorseRenderer::new);
+        registerEntityRender(EBEntities.SPIRIT_WOLF, SpiritWolfRenderer::new);
+        registerEntityRender(EBEntities.SPECTRAL_GOLEM, SpectralGolemRenderer::new);
         registerEntityRender(EBEntities.STORM_ELEMENTAL, BlankRenderer::new);
         registerEntityRender(EBEntities.BOULDER, BoulderRenderer::new);
         registerEntityRender(EBEntities.LEVITATING_BLOCK, net.minecraft.client.renderer.entity.FallingBlockRenderer::new);

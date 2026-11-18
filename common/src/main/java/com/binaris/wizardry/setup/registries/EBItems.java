@@ -335,7 +335,7 @@ public final class EBItems {
     public static final DeferredObject<Item> RING_COMBUSTION = ringArtifact("ring_combustion", Rarity.EPIC, new CombustionRingEffect());
     public static final DeferredObject<Item> RING_CONDENSING = ringArtifact("ring_condensing", Rarity.RARE, new CondensingRingEffect());
     public static final DeferredObject<Item> RING_DEFENDER = ringArtifact("ring_defender", Rarity.RARE, null);
-    public static final DeferredObject<Item> RING_DISINTEGRATION = ringArtifact("ring_disintegration", Rarity.RARE, null);
+    public static final DeferredObject<Item> RING_DISINTEGRATION = ringArtifact("ring_disintegration", Rarity.RARE, new DisintegrationRingEffect());
     public static final DeferredObject<Item> RING_EARTH_BIOME = ringArtifact("ring_earth_biome", Rarity.UNCOMMON, changeModifiersByBiomeElement(Elements.EARTH, Services.PLATFORM::inEarthBiomes, SpellModifiers.POTENCY, 1.3f, SpellModifiers.Operation.MULTIPLY_TOTAL));
     public static final DeferredObject<Item> RING_EARTH_MELEE = ringArtifact("ring_earth_melee", Rarity.UNCOMMON, meleeRing(Elements.EARTH, MobEffects.POISON, 0, 200));
     public static final DeferredObject<Item> RING_EVOKER = ringArtifact("ring_evoker", Rarity.RARE, null);
@@ -372,7 +372,7 @@ public final class EBItems {
     public static final DeferredObject<Item> FLAMECATCHER = item("flamecatcher", FlameCatcherItem::new, false, true);
     public static final DeferredObject<Item> FLAMING_AXE = item("flaming_axe", FlamingAxeItem::new, false, true);
     public static final DeferredObject<Item> FROST_AXE = item("frost_axe", FrostAxeItem::new, false, true);
-    public static final DeferredObject<Item> LIGHTNING_HAMMER = item("lightning_hammer", () -> new Item(new Item.Properties().stacksTo(1)), false, true);
+    public static final DeferredObject<Item> LIGHTNING_HAMMER = item("lightning_hammer", LightningHammerItem::new, false, true);
     //Bombs
     public static final DeferredObject<Item> FIREBOMB = item("firebomb", () -> new BombItem<>(EBEntities.FIRE_BOMB, EBSounds.ENTITY_FIREBOMB_THROW), true, true);
     public static final DeferredObject<Item> POISON_BOMB = item("poison_bomb", () -> new BombItem<>(EBEntities.POISON_BOMB, EBSounds.ENTITY_POISON_BOMB_THROW), true, true);

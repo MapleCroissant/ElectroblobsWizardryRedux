@@ -21,6 +21,11 @@ public abstract class GuiMixin {
     private void ebwizardry$blinkOverlay(GuiGraphics graphics, net.minecraft.client.DeltaTracker delta,
                                         org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
         float strength = com.binaris.wizardry.client.effect.BlinkOverlay.strength(delta.getGameTimeDeltaPartialTick(false));
+        var player = net.minecraft.client.Minecraft.getInstance().player;
+        if (player != null && player.hasEffect(com.binaris.wizardry.setup.registries.EBMobEffects.SIXTH_SENSE.get())) {
+            renderTextureOverlay(graphics, com.binaris.wizardry.client.effect.SixthSenseMarkers.OVERLAY, 1);
+        }
+        com.binaris.wizardry.client.effect.TransportationOverlay.render(graphics);
         if (strength > 0) renderTextureOverlay(graphics, com.binaris.wizardry.client.effect.BlinkOverlay.TEXTURE, strength);
     }
 

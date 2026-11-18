@@ -1,89 +1,71 @@
 package com.binaris.wizardry.content.entity;
 
+import com.binaris.wizardry.setup.registries.EBEntities;
+import com.binaris.wizardry.setup.registries.EBSounds;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.level.Level;
 
-import java.lang.ref.WeakReference;
+import java.util.UUID;
 
-// TODO SHIELD ENTITY
-public class ShieldEntity extends Entity {
-    public WeakReference<Player> player;
+public final class ShieldEntity extends Entity {
+    private UUID owner;
+    private long lastRefresh;
 
-    public ShieldEntity(EntityType<?> entityType, Level level) {
-        super(entityType, level);
-        this.noPhysics = true;
+    public ShieldEntity(EntityType<?> type, Level level) {
+        super(type, level);
+        noPhysics = true;
     }
 
-//    public ShieldEntity(Level par1World, Player player) {
-//        super(EBEntities.SHIELD.get(), par1World);
-//        this.player = new WeakReference<Player>(player);
-//        this.noPhysics = true;
-//        this.moveTo(player.getX() + player.getLookAngle().x,
-//                player.getY() + 1 + player.getLookAngle().y, player.getZ() + player.getLookAngle().z,
-//                player.yHeadRot, player.getXRot());
-//        this.setBoundingBox(new AABB(this.getX() - 0.6f, this.getY() - 0.7f, this.getZ() - 0.6f, this.getX() + 0.6f, this.getY() + 0.7f, this.getZ() + 0.6f));
-//    }
+    public static boolean refresh(Player player) {
+        var level = player.level();
+        if (level.isClientSide) return true;
+        var shield = level.getEntitiesOfClass(ShieldEntity.class, player.getBoundingBox().inflate(4),
+                existing -> player.getUUID().equals(existing.owner)).stream().findFirst().orElse(null);
+        if (shield == null) {
+            shield = new ShieldEntity(EBEntities.SHIELD.get(), level);
+            shield.owner = player.getUUID();
+            shield.follow(player);
+            return level.addFreshEntity(shield);
+        }
+        shield.follow(player);
+        return true;
+    }
+
+    private void follow(Player player) {
+        lastRefresh = level().getGameTime();
+        var point = player.position().add(0, 0.3, 0).add(player.getLookAngle().scale(0.3));
+        setPos(point);
+        setYRot(player.getYHeadRot());
+        setXRot(player.getXRot());
+    }
 
     @Override
     public void tick() {
-//        Player entityplayer = player != null ? player.get() : null;
-//        if (entityplayer != null) {
-//            this.moveTo(entityplayer.getX() + entityplayer.getLookAngle().x * 0.3,
-//                    entityplayer.getY() + 1 + entityplayer.getLookAngle().y * 0.3,
-//                    entityplayer.getZ() + entityplayer.getLookAngle().z * 0.3, entityplayer.yHeadRot,
-//                    entityplayer.getXRot());
-//            if (!entityplayer.isUsingItem() || !(entityplayer.getItemInHand(entityplayer.getUsedItemHand()).getItem() instanceof ISpellCastingItem)) {
-//                WizardData.get(entityplayer).setVariable(Shield.SHIELD_KEY, null);
-//                this.discard();
-//            }
-//        } else if (!level.isClientSide) {
-//            this.discard();
-//        }
+        super.tick();
+        if (!level().isClientSide && level().getGameTime() - lastRefresh > 2) discard();
     }
 
     @Override
-    public void lerpTo(double par1, double par3, double par5, float par7, float par8, int par9) {
-        this.setPos(par1, par3, par5);
-        this.setRot(par7, par8);
+    public boolean isPickable() { return !isRemoved(); }
+
+    @Override
+    public ProjectileDeflection deflection(Projectile projectile) {
+        if (!level().isClientSide) playSound(EBSounds.ENTITY_SHIELD_DEFLECT.get(), 0.3f, 1.3f);
+        return ProjectileDeflection.REVERSE;
     }
 
     @Override
-    public boolean hurt(DamageSource source, float damage) {
-        if (source != null && source.getDirectEntity() instanceof Projectile) {
-            //level().playSound(null, source.getDirectEntity().getX(), source.getDirectEntity().getY(), source.getDirectEntity().getZ(), WizardrySounds.ENTITY_SHIELD_DEFLECT.get(), SoundSource.PLAYERS, 0.3f, 1.3f);
-        }
-        super.hurt(source, damage);
-        return false;
-    }
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
     @Override
-    public SoundSource getSoundSource() {
-        return SoundSource.PLAYERS;
-    }
-
-//    @Override
-//    public Packet<?> getAddEntityPacket() {
-//        return NetworkHooks.getEntitySpawningPacket(this);
-//    }
+    protected void readAdditionalSaveData(CompoundTag tag) {}
 
     @Override
-    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
-
-    }
-
-    @Override
-    protected void readAdditionalSaveData(CompoundTag compoundTag) {
-
-    }
-
-    @Override
-    protected void addAdditionalSaveData(CompoundTag compoundTag) {
-
-    }
+    protected void addAdditionalSaveData(CompoundTag tag) {}
 }

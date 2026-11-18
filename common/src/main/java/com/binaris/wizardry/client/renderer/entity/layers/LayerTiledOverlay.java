@@ -99,6 +99,10 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
         return 0xFFFFFF;
     }
 
+    protected float alpha(T entity, float partialTick) { return 1; }
+
+    protected float textureOffset(T entity, float partialTick) { return 0; }
+
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, T entity,
                        float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks,
@@ -113,7 +117,7 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
 
         VertexConsumer vertexConsumer = new UvScalingVertexConsumer(
                 bufferSource.getBuffer(RenderType.entityTranslucent(texture)),
-                getTileScaleX(), getTileScaleY());
+                getTileScaleX(), getTileScaleY(), textureOffset(entity, partialTicks));
 
         List<ModelPart> hiddenParts = new ArrayList<>();
         try {
@@ -126,7 +130,7 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
 
             int colour = getColor(entity, partialTicks);
             model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY,
-                    0xFF000000 | colour);
+                    ((int) (alpha(entity, partialTicks) * 255) << 24) | colour);
         } finally {
             for (ModelPart part : hiddenParts) {
                 part.visible = true;
@@ -229,7 +233,10 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
         private final float scaleX;
         private final float scaleY;
 
-        UvScalingVertexConsumer(VertexConsumer delegate, float scaleX, float scaleY) {
+        private final float offset;
+
+        UvScalingVertexConsumer(VertexConsumer delegate, float scaleX, float scaleY, float offset) {
+            this.offset = offset;
             this.delegate = delegate;
             this.scaleX = scaleX;
             this.scaleY = scaleY;
@@ -249,7 +256,7 @@ public abstract class LayerTiledOverlay<T extends LivingEntity, M extends Entity
 
         @Override
         public @NotNull VertexConsumer setUv(float u, float v) {
-            delegate.setUv(u * scaleX, v * scaleY);
+            delegate.setUv(u * scaleX + offset, v * scaleY + offset);
             return this;
         }
 

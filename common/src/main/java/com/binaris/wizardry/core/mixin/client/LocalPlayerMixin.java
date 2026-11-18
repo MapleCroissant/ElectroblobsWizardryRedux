@@ -23,6 +23,11 @@ public abstract class LocalPlayerMixin {
     @Unique
     LocalPlayer player = (LocalPlayer) (Object) this;
 
+    @Inject(method = "playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", at = @At("HEAD"), cancellable = true)
+    private void ebwizardry$muteLocalSound(net.minecraft.sounds.SoundEvent sound, float volume, float pitch, CallbackInfo callback) {
+        if (player.hasEffect(EBMobEffects.MUFFLE.get())) callback.cancel();
+    }
+
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/tutorial/Tutorial;onInput(Lnet/minecraft/client/player/Input;)V"))
     public void ebwizardry$localAIStep(CallbackInfo ci) {
         if (player.hasEffect(EBMobEffects.PARALYSIS.get())) {

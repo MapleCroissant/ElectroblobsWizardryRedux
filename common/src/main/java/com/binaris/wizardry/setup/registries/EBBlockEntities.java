@@ -53,6 +53,12 @@ public final class EBBlockEntities {
             () -> BlockEntityType.Builder.of(SpectralBlockEntity::new, EBBlocks.SPECTRAL_BLOCK.get()).build(null)
     );
 
+    public static final DeferredObject<BlockEntityType<StatueBlockEntity>> STATUE = blockEntity(
+            "statue", () -> BlockEntityType.Builder.of(StatueBlockEntity::new, EBBlocks.ICE_STATUE.get(), EBBlocks.PETRIFIED_STONE.get()).build(null));
+    public static final DeferredObject<BlockEntityType<ThornsBlockEntity>> THORNS = blockEntity(
+            "thorns", () -> BlockEntityType.Builder.of(ThornsBlockEntity::new, EBBlocks.THORNS.get()).build(null));
+    public static final DeferredObject<BlockEntityType<SnareBlockEntity>> SNARE = blockEntity(
+            "snare", () -> BlockEntityType.Builder.of(SnareBlockEntity::new, EBBlocks.SNARE.get()).build(null));
     public static final DeferredObject<BlockEntityType<MagicLightBlockEntity>> MAGIC_LIGHT = blockEntity(
             "magic_light", () -> BlockEntityType.Builder.of(MagicLightBlockEntity::new, EBBlocks.MAGIC_LIGHT.get()).build(null));
 

@@ -1,0 +1,24 @@
+{
+    "enabled":  {
+                    "book":  true,
+                    "scroll":  true,
+                    "wands":  true,
+                    "npcs":  true,
+                    "dispensers":  true,
+                    "commands":  true,
+                    "treasure":  true,
+                    "trades":  true,
+                    "looting":  true
+                },
+    "tier":  "ebwizardry:novice",
+    "element":  "ebwizardry:sorcery",
+    "type":  "ebwizardry:buff",
+    "cost":  5,
+    "chargeup":  0,
+    "cooldown":  25,
+    "base_properties":  {
+                            "effect.ebwizardry.muffle_duration":  600,
+                            "effect.ebwizardry.muffle_strength":  0
+                        },
+    "spell_action":  "ebwizardry:point_up"
+}

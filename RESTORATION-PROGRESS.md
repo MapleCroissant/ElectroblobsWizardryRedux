@@ -7,16 +7,16 @@ The 1.12.2 reference at commit `c0be7475b234223e5a3276e62e38e69ffa6de0ce` has 18
 | Scope | Entries | Basis |
 | --- | ---: | --- |
 | Original playable spells | 188 | Excludes `none` |
-| Original spells with Redux casting implementations in source | 140 | 137 original IDs and 3 renamed equivalents. Includes both gated originals and partial Greater Telekinesis |
-| Original spells available in the default Redux release registry | 138 | 136 original IDs and 2 release aliases. Includes partial Greater Telekinesis |
-| Original spells unavailable in the default Redux release | 50 | 48 missing casting implementations and 2 development-gated implementations |
-| All Redux source declarations | 145 | 138 exact original IDs including `none`, plus 7 other IDs |
-| All Redux registrations after the release gate | 142 | Includes `none` and 3 registry-only Redux entries without packaged spell definitions |
-| Base spell definitions in the audited JAR | 139 | The 138 available original spells and `none` |
+| Original spells with Redux casting implementations in source | 186 | 183 original IDs and 3 renamed equivalents. Includes partial Greater Telekinesis |
+| Original spells available in the default Redux release registry | 186 | 183 original IDs and 3 release aliases. Includes partial Greater Telekinesis |
+| Original spells unavailable in the default Redux release | 2 | Remaining unavailable originals |
+| All Redux source declarations | 191 | 184 exact original IDs including `none`, plus 7 other IDs |
+| All Redux registrations after the release gate | 190 | Includes `none` and 3 registry-only Redux entries without packaged spell definitions |
+| Base spell definitions in the audited JAR | 187 | The 186 available original spells and `none` |
 
-`Spells.register` removes `silverfish_swarm`, `conjure_armor`, and the Redux-only `ojospocos` in a production runtime or on a dedicated server. `block_surprise`, `player_hand`, and `wizard_hand` survive that filter despite lacking packaged spell JSON. They are distinct Redux registrations and are excluded from original coverage. `darkvision → dark_vision` and `fireskin → fire_skin` ship under their Redux IDs. `conjure_armour → conjure_armor` exists in source and is gated. Preserve the Redux IDs to protect modern saves.
+`Spells.register` removes the Redux-only `ojospocos` in a production runtime or on a dedicated server. `block_surprise`, `player_hand`, and `wizard_hand` survive that filter despite lacking packaged spell JSON. They are distinct Redux registrations and are excluded from original coverage. `darkvision → dark_vision` and `fireskin → fire_skin` ship under their Redux IDs. `conjure_armour → conjure_armor` ships under the existing Redux ID. Preserve the Redux IDs to protect modern saves.
 
-The 64-entry [original spell inventory](migration/ORIGINAL-SPELL-INVENTORY.md) omits the two shipped aliases from its historical backlog and includes them as context. Of the 64, 13 are release-available with no specific open implementation defect recorded in this audit, 1 has partial parity, 2 are gated, and 48 lack a corresponding cast. Similar spells such as Arc, Homing Spark, Thunderbolt, Fireball, and Phase Step are distinct spells. Icons, sounds, a mob effect, or an entity can exist without a spell registration.
+The 64-entry [original spell inventory](migration/ORIGINAL-SPELL-INVENTORY.md) omits the two shipped aliases from its historical backlog and includes them as context. Of the 64, 61 are release-available with no open implementation item tracked here, Greater Telekinesis has partial parity, and 2 remain unavailable. This makes 3 remaining tracked entries. Similar spells such as Arc, Homing Spark, Thunderbolt, Fireball, and Phase Step are distinct spells. Icons, sounds, a mob effect, or an entity can exist without a spell registration.
 
 ## Completed work and evidence
 
@@ -36,70 +36,73 @@ The 64-entry [original spell inventory](migration/ORIGINAL-SPELL-INVENTORY.md) o
 
 The previous batch passed 52 GameTests in each of the base, combined addon, Curios, and Accessories profiles, plus a 100-tick dedicated-server smoke and Fabric Java compilation. The three-spell batch passed incremental NeoForge compilation and 55 packaged GameTests. The packaged client booted with the new mixin and completed its 360-tick smoke. That smoke did not cast this batch interactively. The packaged JAR includes the three icons, and each spell definition matches the pinned original tier, element, type, cost, charge time, cooldown, and base properties.
 
+## Latest restoration work
+
+- Snowball launches a vanilla snowball with ballistic range scaling. The original does not support dispenser casting. Lightning Disc uses the seeking, piercing projectile already restored for Storm Elemental.
+- Summon Spectral Golem creates the original golem type and a 600-tick minion using the original texture. Silverfish Swarm now uses dedicated non-infesting minions that multiply on kills, up to generation five.
+- Mind Trick clears and suppresses mob targets until attacked and applies nausea to player targets. Celestial Smite strikes terrain below a golden beam and applies area damage and fire.
+- Conjure Armour preserves equipped items, skips existing spectral pieces, equips only eligible slots, and uses server-authoritative inventory changes. Greater Fireball restores the explosive projectile, reflection, and blast scaling.
+- Mark Sacrifice amplifies the next magic hit by 60 percent at base strength and consumes the mark. On NeoForge, the incoming damage adjustment now reaches its damage container. Ice Shroud uses the original 600-tick buff and applies 100 ticks of frost to a nearby nonprojectile attacker.
+- Creative spell books and scrolls enumerate the runtime registry. Original IDs with no runtime registration are absent from those tabs. Existing Redux-only registry entries still resolve saved IDs and are outside the original count. Random spell loot applies the loot context and book or scroll availability filters. Restoration does not require alternate saved IDs or addon source changes. Tests cover book and scroll binding and wand resolution for Snowball and Lightning Disc. Creative search, tooltips, live item use, and multiplayer remain to verify.
+
+The final effect batch passed 64 required GameTests in both the development and packaged NeoForge runs, with Fabric Java compilation. Package inspection matched all ten restored spell definitions against 1.12.2 and found their icons. The combined Extra Spells and Twilight Forest profile and the separate Curios and Accessories profiles each passed 64 GameTests. The packaged client and dedicated server completed their boot smokes. Actual screenshots of the new spells, interactive audio, reconnect behavior, and multiplayer play remain unverified.
+
+### Frost Barrier, Imbue Weapon, and Mine checkpoint
+
+Frost Barrier has its arc, original model, tier-scaled panel count, and timed collision. Imbue Weapon uses temporary sword and bow enchantments with separate active limits and original damage bonuses. Mine checks each block against its harvest tier and protection, and supports Charm of Silk Touch. All 67 development GameTests passed with these three spells.
+
+Greater Telekinesis can now carry closed, unlocked shulker boxes. A GameTest covers the Arcane Lock check, saved carrier data, exact landing inventory, and one recovery item on expiry. The development suite reached 68 passing tests. Other block entities remain excluded.
+
+Divination restores the loaded-chunk ore scan, relative feedback, flash hints, and strong-signal nudge. It uses an ore tag and deterministic value weights instead of sampling 1.12.2 mining and smelting XP. Freezing Weapon builds on the same temporary enchantment infrastructure, with 200 ticks of frost per level for melee hits and 150 for arrows. Both passed the 70-test development and packaged profiles. The non-shulker block-entity gap remains open. Chests and similar containers require a transfer path that accounts for on-removal item drops and multi-block partners.
+
+Chain Lightning restores the primary and two subsequent shock tiers, capped target lists, ally filtering, and arc effects. Muffle restores temporary sound suppression and the 144-degree targeting arc. Development and packaged GameTests passed with both. The Frost Barrier smoke captured the original three-panel model in the packaged client at parity-frost-barrier.png.
+
+Intimidate applies the original timed fear in an eight-block area, clears targeting, and attempts to route affected creatures away from their loaded fear source. The fear-source UUID and effect persist across saves. Its tests cover duration, targeting suppression and save/load. Navigation under real multiplayer conditions remains unverified. The final checkpoint passed 73 GameTests in development, the packaged JAR, the combined addon profile, Curios, and Accessories. Packaged client and dedicated-server smoke checks and Fabric Java compilation passed. The JAR includes all eight definitions and icons, with their original spell metadata and base property values verified.
+
+### Lightning, traps, and spirit companions checkpoint
+
+Lightning Bolt and Thunderstorm use the vanilla lightning entity with stored caster and damage information. They require outdoor placement, and spell fire is checked per block. Spell strikes retain permitted lightning-rod activation. Copper cleaning is left to natural lightning because its vanilla routine can modify neighboring blocks. Stormcloud retains five-block placement, target-age strike cadence, particles, original sounds, and Ring of Stormcloud movement. Snare restores a saved-owner single-use trap. Spirit Wolf restores the persistent second-cast replacement rule, tamed ownership, potency scaling, and owner dismissal. Spirit Horse restores the owned mount, intrinsic saddle, potency scaling, and idle fade. All 79 GameTests passed in development and from the packaged JAR. Packaged dedicated-server and integrated-client smoke checks passed, and Fabric compiled. The combined Extra Spells and Twilight Forest packaged profile and the separate Curios and Accessories development profiles each passed 79 GameTests. The six spells still need interactive visual and audio checks.
+
+Lightning Hammer restores the outdoor fall, hard impact, timed ground shocks and owner-bound ring pickup and throw. Lightning Web restores a continuous ray with primary, secondary, and tertiary damage at ten-tick intervals. All 82 GameTests passed in development and from the packaged JAR. The dedicated-server and integrated-client smoke checks passed, and Fabric compiled. Interactive audiovisual testing of both spells remains open.
+
+Shield restores continuous Resistance I, projectile deflection, the animated shield and release cleanup. Shadow Ward restores a separate channeled defense that splits eligible damage with the attacker and prevents recursive reflection. The development suite passed 84 GameTests. Both spells are included in the subsequent packaged validation.
+
+Disintegration restores the fire ray, lethal-only ember burst, corpse overlay and Ring of Disintegration. The development suite passed 85 GameTests, including nonlethal ignition, exactly-once burst and ember ignition and expiry.
+
+Radiant Totem prioritizes healing wounded allies. Withering Totem stores successful drains and discharges them with Wither on expiry. Clairvoyance remembers a clicked face and dimension, routes through loaded terrain under a 5,000-node budget, and sends the trail only to the caster. Forest of Thorns grows a timed two-block-high ring. Black Hole restores hostile attraction, close-range damage, and charm-gated terrain interaction. All 90 required GameTests passed in development and from the packaged JAR. The packaged dedicated-server and integrated-client smoke checks passed, and Fabric compiled.
+
+Transience restores invisibility, incoming and outgoing damage restrictions, and interaction blocking. Its 1.12.2 rules leave normal block collision in place. Sixth Sense restores the range-scaled effect, through-wall creature markers, and Dire Wolf Pelt marker shapes. All 92 GameTests passed in development, from the packaged JAR, with both spell-pack addons together, and in separate Curios and Accessories profiles. The packaged client loaded both post chains and cleared them on expiry, with screenshots. Dedicated-server smoke and Fabric compilation passed.
+
+Grapple restores the extending vine, block-anchor movement, entity reeling, abseiling artifact, and release. The development suite passed 93 GameTests, including anchor removal and a location-cast pull.
+
+Mind Control restores timed controller-aware targeting, saved controller identity, target cleanup, sheep recoloring, the aura layer, and the Ring of Mind Control. All 94 GameTests passed in development and from the packaged JAR. The packaged NeoForge client and dedicated server and Fabric compilation passed.
+
+Decoy restores opposite lateral movement, owner appearance, invulnerability, time limit, and mob aggro diversion. Mirage restores hidden sustained particles, shifted translucent rendering, and mob target suppression. Summon Phoenix restores the fire-immune hovering minion and its sustained Flame Ray attack. All 97 GameTests passed in development and from the packaged JAR. The packaged client received an owner-resolved Decoy and applied Mirage to it after the mob effect synchronization fix. Dedicated-server smoke and Fabric compilation passed.
+
+Earthquake restores the expanding wave, damage and Weakness, vertical launch, audiovisual effects, and protected terrain bounce. Greater Telekinesis now transports closed, unlocked barrels, with no source inventory drops and an inventory-bearing recovery item if placement fails. Shulker support remains covered. All 99 GameTests passed in development and from the packaged JAR. The packaged client and dedicated-server smoke checks passed, and Fabric compiled.
+
+Ice Statue, Petrify, and Wall of Frost share transactional mob storage and a saved release queue. Tests cover a blocked conversion, restoration of UUID, health and equipment, releasing by breaking an upper section, and a wall thawing without water. All 102 GameTests passed in development and from the packaged JAR. A packaged client retry passed after the illusion smoke fixture began tracking the specific Decoy it created. Dedicated-server smoke and Fabric compilation passed. Wall of Frost reuses the existing DryFrostedIceBlock used by Permafrost.
+
+Slow Time restores the 300-tick aura, original every-sixth-tick cadence, potency scaling, Stop Time charm, client shaders, and scoped player input and update pausing. Overlapping auras select the strongest schedule. All 103 GameTests passed in development and from the packaged JAR.
+
+Forcefield restores the persistent spherical boundary, projectile deflection, damage and interaction protection, and explosion filtering. Transportation restores craftable stones, remembered circles, the Ancient Compass selection overlay, countdown and arrival checks, and Spectral Tether mount transport. All 105 development and packaged GameTests passed including Forcefield boundary damage and Transportation delay and broken-circle rejection.
+
 ## Unresolved original spells
 
 Difficulty is an estimate. Low means an existing implementation or reusable foundation with limited new mechanics. Medium means a distinct implementation with focused testing. High means significant state, networking, rendering, AI, world changes, or multiplayer risk.
 
 | Original registry ID | Element | Tier | Current status | Difficulty |
 | --- | --- | --- | --- | --- |
-| `ebwizardry:black_hole` | sorcery | master | Absent | High |
-| `ebwizardry:celestial_smite` | healing | master | Absent | Medium |
-| `ebwizardry:chain_lightning` | lightning | advanced | Absent | Medium |
-| `ebwizardry:clairvoyance` | sorcery | apprentice | Absent | Medium |
-| `ebwizardry:conjure_armour` | sorcery | advanced | Renamed; development-gated | Low |
-| `ebwizardry:decoy` | sorcery | advanced | Absent | High |
-| `ebwizardry:disintegration` | fire | advanced | Absent | Medium |
-| `ebwizardry:divination` | sorcery | apprentice | Absent | Medium |
-| `ebwizardry:earthquake` | earth | master | Absent | High |
-| `ebwizardry:forcefield` | healing | advanced | Absent | Medium |
-| `ebwizardry:forest_of_thorns` | earth | master | Absent | High |
-| `ebwizardry:freezing_weapon` | ice | advanced | Absent | Medium |
-| `ebwizardry:frost_barrier` | ice | apprentice | Absent | Medium |
-| `ebwizardry:grapple` | earth | apprentice | Absent | High |
-| `ebwizardry:greater_fireball` | fire | advanced | Absent | Medium |
-| `ebwizardry:greater_telekinesis` | sorcery | advanced | Release partial; block entities excluded | High |
-| `ebwizardry:ice_shroud` | ice | advanced | Absent | Medium |
-| `ebwizardry:ice_statue` | ice | apprentice | Absent | High |
-| `ebwizardry:imbue_weapon` | sorcery | apprentice | Absent | Medium |
-| `ebwizardry:intimidate` | necromancy | apprentice | Absent | Medium |
-| `ebwizardry:lightning_bolt` | lightning | advanced | Absent | Medium |
-| `ebwizardry:lightning_disc` | lightning | advanced | Absent | Medium |
-| `ebwizardry:lightning_hammer` | lightning | master | Absent | Medium |
-| `ebwizardry:lightning_web` | lightning | master | Absent | High |
-| `ebwizardry:mark_sacrifice` | healing | apprentice | Absent | High |
-| `ebwizardry:mind_control` | necromancy | advanced | Absent | High |
-| `ebwizardry:mind_trick` | necromancy | novice | Absent | Medium |
-| `ebwizardry:mine` | earth | novice | Absent | Medium |
-| `ebwizardry:mirage` | sorcery | advanced | Absent | High |
-| `ebwizardry:muffle` | sorcery | novice | Absent | High |
-| `ebwizardry:petrify` | sorcery | advanced | Absent | High |
+| `ebwizardry:greater_telekinesis` | sorcery | advanced | Release partial; closed unlocked shulker boxes and barrels supported | High |
 | `ebwizardry:possession` | necromancy | master | Absent | High |
-| `ebwizardry:radiant_totem` | healing | advanced | Absent | Medium |
 | `ebwizardry:resurrection` | healing | master | Absent | High |
-| `ebwizardry:shadow_ward` | necromancy | advanced | Absent | Medium |
-| `ebwizardry:shield` | healing | apprentice | Absent | Medium |
-| `ebwizardry:silverfish_swarm` | earth | master | Minion spell; development-gated | Low |
-| `ebwizardry:sixth_sense` | earth | apprentice | Absent | Medium |
-| `ebwizardry:slow_time` | sorcery | master | Absent | High |
-| `ebwizardry:snare` | earth | novice | Absent | Medium |
-| `ebwizardry:snowball` | ice | novice | Absent | Low |
-| `ebwizardry:stormcloud` | lightning | advanced | Absent | Medium |
-| `ebwizardry:summon_iron_golem` | sorcery | master | Absent | Low |
-| `ebwizardry:summon_phoenix` | fire | master | Absent | High |
-| `ebwizardry:summon_spirit_horse` | earth | advanced | Absent | High |
-| `ebwizardry:summon_spirit_wolf` | earth | apprentice | Absent | Medium |
-| `ebwizardry:thunderstorm` | lightning | master | Absent | Medium |
-| `ebwizardry:transience` | healing | advanced | Absent | Medium |
-| `ebwizardry:transportation` | sorcery | advanced | Absent | High |
-| `ebwizardry:wall_of_frost` | ice | master | Absent | High |
-| `ebwizardry:withering_totem` | necromancy | advanced | Absent | Medium |
 
 ## Known bugs, limits, and verification-only work
 
-- Greater Telekinesis excludes block entities to protect stored data. Test mob and TNT targeting, player protection, artifact interaction, thrown impact damage, and multiplayer before marking full parity. Safe block-entity transport needs a separate design that preserves data and guards against duplication and protection bypass.
+- Greater Telekinesis preserves closed, unlocked shulker boxes and barrels. Other block entities, including multi-block containers, remain excluded. Test mob and TNT targeting, player protection, artifact interaction, thrown impact damage, and multiplayer before marking full parity. Other block types need dedicated removal and placement handling to preserve data and guard against duplication.
 - Light has a visibly different ray blend from the original. Charm of Light permanence and dispel are implemented and still need an interactive check. The existing test covers finite lifetime.
 - Ice Age already has a release registration and an unrelated source TODO for living ice statues. Its existing behavior does not supply the distinct missing Ice Statue spell.
-- Conjure Armour requires a gear-safety review before enabling its existing ID. The current code calls `setItemSlot` after the skip check. Test occupied slots, full inventories, and conjured expiry. Silverfish Swarm needs original count, duration, placement, and targeting checks before removing the gate.
+- Conjure Armour now passes occupied-slot, full-inventory, duplicate prevention, duration, expiry, and death-cleanup checks. Reconnect and live equipment synchronization still need interactive verification. Silverfish placement and ownership under multiplayer load remain unverified.
 - Captured graphics came from scripted gameplay. The user’s manual confirmation covers Iceball, Summon Ice Giant, and Summon Ice Wraith. Interactive audio, combat, a two-client session, and direct 1.12.2 save conversion remain unverified. Preserve current Redux IDs and test any data migration in copied worlds.
 
 - The three-spell batch has automated server coverage for Paralysis damage, effect duration and critical release, summon type and lifetime, and the elemental’s disc launch, impact damage, and piercing. Player look lock, in-game particles and audio, and summon behavior in multiplayer remain unverified interactively. Storm Elemental uses the modern ranged goal with the original 15-block range and 90-tick repeat interval. Its first attack and melee transitions follow that goal’s scheduling.
@@ -108,22 +111,24 @@ Difficulty is an estimate. Low means an existing implementation or reusable foun
 
 | Integration | Existing evidence | What remains |
 | --- | --- | --- |
-| Extra Spells 1.2.0 | Loaded with Twilight Forest in the latest packaged 52-test run. The earlier addon-specific dedicated check cast all 18 spells. | The latest run did not replay that full addon-specific cast matrix or test its visuals. |
+| Extra Spells 1.2.0 | Loaded with Twilight Forest in the packaged 105-test run. The earlier addon-specific dedicated check cast all 18 spells. | The latest run did not replay that full addon-specific cast matrix or test its visuals. |
 | Twilight Forest Spell Pack 1.1.2-port and Twilight Forest 4.8.3345 | Combined packaged tests passed, including real addon lookup in the Redux lectern and registry metadata. Earlier gameplay passed in the addon's own copied smoke world. | The portal assertion failed in the generic Redux fixture. Use the addon fixture for portal checks. Addon-specific dispensing uses its own path. |
-| Curios API 9.5.1+1.21.1 | Separate 52-test development GameTest profile passed. | Interactive artifact equip/unequip and telekinesis anchoring are unverified in that profile. |
-| Accessories 1.1.0-beta.52+1.21.1 | Separate 52-test development GameTest profile passed. | Interactive equipment behavior and the simultaneous Curios/Accessories setup were not rechecked in the latest evidence. |
+| Curios API 9.5.1+1.21.1 | Separate 105-test development GameTest profile passed. | Interactive artifact equip/unequip and telekinesis anchoring are unverified in that profile. |
+| Accessories 1.1.0-beta.52+1.21.1 | Separate 99-test development GameTest profile passed. | Interactive equipment behavior and the simultaneous Curios/Accessories setup were not rechecked in the latest evidence. |
 
 No new compatibility failure appeared in the tested profiles. Use compatible 1.21.1 NeoForge addon builds and the same Redux JAR on both sides. Keep addon jars out of baseline smoke runs. See [rendering and casting repair notes](migration/NEOFORGE-REPAIR.md) for prior fixture details.
 
+The remaining index records the pinned entry points and base properties for both unavailable spells. Resurrection needs a real player respawn lifecycle. In 1.21.1 a dead player entity is removed after 20 ticks, earlier than the original 200-tick wait. Track death time independently, validate same-dimension allied corpses, use the normal respawn path at a safe death location, and account for the Amulet of the Immortal casting item through death, respawn, and logout. Possession needs authoritative movement and attack control, mob-specific abilities, and restoration of the player body and state on exit, death, logout, and dimension change.
+
 ## Recommended restoration order
 
-1. Start the next batch with Snowball and Summon Iron Golem. Check their original projectile and summon behavior against the pinned reference.
-2. Validate Silverfish Swarm and Conjure Armour individually before changing their gates.
-3. Group the remaining work by shared mechanics. Tackle projectile and isolated buff spells before persistent constructs, terrain editing, and AI control. Keep player-state spells such as Possession, Resurrection, and Slow Time in separate batches.
-4. Track targeted manual verification separately from new implementation. Prioritize Greater Telekinesis targets and protection, Light and Charm of Light, and the recent spells’ audio and multiplayer behavior.
+1. Restore Resurrection with server-owned death tracking and an actual player respawn test, including the amulet and both inventory rules. NeoForge 1.21.1 exposes `GameTestHelper.makeMockServerPlayerInLevel()`, which registers a server player with an embedded connection. Use it to exercise the real `PlayerList.respawn` path, assert one player per UUID, and check normal respawn and disconnect handling before enabling the death-screen action.
+2. Restore Possession in its own batch, beginning with host control and guaranteed player-state cleanup.
+3. Track targeted manual verification separately from new implementation. Prioritize Greater Telekinesis targets and protection, Light and Charm of Light, and the recent spells’ audio and multiplayer behavior.
 
 ## Source map
 
+- Latest batch: [Forcefield.java](common/src/main/java/com/binaris/wizardry/content/spell/healing/Forcefield.java), [Transportation.java](common/src/main/java/com/binaris/wizardry/content/spell/sorcery/Transportation.java), [TransportationStoneBlock.java](common/src/main/java/com/binaris/wizardry/content/block/TransportationStoneBlock.java), and [TransportationOverlay.java](common/src/main/java/com/binaris/wizardry/client/effect/TransportationOverlay.java).
 - Registry and release gate — [Spells.java](common/src/main/java/com/binaris/wizardry/setup/registries/Spells.java), [NeoForgeDataGenerators.java](neoforge/src/main/java/com/binaris/wizardry/datagen/NeoForgeDataGenerators.java), and [generated spell definitions](common/src/generated/resources/data/ebwizardry/spells).
 - Gameplay and rendering coverage — [OriginalParityTest.java](neoforge/src/main/java/com/binaris/wizardry/gametest/OriginalParityTest.java), [NeoForgeMigrationTest.java](neoforge/src/main/java/com/binaris/wizardry/gametest/NeoForgeMigrationTest.java), and [SpellVisualSmoke.java](neoforge/src/main/java/com/binaris/wizardry/client/SpellVisualSmoke.java).
 - Resume against the local original checkout at `$env:TEMP/ew-original` when available. Its registry is `src/main/java/electroblob/wizardry/registry/Spells.java` and its definitions are under `src/main/resources/assets/ebwizardry/spells`. The pinned revision is linked in the inventory.
@@ -143,12 +148,12 @@ Run the smallest relevant step first from the Redux root. These PowerShell comma
 .\gradlew.bat --offline :fabric:compileJava
 ```
 
-For combined addon checks, stage Extra Spells, Twilight Forest Spell Pack, and Twilight Forest in `neoforge/run-packaged-smoke/mods`, run `:neoforge:runGameTestJarSmoke -PwithoutOptionalIntegrations`, then remove only the staged copies. For the Twilight Forest portal check, use a copied addon smoke world. Previous logs are under `build/telekinesis-*.log`. For this batch, see `build/original-spell-batch-final.log` (incremental), `build/original-spell-batch-packaged.log` (release), and the client section of `build/original-spell-batch-release.log`. Client evidence is under `neoforge/run-packaged-smoke/screenshots`. The current JAR is `neoforge/build/libs/electroblobs-wizardry-redux-1.21.1-0.8.10-neoforge.jar`, SHA-256 `137CCEA7AC798A6BE768D94B1CAAD5C252D96BC0BDD29AD9B95706CE3BDAFD44`.
+For combined addon checks, stage Extra Spells, Twilight Forest Spell Pack, and Twilight Forest in `neoforge/run-packaged-smoke/mods`, run `:neoforge:runGameTestJarSmoke -PwithoutOptionalIntegrations`, then remove only the staged copies. For the Twilight Forest portal check, use a copied addon smoke world. Previous logs are under `build/telekinesis-*.log`. See `build/original-spell-batch-*.log` for the prior batch and `build/restoration-fear-*.log` for the prior checkpoint and `build/restoration-spirit-release.log` for the previous 79-test checkpoint, with optional profile logs in `build/restoration-spirit-addons.log`, `build/restoration-spirit-curios.log`, and `build/restoration-spirit-accessories.log`. See `build/restoration-hammer-release.log` for the 82-test checkpoint and `build/restoration-constructs-release.log` for the 90-test checkpoint. The 92-test checkpoint is under `build/restoration-vision-*.log`. The 94-test checkpoint is under `build/restoration-control-*.log`. The 97-test checkpoint is under `build/restoration-phoenix-*.log`. The combined addon, Curios, and Accessories profiles each passed 99 required GameTests. The 99-test checkpoint is under `build/restoration-quake-*.log`. The base 186-spell packaged validation is in `build/restoration-186-release.log`. The Forcefield and Transportation validation logs are `build/restoration-transportation-*.log`. The combined addon suite also verifies Transportation?s exact tier, element, mana cost, charge time, and cooldown from the packaged registry. See `build/restoration-statues-verified.log` for 102 packaged tests and `build/restoration-slow-time-verified.log` for 103. Client evidence is under `neoforge/run-packaged-smoke/screenshots`. The current JAR is `neoforge/build/libs/electroblobs-wizardry-redux-1.21.1-0.8.10-neoforge.jar`, SHA-256 `47BB8A2135C5CA60E46ED7DCF22589DAA5340D9737876974216765A3B76AE3EA`.
 
 ## Git handoff
 
-Branch `fix/neoforge-rendering`, HEAD `09d43682` (Restore Wizardry spells, rendering, lectern, and dispenser). This batch leaves 10 modified tracked files and 8 untracked files, with no staged changes. Verify with `git status --short --branch`. No commits, pushes, or merges were made during this batch.
+Branch `fix/neoforge-rendering`, HEAD `4eaf4ca5`. Current checkpoint has 53 modified tracked files and 183 untracked files, with no staged changes. No commits, pushes, or merges were made during this restoration session.
 
 ## Continuation prompt
 
-> Resume Electroblob’s Wizardry Redux 1.21.1 NeoForge on the existing dirty `fix/neoforge-rendering` branch. Read `RESTORATION-PROGRESS.md` and `migration/ORIGINAL-SPELL-INVENTORY.md`, then use the pinned 1.12.2 source to restore Snowball and Summon Iron Golem in a small batch. Preserve existing IDs, rendering, lectern, scroll dispensing, addon and equipment compatibility, and the Arcane Ascension APIs. Leave progression deferred. Start with incremental tests and use packaged client or server checks where the batch warrants them. Record implementation, automated checks, and manual verification separately, and update the counts. Do not commit, push, or merge.
+> Resume Electroblob’s Wizardry Redux 1.21.1 NeoForge on the existing dirty `fix/neoforge-rendering` branch. Read `RESTORATION-PROGRESS.md` and `migration/ORIGINAL-SPELL-INVENTORY.md`, then use the pinned 1.12.2 source to continue with Resurrection and Possession. Preserve existing IDs, rendering, lectern, scroll dispensing, addon and equipment compatibility, and the Arcane Ascension APIs. Leave progression deferred. Start with incremental tests and use packaged client or server checks where the batch warrants them. Record implementation, automated checks, and manual verification separately, and update the counts. Do not commit, push, or merge.

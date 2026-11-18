@@ -18,6 +18,8 @@ public class EBFabricClientNetwork {
         registerClientMessage(DispenserCastS2C.ID, DispenserCastS2C::new);
         registerClientMessage(SpellCastS2C.ID, SpellCastS2C::new);
         registerClientMessage(ScreenShakeS2C.ID, ScreenShakeS2C::new);
+        registerClientMessage(ClairvoyancePathS2C.ID, ClairvoyancePathS2C::new);
+        registerClientMessage(SlowTimeS2C.ID, SlowTimeS2C::new);
         registerClientMessage(ParticleBuilderS2C.ID, ParticleBuilderS2C::new);
         registerClientMessage(MagicEffectSyncS2C.ID, MagicEffectSyncS2C::new);
         registerClientMessage(ConfigSyncS2C.ID, ConfigSyncS2C::new);

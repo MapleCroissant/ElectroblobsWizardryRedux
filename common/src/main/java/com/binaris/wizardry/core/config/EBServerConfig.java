@@ -51,6 +51,7 @@ public class EBServerConfig implements ConfigProvider {
     public static final ConfigOption<List<ResourceLocation>> MELT_ITEMS_BLACKLIST = addOption(ListConfigOption.resourceLocation("melt_items_blacklist", List.of()));
     public static final ConfigOption<List<ResourceLocation>> LOOT_INJECTION_TO_MOBS = addOption(ListConfigOption.resourceLocation("loot_injection_to_mobs", List.of()));
     public static final ConfigOption<Boolean> INJECT_LOOT_TO_HOSTILE_MOBS = addOption(BoolConfigOption.booleanOption("inject_mob_drops", true));
+    public static final ConfigOption<Boolean> SLOW_TIME_AFFECTS_PLAYERS = addOption(BoolConfigOption.booleanOption("slow_time_affects_players", true));
     public static final ConfigOption<Boolean> PLAYERS_MOVE_EACH_OTHER = addOption(BoolConfigOption.booleanOption("players_move_each_other", true));
     public static final ConfigOption<Boolean> REVERSE_SCROLL_DIRECTION = addOption(BoolConfigOption.booleanOption("reverse_scroll_direction", false));
     public static final ConfigOption<Boolean> REPLACE_VANILLA_FALL_DAMAGE = addOption(BoolConfigOption.booleanOption("replace_vanilla_fall_damage", false));

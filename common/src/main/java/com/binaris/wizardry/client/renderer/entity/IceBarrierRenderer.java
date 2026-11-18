@@ -1,43 +1,56 @@
-package com.binaris.wizardry.client.renderer.entity;//package com.electroblob.wizardry.client.renderer.entity;
-//
-//import com.electroblob.wizardry.WizardryMainMod;
-//import com.electroblob.wizardry.common.content.entity.construct.EntityIceBarrier;
-//import com.mojang.blaze3d.vertex.PoseStack;
-//import net.minecraft.client.renderer.MultiBufferSource;
-//import net.minecraft.client.renderer.RenderType;
-//import net.minecraft.client.renderer.entity.EntityRenderer;
-//import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
-//import net.minecraft.client.renderer.texture.OverlayTexture;
-//import net.minecraft.resources.ResourceLocation;
-//
-//public class IceBarrierRenderer extends EntityRenderer<EntityIceBarrier> {
-//    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(WizardryMainMod.MOD_ID, "textures/entity/ice_barrier.png");
-//
-//    private ModelIceBarrier model;
-//
-//    public IceBarrierRenderer(Context p_174008_) {
-//        super(p_174008_);
-//        this.model = new ModelIceBarrier(p_174008_.bakeLayer(ModelIceBarrier.LAYER_LOCATION));
-//    }
-//
-//    @Override
-//    public void render(EntityIceBarrier entity, float p_114486_, float p_114487_, PoseStack p_114488_, MultiBufferSource p_114489_, int p_114490_) {
-//        p_114488_.pushPose();
-//        p_114488_.translate(0, entity.getBbHeight() / 2, 0);
-//        p_114488_.mulPose(Vector3f.ZP.rotationDegrees(180));
-//        p_114488_.mulPose(Vector3f.YP.rotationDegrees(p_114486_));
-//        p_114488_.translate(0, -entity.getBbHeight() / 2 - 0.3, 0);
-//
-//        float s = entity.getSizeMultiplier();
-//        p_114488_.scale(s, s, s);
-//
-//        this.model.renderToBuffer(p_114488_, p_114489_.getBuffer(RenderType.entityTranslucentCull(TEXTURE)), p_114490_, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-//
-//        p_114488_.popPose();
-//    }
-//
-//    @Override
-//    public ResourceLocation getTextureLocation(EntityIceBarrier p_114482_) {
-//        return TEXTURE;
-//    }
-//}
+package com.binaris.wizardry.client.renderer.entity;
+
+import com.binaris.wizardry.WizardryMainMod;
+import com.binaris.wizardry.content.entity.construct.IceBarrierConstruct;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+
+public final class IceBarrierRenderer extends EntityRenderer<IceBarrierConstruct> {
+    private static final ResourceLocation TEXTURE = WizardryMainMod.location("textures/entity/ice_barrier.png");
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(WizardryMainMod.location("ice_barrier"), "main");
+    private final ModelPart model;
+
+    public IceBarrierRenderer(EntityRendererProvider.Context context) {
+        super(context);
+        model = context.bakeLayer(LAYER);
+    }
+
+    public static LayerDefinition createLayer() {
+        var mesh = new MeshDefinition();
+        mesh.getRoot().addOrReplaceChild("barrier", CubeListBuilder.create()
+                .texOffs(0, 0).addBox(-14.5f, -14.5f, -1.5f, 29, 29, 3)
+                .texOffs(0, 32).addBox(-9, -9, -4, 18, 18, 8),
+                PartPose.offsetAndRotation(0, 24, 0, 0, 0, 0.7854f));
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    @Override
+    public void render(IceBarrierConstruct barrier, float yaw, float partialTick, PoseStack poses, MultiBufferSource buffers, int light) {
+        poses.pushPose();
+        double midpoint = barrier.getBbHeight() / 2;
+        poses.translate(0, midpoint, 0);
+        poses.mulPose(Axis.ZP.rotationDegrees(180));
+        poses.mulPose(Axis.YP.rotationDegrees(yaw));
+        poses.translate(0, -midpoint - 0.3, 0);
+        float size = barrier.getSizeMultiplier();
+        poses.scale(size, size, size);
+        model.render(poses, buffers.getBuffer(RenderType.entityTranslucent(TEXTURE)), light, OverlayTexture.NO_OVERLAY);
+        poses.popPose();
+        super.render(barrier, yaw, partialTick, poses, buffers, light);
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(IceBarrierConstruct barrier) { return TEXTURE; }
+}

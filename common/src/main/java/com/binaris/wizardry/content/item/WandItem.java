@@ -66,6 +66,11 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     }
 
     @Override
+    public @NotNull net.minecraft.world.InteractionResult useOn(net.minecraft.world.item.context.UseOnContext context) {
+        return com.binaris.wizardry.content.spell.sorcery.Clairvoyance.remember(context);
+    }
+
+    @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         Spell spell = CastItemDataHelper.getCurrentSpell(stack);

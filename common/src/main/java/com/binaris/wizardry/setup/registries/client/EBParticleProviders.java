@@ -21,6 +21,7 @@ public final class EBParticleProviders {
     // Register all particle providers - this is called during static initialization
     static {
         registerParticle(EBParticles.BEAM, ParticleBeam.BeamProvider::createParticle, ParticleBeam.BeamProvider::new);
+        registerParticle(EBParticles.VINE, ParticleVine.Provider::create, ParticleVine.Provider::new);
         registerParticle(EBParticles.GUARDIAN_BEAM, ParticleGuardianBeam.GuardianBeamProvider::createParticle, ParticleGuardianBeam.GuardianBeamProvider::new);
         registerParticle(EBParticles.BUFF, ParticleBuff.BuffProvider::createParticle, ParticleBuff.BuffProvider::new);
         registerParticle(EBParticles.MAGIC_FIRE, ParticleMagicFire.MagicFireProvider::createParticle, ParticleMagicFire.MagicFireProvider::new);

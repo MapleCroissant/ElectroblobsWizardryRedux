@@ -16,6 +16,12 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 public final class LightningDiscEntity extends MagicProjectileEntity {
+    public static final com.binaris.wizardry.api.content.spell.properties.SpellProperty<Float> SEEKING_STRENGTH =
+            com.binaris.wizardry.api.content.spell.properties.SpellProperty.floatProperty("seeking_strength", 5);
+
+    public LightningDiscEntity(Level level) {
+        this(com.binaris.wizardry.setup.registries.EBEntities.LIGHTNING_DISC.get(), level);
+    }
     public LightningDiscEntity(EntityType<? extends ThrowableProjectile> type, Level level) {
         super(type, level);
     }
@@ -24,7 +30,7 @@ public final class LightningDiscEntity extends MagicProjectileEntity {
     public int getLifeTime() { return 30; }
 
     @Override
-    public float getSeekingStrength() { return 5; }
+    public float getSeekingStrength() { return com.binaris.wizardry.setup.registries.Spells.LIGHTNING_DISC.property(SEEKING_STRENGTH); }
 
     @Override
     public boolean isNoGravity() { return true; }
@@ -33,7 +39,7 @@ public final class LightningDiscEntity extends MagicProjectileEntity {
     public boolean doOverpenetration() { return true; }
 
     @Override
-    public float getDamage(@NotNull EntityHitResult result) { return 12; }
+    public float getDamage(@NotNull EntityHitResult result) { return com.binaris.wizardry.setup.registries.Spells.LIGHTNING_DISC.property(com.binaris.wizardry.content.spell.DefaultProperties.DAMAGE); }
 
     @Override
     public ResourceKey<DamageType> getDamageType(@NotNull EntityHitResult result) { return EBDamageSources.SHOCK; }

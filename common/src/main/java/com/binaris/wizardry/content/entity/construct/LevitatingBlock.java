@@ -20,6 +20,11 @@ import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -35,6 +40,7 @@ public final class LevitatingBlock extends FallingBlockEntity implements Traceab
     private WeakReference<LivingEntity> ownerReference = new WeakReference<>(null);
     private float impactDamage;
     private int suspension;
+    private boolean recoverDebris;
 
     public LevitatingBlock(EntityType<? extends LevitatingBlock> type, Level level) {
         super(type, level);
@@ -89,7 +95,7 @@ public final class LevitatingBlock extends FallingBlockEntity implements Traceab
         if (!level().isClientSide) {
             damageOnImpact(motion);
             if (time > 600 || level().isOutsideBuildHeight(blockPosition())) {
-                discard();
+                recoverOrDiscard();
                 return;
             }
             if (onGround() && !entityData.get(SUSPENDED)) {
@@ -119,22 +125,68 @@ public final class LevitatingBlock extends FallingBlockEntity implements Traceab
         BlockState displaced = level.getBlockState(pos);
         BlockState state = getBlockState();
         var caster = getOwner();
-        discard();
         if (caster != null && EBServerConfig.PLAYER_BLOCK_DAMAGE.get() && BlockUtil.canPlaceBlock(caster, level, pos)
                 && displaced.canBeReplaced() && state.canSurvive(level, pos)
-                && level.isUnobstructed(state, pos, CollisionContext.empty()) && level.setBlock(pos, state, Block.UPDATE_ALL)) {
+                && level.isUnobstructed(this, state.getCollisionShape(level, pos, CollisionContext.empty()).move(pos.getX(), pos.getY(), pos.getZ()))
+                && level.setBlock(pos, state, Block.UPDATE_ALL)) {
+            if (blockData != null) {
+                var contents = level.getBlockEntity(pos);
+                if (!matchesPortableBlock(state, contents)) {
+                    level.setBlock(pos, displaced, Block.UPDATE_ALL);
+                    recoverOrDiscard();
+                    return;
+                }
+                contents.loadWithComponents(blockData, level.registryAccess());
+                contents.setChanged();
+                level.updateNeighbourForOutputSignal(pos, state.getBlock());
+            }
+            discard();
             if (state.getBlock() instanceof FallingBlock falling) falling.onLand(level, pos, state, displaced, this);
         } else {
-            level.levelEvent(2001, pos, Block.getId(state));
+            recoverOrDiscard();
         }
     }
 
+    private boolean matchesPortableBlock(BlockState state, @Nullable BlockEntity contents) {
+        return state.is(Blocks.BARREL) && contents instanceof BarrelBlockEntity
+                || state.getBlock() instanceof ShulkerBoxBlock && contents instanceof ShulkerBoxBlockEntity;
+    }
+
+    public void enableDebrisRecovery() { recoverDebris = true; }
+
+    private void recoverOrDiscard() {
+        if (blockData == null && recoverDebris) {
+            var item = new net.minecraft.world.item.ItemStack(getBlockState().getBlock());
+            if (item.isEmpty() || spawnAtLocation(item) != null) discard();
+            return;
+        }
+        if (blockData == null) {
+            level().levelEvent(2001, blockPosition(), Block.getId(getBlockState()));
+            discard();
+            return;
+        }
+
+        var position = blockPosition().atY(net.minecraft.util.Mth.clamp(blockPosition().getY(),
+                level().getMinBuildHeight() + 1, level().getMaxBuildHeight() - 1));
+        var state = getBlockState();
+        var contents = BlockEntity.loadStatic(position, state, blockData, level().registryAccess());
+        if (!matchesPortableBlock(state, contents)) return;
+        var stack = new net.minecraft.world.item.ItemStack(state.getBlock());
+        contents.saveToItem(stack, level().registryAccess());
+        var item = new net.minecraft.world.entity.item.ItemEntity(level(),
+                position.getX() + 0.5, position.getY(), position.getZ() + 0.5, stack);
+        item.setDefaultPickUpDelay();
+        setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
+        setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+        if (level().addFreshEntity(item)) discard();
+    }
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (owner != null) tag.putUUID("Caster", owner);
         tag.putFloat("ImpactDamage", impactDamage);
         tag.putInt("Suspension", suspension);
+        tag.putBoolean("RecoverDebris", recoverDebris);
     }
 
     @Override
@@ -144,6 +196,7 @@ public final class LevitatingBlock extends FallingBlockEntity implements Traceab
         ownerReference.clear();
         impactDamage = tag.getFloat("ImpactDamage");
         suspension = tag.getInt("Suspension");
+        recoverDebris = tag.getBoolean("RecoverDebris");
         entityData.set(SUSPENDED, suspension > 0);
         dropItem = false;
     }

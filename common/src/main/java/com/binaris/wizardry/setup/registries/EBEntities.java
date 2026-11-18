@@ -4,6 +4,7 @@ import com.binaris.wizardry.WizardryMainMod;
 import com.binaris.wizardry.api.content.DeferredObject;
 import com.binaris.wizardry.content.entity.ArrowRainConstruct;
 import com.binaris.wizardry.content.entity.MeteorEntity;
+import com.binaris.wizardry.content.entity.ShieldEntity;
 import com.binaris.wizardry.content.entity.construct.*;
 import com.binaris.wizardry.content.entity.living.*;
 import com.binaris.wizardry.content.entity.projectile.*;
@@ -34,6 +35,7 @@ public final class EBEntities {
     public static final DeferredObject<EntityType<IceShardEntity>> ICE_SHARD = entity(IceShardEntity::new, "ice_shard", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<LightningDiscEntity>> LIGHTNING_DISC = entity(LightningDiscEntity::new, "lightning_disc", MobCategory.MISC, 2f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<LightningArrow>> LIGHTNING_ARROW = entity(LightningArrow::new, "lightning_arrow", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
+    public static final DeferredObject<EntityType<LargeMagicFireball>> LARGE_MAGIC_FIREBALL = entity(LargeMagicFireball::new, "large_magic_fireball", MobCategory.MISC, 1, 1, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<MagicFireballEntity>> MAGIC_FIREBALL = entity(MagicFireballEntity::new, "magic_fireball", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<MagicMissileEntity>> MAGIC_MISSILE = entity(MagicMissileEntity::new, "magic_missile", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<PoisonBombEntity>> POISON_BOMB = entity(PoisonBombEntity::new, "poison_bomb", MobCategory.MISC, 0.25f, 0.25f, MagicType.PROJECTILE);
@@ -46,6 +48,18 @@ public final class EBEntities {
     public static final DeferredObject<EntityType<MeteorEntity>> METEOR = entity(MeteorEntity::new, "meteor", MobCategory.MISC, 0.98f, 0.98f, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<ArrowRainConstruct>> ARROW_RAIN = entity(ArrowRainConstruct::new, "arrow_rain", MobCategory.MISC, 3, 3, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<ForceOrbEntity>> FORCE_ORB = entity(ForceOrbEntity::new, "force_orb", MobCategory.MISC, 0.25f, 0.25f, MagicType.PROJECTILE);
+    public static final DeferredObject<EntityType<Phoenix>> PHOENIX = entity("phoenix", EntityType.Builder.<Phoenix>of(Phoenix::new, MobCategory.MISC)
+            .fireImmune().sized(1, 2).eyeHeight(2.1f).clientTrackingRange(10).updateInterval(3));
+    public static final DeferredObject<EntityType<DecoyEntity>> DECOY = entity(DecoyEntity::new, "decoy", MobCategory.MISC, 0.6f, 1.8f, MagicType.LIVING);
+    public static final DeferredObject<EntityType<EarthquakeConstruct>> EARTHQUAKE = entity(EarthquakeConstruct::new, "earthquake", MobCategory.MISC, 1, 1, MagicType.CONSTRUCT);
+    public static final DeferredObject<EntityType<BlackHoleConstruct>> BLACK_HOLE = entity(BlackHoleConstruct::new, "black_hole", MobCategory.MISC, 6, 3, MagicType.CONSTRUCT);
+    public static final DeferredObject<EntityType<TotemConstruct>> RADIANT_TOTEM = entity(TotemConstruct::new, "radiant_totem", MobCategory.MISC, 1, 1, MagicType.CONSTRUCT);
+    public static final DeferredObject<EntityType<TotemConstruct>> WITHERING_TOTEM = entity(TotemConstruct::new, "withering_totem", MobCategory.MISC, 1, 1, MagicType.CONSTRUCT);
+    public static final DeferredObject<EntityType<EmberEntity>> EMBER = entity(EmberEntity::new, "ember", MobCategory.MISC, 0.1f, 0.1f, MagicType.PROJECTILE);
+    public static final DeferredObject<EntityType<ForcefieldConstruct>> FORCEFIELD = entity(ForcefieldConstruct::new, "forcefield", MobCategory.MISC, 6, 6, MagicType.CONSTRUCT);
+    public static final DeferredObject<EntityType<ShieldEntity>> SHIELD = entity("shield", EntityType.Builder.of(ShieldEntity::new, MobCategory.MISC).sized(1.2f, 1.4f).noSave().updateInterval(1).clientTrackingRange(10));
+    public static final DeferredObject<EntityType<LightningHammerConstruct>> LIGHTNING_HAMMER = entity(LightningHammerConstruct::new, "lightning_hammer", MobCategory.MISC, 1, 1.9f, MagicType.CONSTRUCT);
+    public static final DeferredObject<EntityType<StormcloudConstruct>> STORMCLOUD = entity(StormcloudConstruct::new, "stormcloud", MobCategory.MISC, 6, 2, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<BlizzardConstruct>> BLIZZARD = entity(BlizzardConstruct::new, "blizzard", MobCategory.MISC, 3, 3, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<FireSigilConstruct>> FIRE_SIGIL = entity(FireSigilConstruct::new, "fire_sigil", MobCategory.MISC, 0.2f, 0.2f, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<FrostSigilConstruct>> FROST_SIGIL = entity(FrostSigilConstruct::new, "frost_sigil", MobCategory.MISC, 0.2f, 0.2f, MagicType.CONSTRUCT);
@@ -59,7 +73,7 @@ public final class EBEntities {
                     .sized(0.98f, 0.98f).clientTrackingRange(10).updateInterval(1));
     public static final DeferredObject<EntityType<BoulderConstruct>> BOULDER = entity(BoulderConstruct::new, "boulder", MobCategory.MISC, 2.375f, 2.375f, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<ZombieSpawnerConstruct>> ZOMBIE_SPAWNER = entity(ZombieSpawnerConstruct::new, "zombie_spawner", MobCategory.MISC, 4f, 2f, MagicType.CONSTRUCT);
-    public static final DeferredObject<EntityType<IceBarrierConstruct>> ICE_BARRIER = entity(IceBarrierConstruct::new, "ice_barrier", MobCategory.MISC, 3, 3, MagicType.CONSTRUCT);
+    public static final DeferredObject<EntityType<IceBarrierConstruct>> ICE_BARRIER = entity(IceBarrierConstruct::new, "ice_barrier", MobCategory.MISC, 1.8f, 1.05f, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<CombustionRuneConstruct>> COMBUSTION_RUNE = entity(CombustionRuneConstruct::new, "combustion_rune", MobCategory.MISC, 2, 0.2F, MagicType.CONSTRUCT);
     public static final DeferredObject<EntityType<BubbleConstruct>> BUBBLE = entity("bubble", EntityType.Builder.<BubbleConstruct>of(BubbleConstruct::new, MobCategory.MISC).sized(0.6f, 1.8f).updateInterval(3).clientTrackingRange(160));
     public static final DeferredObject<EntityType<HailstormConstruct>> HAILSTORM = entity(HailstormConstruct::new, "hailstorm", MobCategory.MISC, 5, 5, MagicType.CONSTRUCT);
@@ -67,6 +81,10 @@ public final class EBEntities {
     public static final DeferredObject<EntityType<IceGiant>> ICE_GIANT = entity(IceGiant::new, "ice_giant", MobCategory.CREATURE, 1.4f, 2.9f, MagicType.LIVING);
     public static final DeferredObject<EntityType<LightningWraith>> LIGHTNING_WRAITH = entity(LightningWraith::new, "lightning_wraith", MobCategory.MONSTER, 0.6F, 1.8F, MagicType.LIVING);
     public static final DeferredObject<EntityType<IceWraith>> ICE_WRAITH = entity(IceWraith::new, "ice_wraith", MobCategory.MONSTER, 0.6F, 1.8F, MagicType.LIVING);
+    public static final DeferredObject<EntityType<SilverfishMinion>> SILVERFISH_MINION = entity(SilverfishMinion::new, "silverfish_minion", MobCategory.MONSTER, 0.4f, 0.3f, MagicType.LIVING);
+    public static final DeferredObject<EntityType<SpiritHorse>> SPIRIT_HORSE = entity(SpiritHorse::new, "spirit_horse", MobCategory.CREATURE, 1.3965f, 1.6f, MagicType.LIVING);
+    public static final DeferredObject<EntityType<SpiritWolf>> SPIRIT_WOLF = entity(SpiritWolf::new, "spirit_wolf", MobCategory.CREATURE, 0.6f, 0.85f, MagicType.LIVING);
+    public static final DeferredObject<EntityType<SpectralGolem>> SPECTRAL_GOLEM = entity(SpectralGolem::new, "spectral_golem", MobCategory.MISC, 1.4f, 2.7f, MagicType.LIVING);
     public static final DeferredObject<EntityType<StormElemental>> STORM_ELEMENTAL = entity(StormElemental::new, "storm_elemental", MobCategory.MONSTER, 0.6F, 1.8F, MagicType.LIVING);
     public static final DeferredObject<EntityType<ShadowWraith>> SHADOW_WRAITH = entity(ShadowWraith::new, "shadow_wraith", MobCategory.MONSTER, 0.6F, 1.8F, MagicType.LIVING);
     public static final DeferredObject<EntityType<MagicSlime>> MAGIC_SLIME = entity(MagicSlime::new, "magic_slime", MobCategory.CREATURE, 2.04F, 2.04F, MagicType.LIVING);
@@ -86,11 +104,22 @@ public final class EBEntities {
 
     public static void registerAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeSupplier> consumer) {
         consumer.accept(REMNANT.get(), Remnant.createAttributes().build());
+        consumer.accept(PHOENIX.get(), net.minecraft.world.entity.Mob.createMobAttributes()
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 30)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, 6)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE, 30)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, 0.5).build());
+        consumer.accept(DECOY.get(), net.minecraft.world.entity.Mob.createMobAttributes()
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, 0.25).build());
         consumer.accept(WIZARD.get(), AbstractWizard.createAttributes().build());
         consumer.accept(EVIL_WIZARD.get(), AbstractWizard.createAttributes().build());
         consumer.accept(MAGIC_SLIME.get(), Monster.createMonsterAttributes().build());
         consumer.accept(LIGHTNING_WRAITH.get(), Blaze.createAttributes().build());
         consumer.accept(ICE_WRAITH.get(), Blaze.createAttributes().build());
+        consumer.accept(SILVERFISH_MINION.get(), SilverfishMinion.createAttributes().build());
+        consumer.accept(SPIRIT_HORSE.get(), SpiritHorse.createBaseHorseAttributes().add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 24).build());
+        consumer.accept(SPIRIT_WOLF.get(), SpiritWolf.createAttributes().build());
+        consumer.accept(SPECTRAL_GOLEM.get(), SpectralGolem.createAttributes().build());
         consumer.accept(STORM_ELEMENTAL.get(), Blaze.createAttributes()
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 30)
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, 6)

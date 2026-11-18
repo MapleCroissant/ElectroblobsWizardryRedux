@@ -19,7 +19,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class MagicFireballEntity extends MagicProjectileEntity {
-    public MagicFireballEntity(EntityType<MagicFireballEntity> entityType, Level world) {
+    public MagicFireballEntity(EntityType<? extends MagicFireballEntity> entityType, Level world) {
         super(entityType, world);
     }
 

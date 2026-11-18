@@ -1,0 +1,25 @@
+{
+    "enabled":  {
+                    "book":  true,
+                    "scroll":  true,
+                    "wands":  true,
+                    "npcs":  true,
+                    "dispensers":  true,
+                    "commands":  true,
+                    "treasure":  true,
+                    "trades":  true,
+                    "looting":  true
+                },
+    "tier":  "ebwizardry:master",
+    "element":  "ebwizardry:sorcery",
+    "type":  "ebwizardry:construct",
+    "cost":  150,
+    "chargeup":  25,
+    "cooldown":  400,
+    "base_properties":  {
+                            "duration":  400,
+                            "range":  10,
+                            "effect_radius":  3
+                        },
+    "spell_action":  "ebwizardry:summon"
+}

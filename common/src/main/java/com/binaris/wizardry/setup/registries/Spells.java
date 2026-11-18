@@ -16,6 +16,8 @@ import com.binaris.wizardry.content.spell.DefaultProperties;
 import com.binaris.wizardry.content.spell.abstr.*;
 import com.binaris.wizardry.content.spell.earth.*;
 import com.binaris.wizardry.content.spell.fire.*;
+import com.binaris.wizardry.content.spell.shared.TotemSpell;
+import com.binaris.wizardry.content.spell.shared.StatueRay;
 import com.binaris.wizardry.content.spell.healing.*;
 import com.binaris.wizardry.content.spell.ice.*;
 import com.binaris.wizardry.content.spell.lightning.*;
@@ -39,13 +41,23 @@ import java.util.function.Supplier;
 public final class Spells {
     public static final Spell EMPOWERING_PRESENCE;
     public static final Spell GLIDE;
+    public static final Spell MINE;
+    public static final Spell SNARE;
+    public static final Spell SIXTH_SENSE;
+    public static final Spell GRAPPLE;
+    public static final Spell FOREST_OF_THORNS;
+    public static final Spell EARTHQUAKE;
+    public static final Spell SUMMON_SPIRIT_WOLF;
+    public static final Spell SUMMON_SPIRIT_HORSE;
+    public static final Spell DIVINATION;
+    public static final Spell MUFFLE;
     public static final Spell IRONFLESH;
     public static final Spell DIAMONDFLESH;
     public static final Spell NONE;
     public static final Spell MAGIC_MISSILE;
     public static final Spell IGNITE;
     public static final Spell FREEZE;
-//    public static final Spell SNOWBALL;
+    public static final Spell SNOWBALL;
     public static final Spell ARC;
     public static final Spell THUNDERBOLT;
     public static final Spell SUMMON_ZOMBIE;
@@ -56,16 +68,42 @@ public final class Spells {
     public static final Spell HEAL;
 
     public static final Spell FIREBALL;
+    public static final Spell GREATER_FIREBALL;
     public static final Spell FLAME_RAY;
     public static final Spell FIREBOMB;
     public static final Spell FIRE_SIGIL;
     public static final Spell FIREBOLT;
     public static final Spell FROST_RAY;
+    public static final Spell FROST_BARRIER;
     public static final Spell SUMMON_SNOW_GOLEM;
     public static final Spell ICE_SHARD;
     // ice_statue
     public static final Spell FROST_SIGIL;
     public static final Spell LIGHTNING_RAY;
+    public static final Spell LIGHTNING_DISC;
+    public static final Spell CHAIN_LIGHTNING;
+    public static final Spell LIGHTNING_BOLT;
+    public static final Spell STORMCLOUD;
+    public static final Spell LIGHTNING_HAMMER;
+    public static final Spell LIGHTNING_WEB;
+    public static final Spell DISINTEGRATION;
+    public static final Spell CLAIRVOYANCE;
+    public static final Spell BLACK_HOLE;
+    public static final Spell DECOY;
+    public static final Spell MIRAGE;
+    public static final Spell ICE_STATUE;
+    public static final Spell PETRIFY;
+    public static final Spell SLOW_TIME;
+    public static final Spell WALL_OF_FROST;
+    public static final Spell RADIANT_TOTEM;
+    public static final Spell WITHERING_TOTEM;
+    public static final Spell THUNDERSTORM;
+    public static final Spell CELESTIAL_SMITE;
+    public static final Spell ICE_SHROUD;
+    public static final Spell MARK_SACRIFICE;
+    public static final Spell MIND_TRICK;
+    public static final Spell INTIMIDATE;
+    public static final Spell SUMMON_IRON_GOLEM;
     public static final Spell SPARK_BOMB;
     public static final Spell HOMING_SPARK;
     public static final Spell LIGHTNING_SIGIL;
@@ -125,18 +163,23 @@ public final class Spells {
     public static final Spell INVISIBILITY;
     public static final Spell LEVITATION;
     public static final Spell FORCE_ORB;
-    // transportation
+    public static final Spell TRANSPORTATION;
     public static final Spell SPECTRAL_PATHWAY;
     public static final Spell PHASE_STEP;
     public static final Spell VANISHING_BOX;
     public static final Spell GREATER_HEAL;
+    public static final Spell SHIELD;
+    public static final Spell FORCEFIELD;
+    public static final Spell TRANSIENCE;
+    public static final Spell SHADOW_WARD;
+    public static final Spell MIND_CONTROL;
     public static final Spell HEALING_AURA;
     // force field
     // iron flesh
     // transience
     public static final Spell METEOR;
     public static final Spell FIRE_BREATH;
-    // summon phoenix
+    public static final Spell SUMMON_PHOENIX;
     public static final Spell ICE_AGE;
     // wall of frost
     public static final Spell SUMMON_ICE_GIANT;
@@ -169,6 +212,8 @@ public final class Spells {
     public static final Spell OAK_FLESH;
     // greater fireball
     public static final Spell FLAMING_WEAPON;
+    public static final Spell IMBUE_WEAPON;
+    public static final Spell FREEZING_WEAPON;
     public static final Spell ICE_LANCE;
     // freezing weapon
     public static final Spell ICE_SPIKES;
@@ -526,6 +571,53 @@ public final class Spells {
 
         FROST_RAY = spell("frost_ray", FrostRay::new);
         LIGHTNING_RAY = spell("lightning_ray", LightningRay::new);
+        CHAIN_LIGHTNING = spell("chain_lightning", ChainLightning::new);
+        LIGHTNING_BOLT = spell("lightning_bolt", LightningBoltSpell::new);
+        STORMCLOUD = spell("stormcloud", Stormcloud::new);
+        LIGHTNING_HAMMER = spell("lightning_hammer", LightningHammer::new);
+        LIGHTNING_WEB = spell("lightning_web", LightningWeb::new);
+        DISINTEGRATION = spell("disintegration", Disintegration::new);
+        CLAIRVOYANCE = spell("clairvoyance", Clairvoyance::new);
+        BLACK_HOLE = spell("black_hole", BlackHole::new);
+        DECOY = spell("decoy", Decoy::new);
+        MIRAGE = spell("mirage", Mirage::new);
+        ICE_STATUE = spell("ice_statue", () -> new StatueRay(StatueRay.Variant.ICE));
+        PETRIFY = spell("petrify", () -> new StatueRay(StatueRay.Variant.STONE));
+        SLOW_TIME = spell("slow_time", SlowTime::new);
+        WALL_OF_FROST = spell("wall_of_frost", () -> new StatueRay(StatueRay.Variant.WALL));
+        RADIANT_TOTEM = spell("radiant_totem", () -> new TotemSpell(false));
+        WITHERING_TOTEM = spell("withering_totem", () -> new TotemSpell(true));
+        THUNDERSTORM = spell("thunderstorm", Thunderstorm::new);
+        SNOWBALL = spell("snowball", SnowballSpell::new);
+        CELESTIAL_SMITE = spell("celestial_smite", CelestialSmite::new);
+        MARK_SACRIFICE = spell("mark_sacrifice", MarkSacrifice::new);
+        ICE_SHROUD = spell("ice_shroud", () -> new BuffSpell(0.3f, 0.5f, 1, EBMobEffects.ICE_SHROUD)
+                .soundValues(1, 1.6f, 0.4f).assignProperties(SpellProperties.builder()
+                        .assignBaseProperties(SpellTiers.ADVANCED, Elements.ICE, SpellTypes.DEFENCE, SpellAction.POINT_UP, 40, 0, 250)
+                        .add(BuffSpell.getEffectDurationProperty(EBMobEffects.ICE_SHROUD.get()), 600)
+                        .add(BuffSpell.getEffectStrengthProperty(EBMobEffects.ICE_SHROUD.get()), 0)
+                        .add(DefaultProperties.EFFECT_DURATION, 100).add(DefaultProperties.EFFECT_STRENGTH, 0).build()));
+        GREATER_FIREBALL = spell("greater_fireball", () -> new ProjectileSpell<LargeMagicFireball>(LargeMagicFireball::new) {
+            @Override
+            protected void addProjectileExtras(com.binaris.wizardry.api.content.spell.internal.CastContext context, LargeMagicFireball fireball) {
+                fireball.blastMultiplier = context.modifiers().getFactor(com.binaris.wizardry.api.content.spell.internal.SpellModifiers.BLAST);
+            }
+        }.assignProperties(SpellProperties.builder()
+                .assignBaseProperties(SpellTiers.ADVANCED, Elements.FIRE, SpellTypes.PROJECTILE, SpellAction.POINT, 20, 5, 30)
+                .add(DefaultProperties.RANGE, 20f).add(DefaultProperties.DAMAGE, 6f)
+                .add(LargeMagicFireball.EXPLOSION_POWER).build()));
+        MIND_TRICK = spell("mind_trick", MindTrick::new);
+        INTIMIDATE = spell("intimidate", Intimidate::new);
+        LIGHTNING_DISC = spell("lightning_disc", () -> new ProjectileSpell<>(LightningDiscEntity::new)
+                .soundValues(1, 0.95f, 0.3f).assignProperties(SpellProperties.builder()
+                        .assignBaseProperties(SpellTiers.ADVANCED, Elements.LIGHTNING, SpellTypes.PROJECTILE, SpellAction.POINT, 25, 5, 60)
+                        .add(DefaultProperties.RANGE, 30f).add(DefaultProperties.DAMAGE, 12f)
+                        .add(LightningDiscEntity.SEEKING_STRENGTH).build()));
+        SUMMON_IRON_GOLEM = spell("summon_iron_golem", () -> new MinionSpell<>(com.binaris.wizardry.content.entity.living.SpectralGolem::new)
+                .soundValues(1, 1.1f, 0.1f).assignProperties(SpellProperties.builder()
+                        .assignBaseProperties(SpellTiers.MASTER, Elements.SORCERY, SpellTypes.MINION, SpellAction.SUMMON, 175, 20, 400)
+                        .add(DefaultProperties.MINION_COUNT, 1).add(DefaultProperties.MINION_LIFETIME, 600)
+                        .add(DefaultProperties.SUMMON_RADIUS, 2).build()));
         PARALYSIS = spell("paralysis", Paralysis::new);
         SUMMON_SHADOW_WRAITH = spell("summon_shadow_wraith", () ->
                 new MinionSpell<ShadowWraith>(ShadowWraith::new) {
@@ -555,6 +647,14 @@ public final class Spells {
                                 .add(DefaultProperties.MINION_LIFETIME, 600)
                                 .add(DefaultProperties.SUMMON_RADIUS, 2).build()));
 
+        SUMMON_PHOENIX = spell("summon_phoenix", () ->
+                new MinionSpell<>(com.binaris.wizardry.content.entity.living.Phoenix::new).flying(true).soundValues(1, 1.1f, 0.1f)
+                        .assignProperties(SpellProperties.builder()
+                                .assignBaseProperties(SpellTiers.MASTER, Elements.FIRE, SpellTypes.MINION, SpellAction.SUMMON, 150, 20, 400)
+                                .add(DefaultProperties.MINION_COUNT, 1)
+                                .add(DefaultProperties.MINION_LIFETIME, 600)
+                                .add(DefaultProperties.SUMMON_RADIUS, 2).build()));
+
         WITHER = spell("wither", Wither::new);
 
         POISON = spell("poison", Poison::new);
@@ -572,6 +672,12 @@ public final class Spells {
         FIRE_BREATH = spell("fire_breath", FireBreath::new);
 
         GREATER_HEAL = spell("greater_heal", GreaterHeal::new);
+        SHIELD = spell("shield", Shield::new);
+        TRANSPORTATION = spell("transportation", Transportation::new);
+        FORCEFIELD = spell("forcefield", Forcefield::new);
+        TRANSIENCE = spell("transience", Transience::new);
+        SHADOW_WARD = spell("shadow_ward", ShadowWard::new);
+        MIND_CONTROL = spell("mind_control", MindControl::new);
 
         POCKET_FURNACE = spell("pocket_furnace", PocketFurnace::new);
 
@@ -634,6 +740,20 @@ public final class Spells {
         BANISH = spell("banish", Banish::new);
 
         GLIDE = spell("glide", Glide::new);
+        MINE = spell("mine", Mine::new);
+        SNARE = spell("snare", Snare::new);
+        SIXTH_SENSE = spell("sixth_sense", SixthSense::new);
+        GRAPPLE = spell("grapple", Grapple::new);
+        FOREST_OF_THORNS = spell("forest_of_thorns", ForestOfThorns::new);
+        EARTHQUAKE = spell("earthquake", Earthquake::new);
+        SUMMON_SPIRIT_WOLF = spell("summon_spirit_wolf", SummonSpiritWolf::new);
+        SUMMON_SPIRIT_HORSE = spell("summon_spirit_horse", SummonSpiritHorse::new);
+        DIVINATION = spell("divination", Divination::new);
+        MUFFLE = spell("muffle", () -> new BuffSpell(0.3f, 0.4f, 0.8f, EBMobEffects.MUFFLE)
+                .soundValues(0.7f, 1.2f, 0.4f).assignProperties(SpellProperties.builder()
+                        .assignBaseProperties(SpellTiers.NOVICE, Elements.SORCERY, SpellTypes.BUFF, SpellAction.POINT_UP, 5, 0, 25)
+                        .add(BuffSpell.getEffectDurationProperty(EBMobEffects.MUFFLE.get()), 600)
+                        .add(BuffSpell.getEffectStrengthProperty(EBMobEffects.MUFFLE.get()), 0).build()));
         EMPOWERING_PRESENCE = spell("empowering_presence", EmpoweringPresence::new);
         LIGHT = spell("light", Light::new);
         BLINK = spell("blink", Blink::new);
@@ -712,7 +832,7 @@ public final class Spells {
                         .add(DefaultProperties.HEALTH, 1F)
                         .build()));
 
-        //FROST_BARRIER = spell("frost_barrier", FrostBarrier::new);
+        FROST_BARRIER = spell("frost_barrier", FrostBarrier::new);
 
         COMBUSTION_RUNE = spell("combustion_rune", () -> new ConstructRangedSpell<>(CombustionRuneConstruct::new, true).floor(true)
                 .assignProperties(SpellProperties.builder()
@@ -730,6 +850,8 @@ public final class Spells {
         DECAY = spell("decay", Decay::new);
 
         FLAMING_WEAPON = spell("flaming_weapon", FlamingWeapon::new);
+        IMBUE_WEAPON = spell("imbue_weapon", ImbueWeapon::new);
+        FREEZING_WEAPON = spell("freezing_weapon", FreezingWeapon::new);
 
         CHARGE = spell("charge", Charge::new);
 
@@ -816,7 +938,6 @@ public final class Spells {
                 SpellProperties.builder()
                         .assignBaseProperties(SpellTiers.ADVANCED, Elements.SORCERY, SpellTypes.DEFENCE, SpellAction.SUMMON, 45, 10, 50)
                         .add(DefaultProperties.ITEM_LIFETIME, 1800)
-                        .add(DefaultProperties.SENSIBLE, true)
                         .build()
         ));
 
@@ -842,7 +963,7 @@ public final class Spells {
                                 .build()
                 );
 
-        SILVERFISH_SWARM = spell("silverfish_swarm", () -> new MinionSpell<>((l) -> new Silverfish(EntityType.SILVERFISH, l)))
+        SILVERFISH_SWARM = spell("silverfish_swarm", () -> new MinionSpell<>(com.binaris.wizardry.content.entity.living.SilverfishMinion::new))
                 .soundValues(1, 1.1f, 0.1f)
                 .assignProperties(
                         SpellProperties.builder()
@@ -850,7 +971,6 @@ public final class Spells {
                                 .add(DefaultProperties.MINION_COUNT, 20)
                                 .add(DefaultProperties.MINION_LIFETIME, 600)
                                 .add(DefaultProperties.SUMMON_RADIUS, 3)
-                                .add(DefaultProperties.SENSIBLE, true)
                                 .build()
                 );
 

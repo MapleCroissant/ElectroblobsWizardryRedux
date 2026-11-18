@@ -22,7 +22,7 @@ public class IceBarrierConstruct extends ScaledConstructEntity {
 
     public IceBarrierConstruct(EntityType<?> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
-        this.setBaseSize(3, 3);
+        this.setBaseSize(1.8f, 1.05f);
     }
 
     public void setDelay(int delay) {
@@ -33,12 +33,19 @@ public class IceBarrierConstruct extends ScaledConstructEntity {
     @Override
     public void setRot(float yaw, float pitch) {
         super.setRot(yaw, pitch);
-        float a = Mth.cos((float) Math.toRadians(getYRot()));
-        float b = Mth.sin((float) Math.toRadians(getYRot()));
-        double x = getBbWidth() / 2 * a + THICKNESS / 2 * b;
-        double z = getBbWidth() / 2 * b + THICKNESS / 2 * a;
+        updateBarrierBounds();
+    }
+
+    private void updateBarrierBounds() {
+        float a = Mth.abs(Mth.cos((float) Math.toRadians(getYRot())));
+        float b = Mth.abs(Mth.sin((float) Math.toRadians(getYRot())));
+        double x = getBbWidth() / 2 * a + THICKNESS * sizeMultiplier / 2 * b;
+        double z = getBbWidth() / 2 * b + THICKNESS * sizeMultiplier / 2 * a;
         setBoundingBox(new AABB(this.getX() - x, this.getY(), this.getZ() - z, this.getX() + x, this.getY() + getBbHeight(), this.getZ() + z));
     }
+
+    @Override
+    public boolean isPickable() { return !isRemoved(); }
 
     @Override
     public boolean canBeCollidedWith() {
@@ -70,7 +77,8 @@ public class IceBarrierConstruct extends ScaledConstructEntity {
             this.move(MoverType.SELF, new Vec3(0, extensionSpeed, 0));
         }
 
-        if (tickCount == delay + 1) this.playSound(EBSounds.ENTITY_ICE_BARRIER_EXTEND.get(), 1, 1.5f);
+        updateBarrierBounds();
+        if (!level().isClientSide && tickCount == delay + 1) this.playSound(EBSounds.ENTITY_ICE_BARRIER_EXTEND.get(), 1, 1.5f);
 
         super.tick();
 
@@ -82,10 +90,10 @@ public class IceBarrierConstruct extends ScaledConstructEntity {
 
                 if (!entity.getBoundingBox().intersects(this.getBoundingBox())) continue;
 
-                double perpendicularDist = getSignedPerpendicularDistance(entity.position().add(1, 0, 1));
+                double perpendicularDist = getSignedPerpendicularDistance(entity.position());
 
                 if (Math.abs(perpendicularDist) < entity.getBbWidth() / 2 + THICKNESS / 2) {
-                    double velocity = 0.25 * Math.signum(perpendicularDist);
+                    double velocity = 0.25 * (perpendicularDist >= 0 ? 1 : -1);
                     entity.push(velocity * look.x, 0, velocity * look.z);
 
                     if (entity instanceof ServerPlayer) {
@@ -112,16 +120,25 @@ public class IceBarrierConstruct extends ScaledConstructEntity {
     protected void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         delay = nbt.getInt("delay");
+        tickCount = nbt.getInt("barrier_age");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("delay", delay);
+        nbt.putInt("barrier_age", tickCount);
     }
 
-    private double getPerpendicularDistance(Vec3 point) {
-        return Math.abs(getSignedPerpendicularDistance(point));
+    public java.util.Optional<Vec3> intersectRay(Vec3 origin, Vec3 end, double margin) {
+        double first = getSignedPerpendicularDistance(origin);
+        double last = getSignedPerpendicularDistance(end);
+        double difference = first - last;
+        if (Math.abs(difference) < 1.0e-6) return java.util.Optional.empty();
+        double travel = first / difference;
+        if (travel < 0 || travel > 1) return java.util.Optional.empty();
+        Vec3 impact = origin.lerp(end, travel);
+        return getBoundingBox().inflate(margin).contains(impact) ? java.util.Optional.of(impact) : java.util.Optional.empty();
     }
 
     private double getSignedPerpendicularDistance(Vec3 point) {

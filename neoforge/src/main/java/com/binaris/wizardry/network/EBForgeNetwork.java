@@ -30,6 +30,8 @@ public final class EBForgeNetwork {
         register(registrar, DispenserCastS2C.ID, DispenserCastS2C::new, true);
         register(registrar, SpellCastS2C.ID, SpellCastS2C::new, true);
         register(registrar, ScreenShakeS2C.ID, ScreenShakeS2C::new, true);
+        register(registrar, ClairvoyancePathS2C.ID, ClairvoyancePathS2C::new, true);
+        register(registrar, SlowTimeS2C.ID, SlowTimeS2C::new, true);
         register(registrar, ParticleBuilderS2C.ID, ParticleBuilderS2C::new, true);
         register(registrar, MagicEffectSyncS2C.ID, MagicEffectSyncS2C::new, true);
         register(registrar, ConfigSyncS2C.ID, ConfigSyncS2C::new, true);

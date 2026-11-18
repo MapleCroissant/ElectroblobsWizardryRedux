@@ -13,6 +13,7 @@ import com.binaris.wizardry.content.spell.DefaultProperties;
 import com.binaris.wizardry.content.spell.abstr.RaySpell;
 import com.binaris.wizardry.core.config.EBServerConfig;
 import com.binaris.wizardry.core.integrations.ArtifactChannel;
+import com.binaris.wizardry.core.platform.Services;
 import com.binaris.wizardry.setup.registries.EBItems;
 import com.binaris.wizardry.setup.registries.Elements;
 import com.binaris.wizardry.setup.registries.SpellTiers;
@@ -25,7 +26,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.phys.BlockHitResult;
@@ -84,17 +92,55 @@ public final class GreaterTelekinesis extends RaySpell {
         var level = context.world();
         var pos = hit.getBlockPos();
         var state = level.getBlockState(pos);
-        if (!state.isSolid() || state.getDestroySpeed(level, pos) < 0 || state.hasBlockEntity()
+        boolean barrel = state.is(Blocks.BARREL);
+        boolean portable = barrel || state.getBlock() instanceof ShulkerBoxBlock;
+        if ((!state.isSolid() && !portable) || state.getDestroySpeed(level, pos) < 0 || (state.hasBlockEntity() && !portable)
                 || state.getBlock() instanceof DoorBlock || state.getBlock() instanceof BedBlock) return false;
         if (level.isClientSide) return true;
         if (!BlockUtil.canBreak(caster, level, pos, true) || level.getBlockState(pos) != state) return false;
 
+        BaseContainerBlockEntity container = null;
         var block = new LevitatingBlock(level, pos, state, caster,
                 context.modifiers().get(SpellModifiers.POTENCY, property(DefaultProperties.DAMAGE)));
+        if (portable) {
+            if (!(level.getBlockEntity(pos) instanceof BaseContainerBlockEntity current) || !closedContainer(current, state)) return false;
+            var lock = Services.OBJECT_DATA.getArcaneLockData(current);
+            if (lock != null && lock.isArcaneLocked()) return false;
+            block.blockData = current.saveWithId(level.registryAccess());
+            if (block.blockData.contains("Lock") || (barrel && block.blockData.contains("LootTable"))) return false;
+            container = current;
+        }
         if (!level.addFreshEntity(block)) return false;
-        if (level.getBlockState(pos) == state && level.removeBlock(pos, false)) return true;
+
+        if (level.getBlockState(pos) != state || (container != null
+                && (level.getBlockEntity(pos) != container || !closedContainer(container, state)
+                || !container.saveWithId(level.registryAccess()).equals(block.blockData)))) {
+            block.discard();
+            return false;
+        }
+
+        if (barrel) {
+            // A barrel's removal drops its inventory if the block entity is still attached.
+            level.getChunkAt(pos).removeBlockEntity(pos);
+        }
+        if (level.removeBlock(pos, false)) {
+            if (barrel) level.updateNeighbourForOutputSignal(pos, state.getBlock());
+            return true;
+        }
+        if (barrel) {
+            if (level.getBlockState(pos) != state) return true;
+            container.clearRemoved();
+            level.setBlockEntity(container);
+        }
         block.discard();
         return false;
+    }
+
+    private boolean closedContainer(BaseContainerBlockEntity container, BlockState state) {
+        if (state.is(Blocks.BARREL)) {
+            return container instanceof BarrelBlockEntity && !state.getValue(BarrelBlock.OPEN);
+        }
+        return container instanceof ShulkerBoxBlockEntity box && box.isClosed();
     }
 
     @Override

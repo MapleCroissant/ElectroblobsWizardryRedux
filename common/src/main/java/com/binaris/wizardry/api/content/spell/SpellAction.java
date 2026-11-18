@@ -20,6 +20,7 @@ public class SpellAction {
     public static SpellAction IMBUE;
     public static SpellAction GRAPPLE;
     public static SpellAction NONE;
+    public static final SpellAction BLOCK;
     static List<SpellAction> spellActions = new ArrayList<>();
 
     static {
@@ -99,6 +100,13 @@ public class SpellAction {
         GRAPPLE = new SpellAction(WizardryMainMod.location("grapple"));
 
         NONE = new SpellAction(WizardryMainMod.location("none"));
+        BLOCK = new SpellAction(WizardryMainMod.location("block")) {
+            @Override
+            public void renderArms(LivingEntity entity, HumanoidModel<?> model, InteractionHand hand) {
+                if (hand == InteractionHand.MAIN_HAND) model.rightArm.setRotation(-0.95f, -0.52f, 0);
+                else model.leftArm.setRotation(-0.95f, 0.52f, 0);
+            }
+        };
     }
 
     public ResourceLocation location;

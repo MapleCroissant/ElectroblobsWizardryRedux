@@ -31,6 +31,8 @@ public final class EBFabricPayloads {
         register(PayloadTypeRegistry.playS2C(), DispenserCastS2C.ID, DispenserCastS2C::new);
         register(PayloadTypeRegistry.playS2C(), SpellCastS2C.ID, SpellCastS2C::new);
         register(PayloadTypeRegistry.playS2C(), ScreenShakeS2C.ID, ScreenShakeS2C::new);
+        register(PayloadTypeRegistry.playS2C(), ClairvoyancePathS2C.ID, ClairvoyancePathS2C::new);
+        register(PayloadTypeRegistry.playS2C(), SlowTimeS2C.ID, SlowTimeS2C::new);
         register(PayloadTypeRegistry.playS2C(), ParticleBuilderS2C.ID, ParticleBuilderS2C::new);
         register(PayloadTypeRegistry.playS2C(), MagicEffectSyncS2C.ID, MagicEffectSyncS2C::new);
         register(PayloadTypeRegistry.playS2C(), ConfigSyncS2C.ID, ConfigSyncS2C::new);

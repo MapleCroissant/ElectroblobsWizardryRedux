@@ -122,6 +122,10 @@ public final class DataEvents {
     /// "temporal" item system should work.
     public static void onConjureToss(EBItemTossEvent event) {
         ItemStack stack = event.getStack();
+        if (stack.getItem() instanceof com.binaris.wizardry.content.item.LightningHammerItem) {
+            event.setCanceled(true);
+            return;
+        }
         if (ConjureItemSpell.isSummoned(stack)) {
             ConjureData data = Services.OBJECT_DATA.getConjureData(stack);
             if (data != null && data.isSummoned()) event.setCanceled(true);

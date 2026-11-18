@@ -2,6 +2,7 @@ package com.binaris.wizardry.content.spell.sorcery;
 
 import com.binaris.wizardry.api.content.data.ConjureData;
 import com.binaris.wizardry.api.content.spell.internal.PlayerCastContext;
+import com.binaris.wizardry.api.content.spell.internal.SpellModifiers;
 import com.binaris.wizardry.api.content.util.EntityUtil;
 import com.binaris.wizardry.content.spell.DefaultProperties;
 import com.binaris.wizardry.content.spell.abstr.ConjureItemSpell;
@@ -31,20 +32,25 @@ public class ConjureArmor extends ConjureItemSpell {
 
     @Override
     protected boolean conjureItem(PlayerCastContext ctx) {
+        if (ctx.world().isClientSide) return true;
+        int duration = (int) (property(DefaultProperties.ITEM_LIFETIME) * ctx.modifiers().getFactor(SpellModifiers.DURATION));
+        if (duration <= 0) return false;
+
         ItemStack armor;
         boolean flag = false;
 
-        for (EquipmentSlot slot : EntityUtil.ARMOR_SLOTS) {
+        for (var entry : SPECTRAL_ARMOUR_MAP.entrySet()) {
+            var slot = entry.getKey();
+            var item = entry.getValue();
             // Player already has this piece of armor, skip to next slot
-            if (!ctx.caster().getItemBySlot(slot).isEmpty() && EntityUtil.doesPlayerHaveItem(ctx.caster(), SPECTRAL_ARMOUR_MAP.get(slot))) {
+            if (!ctx.caster().getItemBySlot(slot).isEmpty() || EntityUtil.doesPlayerHaveItem(ctx.caster(), item)) {
                 continue;
             }
 
-            armor = new ItemStack(SPECTRAL_ARMOUR_MAP.get(slot));
+            armor = new ItemStack(item);
             armor = addItemExtras(ctx, armor);
 
             ConjureData data = Services.OBJECT_DATA.getConjureData(armor);
-            int duration = property(DefaultProperties.ITEM_LIFETIME);
             long currentGameTime = ctx.world().getGameTime();
             data.setExpireTime(currentGameTime + duration);
             data.setDuration(duration);

@@ -74,6 +74,8 @@ public final class EBEventHelper {
         bus.register(EBLivingHurtEvent.class, MagicMobEffect.EventCaller::callUserHurtEvent);
         bus.register(EBLivingHurtEvent.class, AllyDesignation::onLivingHurt);
         bus.register(EBLivingHurtEvent.class, com.binaris.wizardry.content.spell.lightning.Paralysis::onLivingHurt);
+        bus.register(EBLivingHurtEvent.class, com.binaris.wizardry.content.spell.necromancy.MindTrick::onLivingHurt);
+        bus.register(EBLivingHurtEvent.class, com.binaris.wizardry.content.spell.healing.MarkSacrifice::onLivingHurt);
     }
 
     private static void onLivingTickEvent(WizardryEventBus bus) {

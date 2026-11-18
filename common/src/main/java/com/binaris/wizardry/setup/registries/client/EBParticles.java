@@ -15,6 +15,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public final class EBParticles {
     static final Map<String, DeferredObject<SimpleParticleType>> PARTICLE_TYPES = new HashMap<>();
+    public static final DeferredObject<SimpleParticleType> VINE = particle("vine");
     public static final DeferredObject<SimpleParticleType> BEAM = particle("beam");
     public static final DeferredObject<SimpleParticleType> GUARDIAN_BEAM = particle("guardian_beam");
     public static final DeferredObject<SimpleParticleType> BUFF = particle("buff");

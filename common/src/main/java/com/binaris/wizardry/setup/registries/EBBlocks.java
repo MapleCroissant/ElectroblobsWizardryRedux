@@ -37,6 +37,7 @@ public final class EBBlocks {
     public static final DeferredObject<Block> POTTED_CRYSTAL_FLOWER = block("potted_crystal_flower", () -> new FlowerPotBlock(CRYSTAL_FLOWER.get(), BlockBehaviour.Properties.of().instabreak().noOcclusion().lightLevel((state) -> 15).pushReaction(PushReaction.DESTROY)), false, false, false);
     public static final DeferredObject<Block> PERMAFROST = block("permafrost", PermafrostBlock::new, false, false, false);
     public static final DeferredObject<Block> VANISHING_COBWEB = block("vanishing_cobweb", () -> new VanishingCobwebBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB)), false, false, false);
+    public static final DeferredObject<Block> TRANSPORTATION_STONE = block("transportation_stone", TransportationStoneBlock::new, false, true, true);
     public static final DeferredObject<Block> ARCANE_WORKBENCH = block("arcane_workbench", () -> new ArcaneWorkbenchBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)), false, true, true);
     public static final DeferredObject<Block> GILDED_OAK_WOOD = block("gilded_oak_wood", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD)), true, true, true);
     public static final DeferredObject<Block> GILDED_SPRUCE_WOOD = block("gilded_spruce_wood", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD)), true, true, true);
@@ -73,6 +74,11 @@ public final class EBBlocks {
     public static final DeferredObject<Block> RECEPTACLE = block("receptacle", ReceptacleBlock::new, false, false, false);
     public static final DeferredObject<Block> WALL_RECEPTACLE = block("wall_receptacle", WallReceptacleBlock::new, false, false, false);
     public static final DeferredObject<Block> OBSIDIAN_CRUST = block("obsidian_crust", ObsidianCrustBlock::new, false, false, false);
+    public static final DeferredObject<Block> ICE_STATUE = block("ice_statue", () -> new StatueBlock(true), false, false, false);
+    public static final DeferredObject<Block> PETRIFIED_STONE = block("petrified_stone", () -> new StatueBlock(false), false, false, false);
+    public static final DeferredObject<Block> DRY_FROSTED_ICE = block("dry_frosted_ice", DryFrostedIceBlock::new, false, false, false);
+    public static final DeferredObject<Block> THORNS = block("thorns", ThornsBlock::new, false, false, false);
+    public static final DeferredObject<Block> SNARE = block("snare", SnareBlock::new, false, false, false);
     public static final DeferredObject<Block> MAGIC_LIGHT = block("magic_light", MagicLightBlock::new, false, false, false);
     public static final DeferredObject<Block> SPECTRAL_BLOCK = block("spectral_block", SpectralBlock::new, true, false, false);
     public static final DeferredObject<Block> IMBUEMENT_ALTAR = block("imbuement_altar", ImbuementAltarBlock::new, false, true, true);

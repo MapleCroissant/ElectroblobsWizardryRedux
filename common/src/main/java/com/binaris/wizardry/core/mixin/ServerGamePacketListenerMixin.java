@@ -11,9 +11,19 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerMixin {
 
+    @org.spongepowered.asm.mixin.Shadow public ServerPlayer player;
+
+    @org.spongepowered.asm.mixin.injection.Inject(
+            method = {"handleMovePlayer", "handleMoveVehicle", "handlePlayerAction", "handleUseItemOn", "handleUseItem", "handleInteract"},
+            at = @At("HEAD"), cancellable = true)
+    private void ebwizardry$pausePlayerInput(org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        var server = player.getServer();
+        if (server != null && server.isSameThread() && com.binaris.wizardry.content.effect.SlowTimeMobEffect.blocks(player)) ci.cancel();
+    }
+
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSleeping()Z"))
     private boolean EBWIZARDRY$whitelistFlightFromFloatingKick(ServerPlayer player) {
-        if (EntityUtil.isCasting(player, Spells.FLIGHT)) return true;
+        if (EntityUtil.isCasting(player, Spells.FLIGHT) || com.binaris.wizardry.content.effect.SlowTimeMobEffect.blocks(player)) return true;
         return player.isSleeping();
     }
 }

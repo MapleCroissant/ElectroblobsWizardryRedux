@@ -67,6 +67,10 @@ public final class WizardryFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(EBBlocks.ACACIA_LECTERN.get(), RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(EBBlocks.DARK_OAK_LECTERN.get(), RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(EBBlocks.IMBUEMENT_ALTAR.get(), RenderType.cutoutMipped());
+        BlockRenderLayerMap.INSTANCE.putBlock(EBBlocks.SNARE.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(EBBlocks.THORNS.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(EBBlocks.ICE_STATUE.get(), RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(EBBlocks.DRY_FROSTED_ICE.get(), RenderType.translucent());
 
         WorldRenderEvents.AFTER_TRANSLUCENT.register(this::renderContainmentField);
 

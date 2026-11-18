@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " x ",
+    "xyx",
+    " x "
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:stone"
+    },
+    "y": [
+      {
+        "item": "ebwizardry:magic_crystal"
+      },
+      {
+        "item": "ebwizardry:magic_crystal_earth"
+      },
+      {
+        "item": "ebwizardry:magic_crystal_fire"
+      },
+      {
+        "item": "ebwizardry:magic_crystal_healing"
+      },
+      {
+        "item": "ebwizardry:magic_crystal_ice"
+      },
+      {
+        "item": "ebwizardry:magic_crystal_lightning"
+      },
+      {
+        "item": "ebwizardry:magic_crystal_necromancy"
+      },
+      {
+        "item": "ebwizardry:magic_crystal_sorcery"
+      }
+    ]
+  },
+  "result": {
+    "id": "ebwizardry:transportation_stone",
+    "count": 2
+  }
+}

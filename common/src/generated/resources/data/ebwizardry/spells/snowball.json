@@ -1,0 +1,23 @@
+{
+    "enabled":  {
+                    "book":  true,
+                    "scroll":  true,
+                    "wands":  true,
+                    "npcs":  true,
+                    "dispensers":  true,
+                    "commands":  true,
+                    "treasure":  true,
+                    "trades":  true,
+                    "looting":  true
+                },
+    "tier":  "ebwizardry:novice",
+    "element":  "ebwizardry:ice",
+    "type":  "ebwizardry:projectile",
+    "cost":  1,
+    "chargeup":  0,
+    "cooldown":  1,
+    "base_properties":  {
+                            "range":  15
+                        },
+    "spell_action":  "ebwizardry:point"
+}

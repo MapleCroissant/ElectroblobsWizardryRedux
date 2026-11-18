@@ -6,6 +6,7 @@ import com.binaris.wizardry.attachments.player.SpellManagerDataHolder;
 import com.binaris.wizardry.attachments.stack.ConjureDataHolder;
 import com.binaris.wizardry.attachments.stack.ImbuementEnchantDataHolder;
 import com.binaris.wizardry.api.content.util.RegistryUtils;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.TieredItem;
 import com.binaris.wizardry.content.spell.abstr.ConjureItemSpell;
 import com.binaris.wizardry.core.platform.services.IObjectData;
@@ -48,7 +49,8 @@ public class ForgeObjectData implements IObjectData {
 
     @Override
     public @Nullable ImbuementEnchantData getImbuementData(ItemStack stack) {
-        if (!(stack.getItem() instanceof TieredItem) || !RegistryUtils.isSafelyEnchantable(stack.getItem())) return null;
+        var item = stack.getItem();
+        if ((!(item instanceof TieredItem) && !(item instanceof BowItem)) || !RegistryUtils.isSafelyEnchantable(item)) return null;
         return new ImbuementEnchantDataHolder(stack);
     }
 

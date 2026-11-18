@@ -6,6 +6,10 @@ import com.binaris.wizardry.api.content.event.EBLivingTick;
 import com.binaris.wizardry.api.content.effect.MagicMobEffect;
 import com.binaris.wizardry.api.content.util.EntityUtil;
 import com.binaris.wizardry.content.effect.FrostStepEffect;
+import com.binaris.wizardry.content.spell.fire.Disintegration;
+import com.binaris.wizardry.content.spell.necromancy.ShadowWard;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.binaris.wizardry.core.event.WizardryEventBus;
 import com.binaris.wizardry.core.integrations.ArtifactChannel;
 import com.binaris.wizardry.core.networking.MagicEffectSync;
@@ -34,7 +38,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+public abstract class LivingEntityMixin implements Disintegration.Animation {
+    @Unique
+    private int ebwizardry$disintegrationStart = -1;
+
+    @Override
+    public int ebwizardry$disintegrationFrame() {
+        return ebwizardry$disintegrationStart < 0 ? -1 : livingEntity.tickCount - ebwizardry$disintegrationStart;
+    }
+
+    @Override
+    public boolean ebwizardry$startDisintegration() {
+        if (ebwizardry$disintegrationStart >= 0) return false;
+        ebwizardry$disintegrationStart = livingEntity.tickCount;
+        return true;
+    }
+
+    @Inject(method = "handleEntityEvent", at = @At("HEAD"))
+    private void ebwizardry$animateDisintegration(byte event, CallbackInfo ci) {
+        if (event == Disintegration.ANIMATION_EVENT) ebwizardry$startDisintegration();
+    }
     @Unique
     LivingEntity livingEntity = (LivingEntity) (Object) this;
 
@@ -55,6 +78,25 @@ public abstract class LivingEntityMixin {
 
         if (ArtifactChannel.isEquipped(player, EBItems.AMULET_WITHER_IMMUNITY.get()))
             if (effect.getEffect() == MobEffects.WITHER) cir.setReturnValue(false);
+    }
+
+    @WrapMethod(method = "hurt")
+    private boolean ebwizardry$shadowWard(DamageSource source, float amount, Operation<Boolean> original) {
+        if (!livingEntity.level().isClientSide && com.binaris.wizardry.content.spell.healing.Transience.blocksDamage(livingEntity, source)){
+            return false;
+        }
+        if (!livingEntity.level().isClientSide
+                && com.binaris.wizardry.content.entity.construct.ForcefieldConstruct.blocksDamage(livingEntity, source)) return false;
+        float fraction = amount > 0 ? ShadowWard.reflectedFraction(livingEntity, source) : 0;
+        if (fraction == 0 || livingEntity.isInvulnerableTo(source) || !livingEntity.isAlive()) {
+            return original.call(source, amount);
+        }
+        float remaining = amount * (1 - fraction);
+        boolean applied = remaining > 0 && original.call(livingEntity.damageSources().magic(), remaining);
+        if (remaining == 0 || applied) {
+            ShadowWard.reflect(livingEntity, (LivingEntity) source.getEntity(), amount * fraction);
+        }
+        return applied;
     }
 
     @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/WalkAnimationState;setSpeed(F)V", shift = At.Shift.AFTER), cancellable = true)
@@ -106,6 +148,7 @@ public abstract class LivingEntityMixin {
 
     @Inject(method = "onEffectAdded", at = @At("TAIL"))
     private void EBWIZARDRY$syncMagicEffectAdded(MobEffectInstance instance, Entity source, CallbackInfo ci) {
+        if (instance.getEffect() == EBMobEffects.SLOW_TIME.get()) com.binaris.wizardry.content.effect.SlowTimeMobEffect.observe(livingEntity);
         // This already includes the needed checks in the method
         MagicEffectSync.sendToTracking(livingEntity, instance, MagicEffectSyncS2C.Action.ADD);
     }
@@ -114,6 +157,14 @@ public abstract class LivingEntityMixin {
     private void EBWIZARDRY$syncMagicEffectUpdated(MobEffectInstance instance, boolean same, Entity source, CallbackInfo ci) {
         // This already includes the needed checks in the method
         MagicEffectSync.sendToTracking(livingEntity, instance, MagicEffectSyncS2C.Action.ADD);
+    }
+
+    @Inject(method = "onEffectRemoved", at = @At("HEAD"))
+    private void ebwizardry$clearMindControl(MobEffectInstance effect, CallbackInfo ci) {
+        if (!livingEntity.level().isClientSide && livingEntity instanceof Mob mob
+                && effect.getEffect() == EBMobEffects.MIND_CONTROL.get()) {
+            com.binaris.wizardry.content.effect.MindControlMobEffect.clear(mob);
+        }
     }
 
     @Inject(method = "onEffectRemoved", at = @At("TAIL"))

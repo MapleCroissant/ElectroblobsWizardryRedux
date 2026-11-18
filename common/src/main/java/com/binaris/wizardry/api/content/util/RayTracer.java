@@ -66,6 +66,12 @@ public final class RayTracer {
     /// @return The intercept point, or null if no collision occurs.
     @Nullable
     private static Vec3 calculateIntercept(Entity entity, Vec3 origin, Vec3 endpoint, float aimAssist) {
+        if (entity instanceof com.binaris.wizardry.content.entity.construct.ForcefieldConstruct field) {
+            return field.intersect(origin, endpoint, aimAssist).orElse(null);
+        }
+        if (entity instanceof com.binaris.wizardry.content.entity.construct.IceBarrierConstruct barrier) {
+            return barrier.intersectRay(origin, endpoint, aimAssist).orElse(null);
+        }
         AABB bounds = entity.getBoundingBox();
         float pickRadius = entity.getPickRadius();
         if (pickRadius != 0) bounds = bounds.inflate(pickRadius);
