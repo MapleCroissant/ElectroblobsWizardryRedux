@@ -48,7 +48,7 @@ public class TrapSlime extends RaySpell {
 
             MinionData data = Services.OBJECT_DATA.getMinionData(slime);
             data.setSummoned(true);
-            data.setOwnerUUID(ctx.caster().getUUID());
+            if (ctx.caster() != null) data.setOwnerUUID(ctx.caster().getUUID());
             data.setShouldFollowOwner(false);
             data.setLifetime((int) (ctx.modifiers().get(SpellModifiers.DURATION, property(DefaultProperties.DURATION).floatValue())));
 

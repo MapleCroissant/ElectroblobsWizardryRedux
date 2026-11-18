@@ -50,9 +50,10 @@ public final class ClientMessageHandler {
 
         Entity e = level.getEntity(m.getCasterID());
         if (!(e instanceof Player caster)) return;
-        PlayerCastContext ctx = new PlayerCastContext(level, caster, m.getHand(), 0, m.getModifiers());
+        PlayerCastContext ctx = new PlayerCastContext(level, caster, m.getHand(), m.getCastingTicks(), m.getModifiers());
         m.getSpell().cast(ctx);
 
+        if (m.getCastingTicks() != 0) return;
         SpellCastEvent.Sources source = SpellCastEvent.Sources.OTHER;
         Item item = caster.getItemInHand(m.getHand()).getItem();
 
@@ -62,6 +63,20 @@ public final class ClientMessageHandler {
         // No need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
         // The handler for this event now deals with discovery.
         WizardryEventBus.fireEvent(new SpellCastEvent.Post(source, m.getSpell(), ctx));
+    }
+
+    public static void dispenserCast(DispenserCastS2C message) {
+        var level = Minecraft.getInstance().level;
+        if (level == null) return;
+        var spell = Services.REGISTRY_UTIL.getSpell(message.spell());
+        if (spell == null) return;
+        var context = com.binaris.wizardry.content.item.ScrollDispenseBehavior.context(level, message.pos(),
+                message.direction(), message.modifiers(), message.tick(), message.duration());
+        if (!spell.isInstantCast()) {
+            com.binaris.wizardry.core.ClientSpellSoundManager.dispenserTick(level, message.pos(), spell, message.finished());
+        }
+        if (message.finished()) spell.endCast(context);
+        else spell.cast(context);
     }
 
     public static void npcSpellCast(NPCSpellCastS2C m) {

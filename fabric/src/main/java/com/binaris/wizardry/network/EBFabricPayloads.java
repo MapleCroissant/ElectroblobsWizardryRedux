@@ -26,6 +26,9 @@ public final class EBFabricPayloads {
         register(PayloadTypeRegistry.playS2C(), SpellGlyphPacketS2C.ID, SpellGlyphPacketS2C::new);
         register(PayloadTypeRegistry.playS2C(), SpellPropertiesSyncS2C.ID, SpellPropertiesSyncS2C::new);
         register(PayloadTypeRegistry.playS2C(), NPCSpellCastS2C.ID, NPCSpellCastS2C::new);
+        register(PayloadTypeRegistry.playC2S(), SelectLecternSpellC2S.ID, SelectLecternSpellC2S::new);
+        register(PayloadTypeRegistry.playS2C(), OpenLecternS2C.ID, OpenLecternS2C::new);
+        register(PayloadTypeRegistry.playS2C(), DispenserCastS2C.ID, DispenserCastS2C::new);
         register(PayloadTypeRegistry.playS2C(), SpellCastS2C.ID, SpellCastS2C::new);
         register(PayloadTypeRegistry.playS2C(), ScreenShakeS2C.ID, ScreenShakeS2C::new);
         register(PayloadTypeRegistry.playS2C(), ParticleBuilderS2C.ID, ParticleBuilderS2C::new);

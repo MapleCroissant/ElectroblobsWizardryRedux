@@ -40,7 +40,7 @@ public final class RayTracer {
         List<? extends Entity> entities = world.getEntitiesOfClass(entityType, searchVolume);
         entities.removeIf(filter);
 
-        Entity closestEntity = null;
+        EntityHitResult closestHit = null;
         double closestDistance = origin.distanceTo(traceEnd);
 
         for (Entity entity : entities) {
@@ -49,12 +49,12 @@ public final class RayTracer {
 
             double distance = origin.distanceTo(intercept);
             if (distance < closestDistance) {
-                closestEntity = entity;
+                closestHit = new EntityHitResult(entity, intercept);
                 closestDistance = distance;
             }
         }
 
-        return closestEntity != null ? new EntityHitResult(closestEntity) : blockHit;
+        return closestHit != null ? closestHit : blockHit;
     }
 
     /// Calculates the intercept point between a ray and an entity's hitbox.

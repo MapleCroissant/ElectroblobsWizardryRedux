@@ -29,6 +29,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void EBWIZARDRY$addSummonAnimationLayer(CallbackInfo ci) {
+        this.layers.add(new com.binaris.wizardry.client.renderer.entity.layers.LayerMineralFlesh<T, M>(
+                (RenderLayerParent<T, M>) (Object) this));
         this.layers.add(new LayerSummonAnimation<T, M>((RenderLayerParent<T, M>) (Object) this));
     }
 

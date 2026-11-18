@@ -15,6 +15,51 @@ import java.util.UUID;
 @PrefixGameTestTemplate(false)
 public class NeoForgeMigrationTest {
     @GameTest(template = "empty")
+    public static void registeredSpellsExposeRegistryMetadata(GameTestHelper helper) {
+        var registry = Services.REGISTRY_UTIL;
+        for (var spell : registry.getSpells()) {
+            if (registry.getSpell(spell.getLocation()) != spell
+                    || registry.getElement(spell.getElement().getLocation()) != spell.getElement()
+                    || registry.getTier(spell.getTier().getLocation()) != spell.getTier()) {
+                helper.fail("Spell metadata does not round-trip through the registries: " + spell);
+            }
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void successfulChannelCompletesExactlyOnce(GameTestHelper helper) {
+        var player = helper.makeMockPlayer(net.minecraft.world.level.GameType.CREATIVE);
+        var hand = net.minecraft.world.InteractionHand.MAIN_HAND;
+        var spell = Spells.FROST_RAY;
+        var source = com.binaris.wizardry.api.content.event.SpellCastEvent.Sources.WAND;
+        var wand = new ItemStack(EBItems.APPRENTICE_WAND.get());
+        var context = new com.binaris.wizardry.api.content.spell.internal.PlayerCastContext(
+                helper.getLevel(), player, hand, 0, new com.binaris.wizardry.api.content.spell.internal.SpellModifiers());
+        int[] completions = {0};
+        UUID playerId = player.getUUID();
+        com.binaris.wizardry.core.event.WizardryEventBus.getInstance().register(
+                com.binaris.wizardry.api.content.event.SpellCastEvent.Completed.class, event -> {
+                    if (event.getCaster() != null && event.getCaster().getUUID().equals(playerId)) completions[0]++;
+                });
+
+        player.setItemInHand(hand, wand);
+        player.startUsingItem(hand);
+        var state = (com.binaris.wizardry.core.ActiveItemCast) player;
+        var cast = new com.binaris.wizardry.core.ActiveItemCast.Attempt(source, spell, wand);
+        com.binaris.wizardry.api.content.util.CastItemUtils.completeChannel(source, spell, context, wand);
+        if (completions[0] != 0) helper.fail("Unsuccessful channel completed");
+        com.binaris.wizardry.api.content.util.CastItemUtils.recordItemCast(source, spell, context, wand);
+        com.binaris.wizardry.api.content.util.CastItemUtils.recordItemCast(source, spell, context, wand);
+        if (!cast.equals(state.ebwizardry$getItemCast()) || completions[0] != 0) helper.fail("Channel tick completed prematurely");
+        com.binaris.wizardry.api.content.util.CastItemUtils.completeChannel(source, spell, context, wand.copy());
+        if (completions[0] != 0) helper.fail("Different stack completed the channel");
+        com.binaris.wizardry.api.content.util.CastItemUtils.completeChannel(source, spell, context, wand);
+        com.binaris.wizardry.api.content.util.CastItemUtils.completeChannel(source, spell, context, wand);
+        if (completions[0] != 1) helper.fail("Accepted channel did not complete exactly once");
+        helper.succeed();
+    }
+    @GameTest(template = "empty")
     public static void elementalBiomeBonusesUseConventionalTags(GameTestHelper helper) {
         var biomes = helper.getLevel().registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME);
         for (var key : java.util.List.of(net.minecraft.world.level.biome.Biomes.FOREST, net.minecraft.world.level.biome.Biomes.BIRCH_FOREST, net.minecraft.world.level.biome.Biomes.DARK_FOREST, net.minecraft.world.level.biome.Biomes.JUNGLE)) {

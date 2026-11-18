@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 
 /// Fluent builder for creating and spawning custom wizardry particles on the client.
 ///
-/// This is a stateful singleton — only one particle can be configured at a time. Callers start a build
+/// Each create() call starts an independent build.
 /// with one of the static {@code create()} overloads, chain setter methods to configure position, velocity,
 /// color, lifetime, spin, collision, and targeting, then finish with {@code spawn(world)}. Server-side
 /// spawning is normally blocked (particles are client-only) unless {@code allowServer(true)} is set,
@@ -35,8 +35,6 @@ import net.minecraft.world.phys.Vec3;
 /// @see ParticleWizardry
 /// @see ParticleSpawner
 public final class ParticleBuilder {
-    /// Singleton instance
-    private static final ParticleBuilder instance = new ParticleBuilder();
     /// The particle type
     private SimpleParticleType particle;
     /// If the particle is building, if not, always throw an error
@@ -95,7 +93,7 @@ public final class ParticleBuilder {
     /// @throws IllegalStateException If already building
     /// @see #particle(DeferredObject)
     public static ParticleBuilder create(DeferredObject<SimpleParticleType> particle) {
-        return ParticleBuilder.instance.particle(particle);
+        return new ParticleBuilder().particle(particle);
     }
 
     /// Starts building a particle of the given type and positions it randomly within the given entity's bounding box.
@@ -115,7 +113,7 @@ public final class ParticleBuilder {
         double y = entity.yo + entity.level().random.nextDouble() * (double) entity.getBbWidth();
         double z = entity.zo + (entity.level().random.nextDouble() - 0.5D) * (double) entity.getBbWidth();
 
-        return ParticleBuilder.instance.particle(type).pos(x, y, z);
+        return create(type).pos(x, y, z);
     }
 
     /// Creates a particle at a random position within a radius of the given position.
@@ -216,21 +214,10 @@ public final class ParticleBuilder {
     /// @param particle The particle type
     /// @return The ParticleBuilder instance
     private ParticleBuilder particle(DeferredObject<SimpleParticleType> particle) {
-        if (instance.building) {
-            EBLogger.warn("Attempted to build an already built particle: " + this.getCurrentParticleString());
-            return instance;
-        }
+        reset();
         this.particle = particle.get();
         this.building = true;
         return this;
-    }
-
-    /// Gets a readable string representation of the current builder parameters; used in error messages.
-    private String getCurrentParticleString() {
-        return String.format("[ Type: %s, Position: (%s, %s, %s), Velocity: (%s, %s, %s), Colour: (%s, %s, %s), "
-                        + "Fade Colour: (%s, %s, %s), Radius: %s, Revs/tick: %s, Lifetime: %s, Gravity: %s, Shaded: %s, "
-                        + "Scale: %s, Entity: %s ]",
-                particle, x, y, z, velocityX, velocityY, velocityZ, red, green, blue, fadeRed, fadeGreen, fadeBlue, radius, rpt, lifetime, gravity, shaded, scale, entity);
     }
 
     /// Sets the position of the particle.

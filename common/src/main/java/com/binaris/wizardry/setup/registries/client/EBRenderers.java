@@ -71,12 +71,12 @@ public final class EBRenderers {
         registerEntityRender(EBEntities.EVIL_WIZARD, EvilWizardRenderer::new);
         registerEntityRender(EBEntities.ICE_GIANT, IceGiantRenderer::new);
 
-        registerEntityRender(EBEntities.FIRE_BOLT, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/firebolt.png"))));
-        registerEntityRender(EBEntities.SPARK, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/spark.png"))));
-        registerEntityRender(EBEntities.ICE_CHARGE, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/ice_charge.png"))));
+        registerEntityRender(EBEntities.FIRE_BOLT, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/firebolt.png"), 0.2f, false)));
+        registerEntityRender(EBEntities.SPARK, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/spark.png"), 0.4f, true)));
+        registerEntityRender(EBEntities.ICE_CHARGE, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/ice_charge.png"), 0.6f, false)));
         registerEntityRender(EBEntities.MAGIC_FIREBALL, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/magic_fireball.png"))));
         registerEntityRender(EBEntities.ICE_BALL, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/iceball.png"))));
-        registerEntityRender(EBEntities.DARKNESS_ORB, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/darkness_orb.png"), true)));
+        registerEntityRender(EBEntities.DARKNESS_ORB, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/darkness_orb.png"), 0.6f, true)));
         registerEntityRender(EBEntities.FORCE_ORB, (ctx -> new MagicProjectileRenderer<>(ctx, WizardryMainMod.location("textures/entity/force_orb.png"), true)));
         registerEntityRender(EBEntities.RING_OF_FIRE, (ctx -> new FireRingRenderer(ctx, WizardryMainMod.location("textures/entity/ring_of_fire.png"))));
 
@@ -110,6 +110,7 @@ public final class EBRenderers {
         registerEntityRender(EBEntities.SHADOW_WRAITH, BlankRenderer::new);
         registerEntityRender(EBEntities.STORM_ELEMENTAL, BlankRenderer::new);
         registerEntityRender(EBEntities.BOULDER, BoulderRenderer::new);
+        registerEntityRender(EBEntities.LEVITATING_BLOCK, net.minecraft.client.renderer.entity.FallingBlockRenderer::new);
         registerEntityRender(EBEntities.ZOMBIE_SPAWNER, ZombieSpawnerRenderer::new);
 
     }

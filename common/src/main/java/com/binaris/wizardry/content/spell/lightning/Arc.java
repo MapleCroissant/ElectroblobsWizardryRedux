@@ -41,7 +41,7 @@ public class Arc extends RaySpell {
             ParticleBuilder.spawnShockParticles(ctx.world(), target.xo, target.yo + target.getBbHeight() / 2, target.zo);
         }
 
-        target.hurt(MagicDamageSource.causeDirectMagicDamage(ctx.caster(), EBDamageSources.SHOCK),
+        target.hurt(MagicDamageSource.causeDirectMagicDamage(ctx.world(), ctx.caster(), EBDamageSources.SHOCK),
                 ctx.modifiers().get(SpellModifiers.POTENCY, property(DefaultProperties.DAMAGE)));
 
         return true;

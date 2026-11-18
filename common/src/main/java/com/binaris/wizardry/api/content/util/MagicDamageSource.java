@@ -80,6 +80,13 @@ public class MagicDamageSource extends DamageSource {
         return createMagicDamage(caster, null, type);
     }
 
+    /// Creates damage for a ray that may originate at a block, such as a dispenser.
+    public static DamageSource causeDirectMagicDamage(net.minecraft.world.level.Level level, @Nullable Entity caster,
+                                                     ResourceKey<DamageType> type) {
+        Holder<DamageType> holder = level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(type);
+        return new MagicDamageSource(holder, caster, null);
+    }
+
     /// Create an indirect magic damage [DamageSource] where `magic` is the direct entity
     /// (e.g. a projectile) and `caster` is the indirect/owner entity who should be credited.
     ///

@@ -63,6 +63,15 @@ public class EBServerConfig implements ConfigProvider {
     public static final ConfigOption<Boolean> BLOCK_OWNED_ALLIES_DAMAGE = addOption(BoolConfigOption.booleanOption("block_owned_allies_damage", true));
     public static final ConfigOption<Float> FORFEIT_CHANCE = addOption(NumberConfigOption.floating("forfeit_chance", 0.2F, 0.0F, 1.0F));
 
+    public static final ConfigOption<Integer> LECTERN_SEARCH_RADIUS = addOption(NumberConfigOption.integer("lectern_search_radius", 4, 1, 16));
+    public static final ConfigOption<List<ResourceLocation>> LECTERN_EXTRA_BOOKSHELVES = addOption(
+            ListConfigOption.resourceLocation("lectern_extra_bookshelves", List.of()));
+
+    public static final ConfigOption<Boolean> MINERAL_FLESH_SLOWNESS = addOption(BoolConfigOption.booleanOption("mineral_flesh_slowness", true));
+    public static final ConfigOption<Float> IRON_FLESH_ARMOR = addOption(NumberConfigOption.floating("iron_flesh_armor", 4, 0, 30));
+    public static final ConfigOption<Float> DIAMOND_FLESH_ARMOR = addOption(NumberConfigOption.floating("diamond_flesh_armor", 4, 0, 30));
+    public static final ConfigOption<Float> DIAMOND_FLESH_TOUGHNESS = addOption(NumberConfigOption.floating("diamond_flesh_toughness", 3, 0, 20));
+
     private static <T> ConfigOption<T> addOption(ConfigOption<T> option) {
         OPTIONS.add(option);
         return option;

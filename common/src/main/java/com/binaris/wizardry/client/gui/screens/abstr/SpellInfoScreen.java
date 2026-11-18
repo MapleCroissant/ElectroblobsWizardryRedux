@@ -46,13 +46,16 @@ public abstract class SpellInfoScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        int left = this.width / 2 - xSize / 2;
-        int top = this.height / 2 - this.ySize / 2;
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        this.drawBackgroundLayer(guiGraphics, left, top, mouseX, mouseY);
+        int left = (this.width - xSize) / 2;
+        int top = (this.height - ySize) / 2;
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.drawForegroundLayer(guiGraphics, left, top, mouseX, mouseY);
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        this.drawBackgroundLayer(guiGraphics, (this.width - xSize) / 2, (this.height - ySize) / 2, mouseX, mouseY);
     }
 
     protected void drawBackgroundLayer(@NotNull GuiGraphics guiGraphics, int left, int top, int mouseX, int mouseY) {

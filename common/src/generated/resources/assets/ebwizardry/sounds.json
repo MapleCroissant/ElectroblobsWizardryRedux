@@ -1982,6 +1982,14 @@
     ],
     "subtitle": "subtitles.ebwizardry.spell_casting"
   },
+  "spell.lightning_pulse.spark": {
+    "sounds": ["ebwizardry:lightning_ray_start"],
+    "subtitle": "subtitles.ebwizardry.spell_casting"
+  },
+  "spell.lightning_pulse.explosion": {
+    "sounds": ["ebwizardry:shockwave"],
+    "subtitle": "subtitles.ebwizardry.spell_casting"
+  },
   "spell.lightning_ray.end": {
     "sounds": [
       "ebwizardry:lightning_ray_end"

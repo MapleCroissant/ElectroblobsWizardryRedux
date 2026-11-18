@@ -14,6 +14,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Gui.class)
 public abstract class GuiMixin {
+    @org.spongepowered.asm.mixin.Shadow
+    protected abstract void renderTextureOverlay(GuiGraphics graphics, ResourceLocation texture, float alpha);
+
+    @org.spongepowered.asm.mixin.injection.Inject(method = "renderCameraOverlays", at = @At("TAIL"))
+    private void ebwizardry$blinkOverlay(GuiGraphics graphics, net.minecraft.client.DeltaTracker delta,
+                                        org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        float strength = com.binaris.wizardry.client.effect.BlinkOverlay.strength(delta.getGameTimeDeltaPartialTick(false));
+        if (strength > 0) renderTextureOverlay(graphics, com.binaris.wizardry.client.effect.BlinkOverlay.TEXTURE, strength);
+    }
+
     @Redirect(method = "renderEffects", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"))
     private void ebwizardry$effectBackground(GuiGraphics graphics, ResourceLocation sprite, int x, int y,

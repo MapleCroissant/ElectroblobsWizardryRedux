@@ -35,6 +35,9 @@ public interface MinionData {
         int pickUpLootPosibility = getPickUpLootPosibility();
         if (pickUpLootPosibility != -1) getProvider().setCanPickUpLoot(pickUpLootPosibility != 0);
 
+        // A dispenser summon has no owner. Retain its natural target selection.
+        if (getOwnerUUID() == null) return;
+
         ((MobGoalsAccessor) getProvider()).getTargetSelector().removeAllGoals((goal) -> true);
         if (shouldDeleteGoals()) ((MobGoalsAccessor) getProvider()).getGoalSelector().removeAllGoals((goal) -> true);
 

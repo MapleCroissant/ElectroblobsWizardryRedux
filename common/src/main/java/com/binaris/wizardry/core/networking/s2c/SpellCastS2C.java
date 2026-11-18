@@ -17,8 +17,14 @@ public class SpellCastS2C implements Message {
     InteractionHand hand;
     Spell spell;
     SpellModifiers modifiers;
+    private final int castingTicks;
 
     public SpellCastS2C(int casterID, InteractionHand hand, Spell spell, SpellModifiers modifiers) {
+        this(casterID, hand, spell, modifiers, 0);
+    }
+
+    public SpellCastS2C(int casterID, InteractionHand hand, Spell spell, SpellModifiers modifiers, int castingTicks) {
+        this.castingTicks = castingTicks;
         this.casterID = casterID;
         this.hand = hand;
         this.spell = spell;
@@ -30,6 +36,7 @@ public class SpellCastS2C implements Message {
         this.hand = pBuf.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         this.spell = Services.REGISTRY_UTIL.getSpell(pBuf.readResourceLocation());
         this.modifiers = SpellModifiers.fromTag(pBuf.readNbt());
+        this.castingTicks = pBuf.isReadable() ? pBuf.readVarInt() : 0;
     }
 
     @Override
@@ -43,6 +50,7 @@ public class SpellCastS2C implements Message {
         pBuf.writeBoolean(hand == InteractionHand.MAIN_HAND);
         pBuf.writeResourceLocation(spell.getLocation());
         pBuf.writeNbt(modifiers.toTag());
+        if (castingTicks != 0) pBuf.writeVarInt(castingTicks);
     }
 
     @Override
@@ -60,6 +68,10 @@ public class SpellCastS2C implements Message {
 
     public Spell getSpell() {
         return spell;
+    }
+
+    public int getCastingTicks() {
+        return castingTicks;
     }
 
     public InteractionHand getHand() {

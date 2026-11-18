@@ -33,6 +33,10 @@ import java.util.function.Supplier;
 
 
 public final class Spells {
+    public static final Spell EMPOWERING_PRESENCE;
+    public static final Spell GLIDE;
+    public static final Spell IRONFLESH;
+    public static final Spell DIAMONDFLESH;
     public static final Spell NONE;
     public static final Spell MAGIC_MISSILE;
     public static final Spell IGNITE;
@@ -43,7 +47,7 @@ public final class Spells {
     public static final Spell SUMMON_ZOMBIE;
     // snare
     public static final Spell DART;
-    // light
+    public static final Spell LIGHT;
     public static final Spell TELEKINESIS;
     public static final Spell HEAL;
 
@@ -57,7 +61,7 @@ public final class Spells {
     public static final Spell ICE_SHARD;
     // ice_statue
     public static final Spell FROST_SIGIL;
-    //lightning_ray
+    public static final Spell LIGHTNING_RAY;
     public static final Spell SPARK_BOMB;
     public static final Spell HOMING_SPARK;
     public static final Spell LIGHTNING_SIGIL;
@@ -72,7 +76,7 @@ public final class Spells {
     public static final Spell WHIRLWIND;
     public static final Spell POISON_BOMB;
     //summon spirit wolf
-    // blink
+    public static final Spell BLINK;
     public static final Spell AGILITY;
     public static final Spell CONJURE_SWORD;
     public static final Spell CONJURE_PICKAXE;
@@ -89,7 +93,7 @@ public final class Spells {
     public static final Spell FIRE_SKIN;
     public static final Spell FLAMING_AXE;
     public static final Spell BLIZZARD;
-    // summon ice wraith
+    public static final Spell SUMMON_ICE_WRAITH;
     // ice_shroud
     public static final Spell ICE_CHARGE;
     public static final Spell FROST_AXE;
@@ -515,6 +519,14 @@ public final class Spells {
         LIFE_DRAIN = spell("life_drain", LifeDrain::new);
 
         FROST_RAY = spell("frost_ray", FrostRay::new);
+        LIGHTNING_RAY = spell("lightning_ray", LightningRay::new);
+        SUMMON_ICE_WRAITH = spell("summon_ice_wraith", () ->
+                new MinionSpell<>(com.binaris.wizardry.content.entity.living.IceWraith::new).soundValues(1, 1.1f, 0.2f)
+                        .assignProperties(SpellProperties.builder()
+                                .assignBaseProperties(SpellTiers.ADVANCED, Elements.ICE, SpellTypes.MINION, SpellAction.SUMMON, 40, 10, 200)
+                                .add(DefaultProperties.MINION_COUNT, 1)
+                                .add(DefaultProperties.MINION_LIFETIME, 600)
+                                .add(DefaultProperties.SUMMON_RADIUS, 2).build()));
 
         WITHER = spell("wither", Wither::new);
 
@@ -547,6 +559,18 @@ public final class Spells {
         DETONATE = spell("detonate", Detonate::new);
 
         INVOKE_WEATHER = spell("invoke_weather", InvokeWeather::new);
+
+        IRONFLESH = spell("ironflesh", () -> new BuffSpell(0.4f, 0.5f, 0.6f, EBMobEffects.IRONFLESH).soundValues(0.7f, 1.2f, 0.4f)
+                .assignProperties(SpellProperties.builder()
+                        .assignBaseProperties(SpellTiers.ADVANCED, Elements.HEALING, SpellTypes.DEFENCE, SpellAction.POINT_UP, 30, 15, 100)
+                        .add(BuffSpell.getEffectDurationProperty(EBMobEffects.IRONFLESH.get()), 600)
+                        .add(BuffSpell.getEffectStrengthProperty(EBMobEffects.IRONFLESH.get()), 0).build()));
+
+        DIAMONDFLESH = spell("diamondflesh", () -> new BuffSpell(0.1f, 0.7f, 1, EBMobEffects.DIAMONDFLESH).soundValues(0.7f, 1.2f, 0.4f)
+                .assignProperties(SpellProperties.builder()
+                        .assignBaseProperties(SpellTiers.MASTER, Elements.HEALING, SpellTypes.DEFENCE, SpellAction.POINT_UP, 100, 25, 300)
+                        .add(BuffSpell.getEffectDurationProperty(EBMobEffects.DIAMONDFLESH.get()), 600)
+                        .add(BuffSpell.getEffectStrengthProperty(EBMobEffects.DIAMONDFLESH.get()), 0).build()));
 
         OAK_FLESH = spell("oakflesh", () -> new BuffSpell(0.6f, 0.5f, 0.4f, EBMobEffects.OAKFLESH).soundValues(0.7f, 1.2f, 0.4f)
                 .assignProperties(SpellProperties.builder()
@@ -582,6 +606,10 @@ public final class Spells {
 
         BANISH = spell("banish", Banish::new);
 
+        GLIDE = spell("glide", Glide::new);
+        EMPOWERING_PRESENCE = spell("empowering_presence", EmpoweringPresence::new);
+        LIGHT = spell("light", Light::new);
+        BLINK = spell("blink", Blink::new);
         PHASE_STEP = spell("phase_step", PhaseStep::new);
 
         METEOR = spell("meteor", Meteor::new);
@@ -680,7 +708,7 @@ public final class Spells {
 
         CURSE_OF_SOULBINDING = spell("curse_of_soulbinding", CurseOfSoulbinding::new);
 
-        GREATER_TELEKINESIS = spell("greater_telekinesis", BlockWithSurprise::new); // todo
+        GREATER_TELEKINESIS = spell("greater_telekinesis", GreaterTelekinesis::new);
 
         LIGHTNING_PULSE = spell("lightning_pulse", LightningPulse::new);
 

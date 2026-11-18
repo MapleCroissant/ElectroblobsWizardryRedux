@@ -39,6 +39,7 @@
     "ClientLevelMixin",
     "HumanoidModelMixin",
     "MinecraftMixin",
+    "client.BlinkFovMixin",
     "client.ConjureBarMixin",
     "client.ClientPacketListenerMixin",
     "client.EffectRenderingInventoryScreenMixin",

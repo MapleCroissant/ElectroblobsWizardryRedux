@@ -28,6 +28,7 @@ public final class WizardryForgeMod {
     }
     private static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            com.binaris.wizardry.content.item.ScrollDispenseBehavior.register();
             BookshelfMenu.initBookItems(); WandUpgrades.initUpgrades();
             EntityTransformations.init(); NotImplementedItems.init();
             com.binaris.wizardry.integration.curios.CuriosIntegration.load();

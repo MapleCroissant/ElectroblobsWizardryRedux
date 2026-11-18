@@ -89,9 +89,8 @@ public abstract class SoundLoopSpell extends SoundLoop {
 
         @Override
         protected boolean stillCasting(Spell spell) {
-            return false;
-            // TODO DISPENSER CASTING DATA
-            //return DispenserCastingData.get(source).currentlyCasting() == spell;
+            return !source.isRemoved() && source.getLevel() != null
+                    && com.binaris.wizardry.core.ClientSpellSoundManager.isDispenserCasting(source.getLevel(), source.getBlockPos(), spell);
         }
     }
 

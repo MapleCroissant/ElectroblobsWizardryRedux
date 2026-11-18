@@ -21,11 +21,14 @@ public final class EBMobEffects {
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> STATIC_AURA = mobEffect("static_aura", StaticAuraMobEffect::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> WARD = mobEffect("ward", WardMobEffect::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> FIRESKIN = mobEffect("fireskin", FireSkinMobEffect::new);
+    public static final Supplier<net.minecraft.core.Holder<MobEffect>> IRONFLESH = mobEffect("ironflesh", () -> new MineralFleshMobEffect(false));
+    public static final Supplier<net.minecraft.core.Holder<MobEffect>> DIAMONDFLESH = mobEffect("diamondflesh", () -> new MineralFleshMobEffect(true));
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> OAKFLESH = mobEffect("oakflesh", OakFleshMobEffect::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> CURSE_OF_ENFEEBLEMENT = mobEffect("curse_of_enfeeblement", EnfeeblementCurse::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> CURSE_OF_UNDEATH = mobEffect("curse_of_undeath", UndeathCurse::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> DECAY = mobEffect("decay", DecayMobEffect::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> CONTAINMENT = mobEffect("containment", ContainmentEffect::new);
+    public static final Supplier<net.minecraft.core.Holder<MobEffect>> EMPOWERMENT = mobEffect("empowerment", EmpowermentMobEffect::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> FONT_OF_MANA = mobEffect("font_of_mana", FontOfManaMobEffect::new);
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> CURSE_OF_SOULBINDING = mobEffect("curse_of_soulbinding", () -> new CurseMobEffect(MobEffectCategory.HARMFUL, 0x0f000f));
     public static final Supplier<net.minecraft.core.Holder<MobEffect>> FROST_STEP = mobEffect("frost_step", FrostStepEffect::new);

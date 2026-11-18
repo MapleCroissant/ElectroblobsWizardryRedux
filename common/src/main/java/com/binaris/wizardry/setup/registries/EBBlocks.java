@@ -50,12 +50,12 @@ public final class EBBlocks {
     public static final DeferredObject<Block> JUNGLE_BOOKSHELF = block("jungle_bookshelf", BookShelfBlock::new, false, true, true);
     public static final DeferredObject<Block> ACACIA_BOOKSHELF = block("acacia_bookshelf", BookShelfBlock::new, false, true, true);
     public static final DeferredObject<Block> DARK_OAK_BOOKSHELF = block("dark_oak_bookshelf", BookShelfBlock::new, false, true, true);
-    public static final DeferredObject<Block> OAK_LECTERN = block("oak_lectern", MagicLecternBlock::new, false, true, true);
-    public static final DeferredObject<Block> SPRUCE_LECTERN = block("spruce_lectern", MagicLecternBlock::new, false, true, true);
-    public static final DeferredObject<Block> BIRCH_LECTERN = block("birch_lectern", MagicLecternBlock::new, false, true, true);
-    public static final DeferredObject<Block> JUNGLE_LECTERN = block("jungle_lectern", MagicLecternBlock::new, false, true, true);
-    public static final DeferredObject<Block> ACACIA_LECTERN = block("acacia_lectern", MagicLecternBlock::new, false, true, true);
-    public static final DeferredObject<Block> DARK_OAK_LECTERN = block("dark_oak_lectern", MagicLecternBlock::new, false, true, true);
+    public static final DeferredObject<Block> OAK_LECTERN = block("oak_lectern", IndexedLecternBlock::new, false, true, true);
+    public static final DeferredObject<Block> SPRUCE_LECTERN = block("spruce_lectern", IndexedLecternBlock::new, false, true, true);
+    public static final DeferredObject<Block> BIRCH_LECTERN = block("birch_lectern", IndexedLecternBlock::new, false, true, true);
+    public static final DeferredObject<Block> JUNGLE_LECTERN = block("jungle_lectern", IndexedLecternBlock::new, false, true, true);
+    public static final DeferredObject<Block> ACACIA_LECTERN = block("acacia_lectern", IndexedLecternBlock::new, false, true, true);
+    public static final DeferredObject<Block> DARK_OAK_LECTERN = block("dark_oak_lectern", IndexedLecternBlock::new, false, true, true);
     public static final DeferredObject<Block> FIRE_RUNESTONE = block("fire_runestone", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).strength(4)), false, true, true);
     public static final DeferredObject<Block> ICE_RUNESTONE = block("ice_runestone", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).strength(4)), false, true, true);
     public static final DeferredObject<Block> LIGHTNING_RUNESTONE = block("lightning_runestone", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).strength(4)), false, true, true);
@@ -73,6 +73,7 @@ public final class EBBlocks {
     public static final DeferredObject<Block> RECEPTACLE = block("receptacle", ReceptacleBlock::new, false, false, false);
     public static final DeferredObject<Block> WALL_RECEPTACLE = block("wall_receptacle", WallReceptacleBlock::new, false, false, false);
     public static final DeferredObject<Block> OBSIDIAN_CRUST = block("obsidian_crust", ObsidianCrustBlock::new, false, false, false);
+    public static final DeferredObject<Block> MAGIC_LIGHT = block("magic_light", MagicLightBlock::new, false, false, false);
     public static final DeferredObject<Block> SPECTRAL_BLOCK = block("spectral_block", SpectralBlock::new, true, false, false);
     public static final DeferredObject<Block> IMBUEMENT_ALTAR = block("imbuement_altar", ImbuementAltarBlock::new, false, true, true);
 

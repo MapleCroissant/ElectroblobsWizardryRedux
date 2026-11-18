@@ -127,9 +127,10 @@ public abstract class AreaEffectSpell extends Spell {
 
         List<LivingEntity> targets = EntityUtil.getLivingWithinRadius(radius, origin.x, origin.y, origin.z, ctx.world());
 
-        if (targetAllies)
-            targets.removeIf(target -> target != ctx.caster() && !AllyDesignation.isAllied(ctx.caster(), target));
-        else targets.removeIf(target -> !AllyDesignation.isValidTarget(ctx.caster(), target));
+        if (ctx.caster() != null) {
+            if (targetAllies) targets.removeIf(target -> target != ctx.caster() && !AllyDesignation.isAllied(ctx.caster(), target));
+            else targets.removeIf(target -> !AllyDesignation.isValidTarget(ctx.caster(), target));
+        }
 
         targets.sort(Comparator.comparingDouble(e -> e.distanceToSqr(origin.x, origin.y, origin.z)));
 

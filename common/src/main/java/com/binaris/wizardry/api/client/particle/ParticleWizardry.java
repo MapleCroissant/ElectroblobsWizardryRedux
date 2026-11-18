@@ -254,22 +254,22 @@ public abstract class ParticleWizardry extends TextureSheetParticle {
             float u, v;
             switch (i) {
                 case 0 -> {
-                    scratch.set(-1, -1, 0);
+                    scratch.set(1, -1, 0);
                     u = u1;
                     v = v1;
                 }
                 case 1 -> {
-                    scratch.set(-1, 1, 0);
+                    scratch.set(1, 1, 0);
                     u = u1;
                     v = v0;
                 }
                 case 2 -> {
-                    scratch.set(1, 1, 0);
+                    scratch.set(-1, 1, 0);
                     u = u0;
                     v = v0;
                 }
                 default -> {
-                    scratch.set(1, -1, 0);
+                    scratch.set(-1, -1, 0);
                     u = u0;
                     v = v1;
                 }

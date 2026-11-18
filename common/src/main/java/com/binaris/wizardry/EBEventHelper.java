@@ -128,6 +128,7 @@ public final class EBEventHelper {
     }
 
     private static void onSpellPreCast(WizardryEventBus bus) {
+        bus.register(SpellCastEvent.Prepare.class, com.binaris.wizardry.content.effect.EmpowermentMobEffect::prepareItemCast);
         bus.register(SpellCastEvent.Pre.class, WizardArmorItem::onSpellPreCast);
         bus.register(SpellCastEvent.Pre.class, Forfeit::onSpellCastPreEvent);
         bus.register(SpellCastEvent.Pre.class, ArtifactItem::onSpellPreCast);

@@ -5,6 +5,7 @@ import com.binaris.wizardry.core.networking.c2s.BlockUsePacketC2S;
 import com.binaris.wizardry.core.networking.c2s.ControlInputPacketC2S;
 import com.binaris.wizardry.core.networking.c2s.RequestPlayerDataSyncC2S;
 import com.binaris.wizardry.core.networking.c2s.SpellAccessPacketC2S;
+import com.binaris.wizardry.core.networking.c2s.SelectLecternSpellC2S;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +14,7 @@ import java.util.function.Function;
 
 public class EBFabricServerNetwork {
     public static void registerC2SMessages() {
+        registerServerMessage(SelectLecternSpellC2S.ID, SelectLecternSpellC2S::new);
         registerServerMessage(BlockUsePacketC2S.ID, BlockUsePacketC2S::new);
         registerServerMessage(ControlInputPacketC2S.ID, ControlInputPacketC2S::new);
         registerServerMessage(SpellAccessPacketC2S.ID, SpellAccessPacketC2S::new);

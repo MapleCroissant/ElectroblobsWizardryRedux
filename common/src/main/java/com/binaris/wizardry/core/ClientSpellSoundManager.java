@@ -7,6 +7,10 @@ import com.binaris.wizardry.client.sound.SoundLoop;
 import com.binaris.wizardry.client.sound.SoundLoopSpell;
 import com.binaris.wizardry.setup.registries.EBSounds;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -22,6 +26,22 @@ import net.minecraft.world.level.Level;
 /// a {@code MovingSoundEntity} to an entity so the audio follows it as it moves. The charge
 /// sound uses {@code MovingSoundSpellCharge} and is triggered during wand charge-up.
 public final class ClientSpellSoundManager {
+    private static final Map<Level, Map<BlockPos, DispenserSound>> DISPENSER_CASTS = new WeakHashMap<>();
+
+    public static void dispenserTick(Level level, BlockPos pos, Spell spell, boolean finished) {
+        var casts = DISPENSER_CASTS.computeIfAbsent(level, ignored -> new HashMap<>());
+        long tick = level.getGameTime();
+        casts.values().removeIf(cast -> cast.expiresAt < tick);
+        if (finished) casts.remove(pos);
+        else casts.put(pos, new DispenserSound(spell, tick + 10));
+    }
+
+    public static boolean isDispenserCasting(Level level, BlockPos pos, Spell spell) {
+        var cast = DISPENSER_CASTS.getOrDefault(level, Map.of()).get(pos);
+        return cast != null && cast.spell == spell && cast.expiresAt >= level.getGameTime();
+    }
+
+    private record DispenserSound(Spell spell, long expiresAt) {}
 
     /// Plays a three-phase spell sound loop (start, loop, end) attached to a living
     /// entity, provided no other loop for the same spell is already active on that entity.
@@ -98,7 +118,7 @@ public final class ClientSpellSoundManager {
     /// @param pitch sound pitch.
     /// @param duration ticks to loop, or -1 for indefinite.
     public static void playSpellSoundLoop(Level world, double x, double y, double z, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, float volume, float pitch, int duration) {
-        if (duration == -1)
+        if (duration == -1 || isDispenserCasting(world, BlockPos.containing(x, y, z), spell))
             SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellDispenser(start, loop, end, spell, world, x, y, z, volume, pitch));
         else
             SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellPosTimed(start, loop, end, spell, duration, x, y, z, volume, pitch));

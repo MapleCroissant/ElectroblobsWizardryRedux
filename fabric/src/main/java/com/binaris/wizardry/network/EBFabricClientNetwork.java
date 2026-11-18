@@ -14,6 +14,8 @@ public class EBFabricClientNetwork {
         registerClientMessage(SpellGlyphPacketS2C.ID, SpellGlyphPacketS2C::new);
         registerClientMessage(SpellPropertiesSyncS2C.ID, SpellPropertiesSyncS2C::new);
         registerClientMessage(NPCSpellCastS2C.ID, NPCSpellCastS2C::new);
+        registerClientMessage(OpenLecternS2C.ID, OpenLecternS2C::new);
+        registerClientMessage(DispenserCastS2C.ID, DispenserCastS2C::new);
         registerClientMessage(SpellCastS2C.ID, SpellCastS2C::new);
         registerClientMessage(ScreenShakeS2C.ID, ScreenShakeS2C::new);
         registerClientMessage(ParticleBuilderS2C.ID, ParticleBuilderS2C::new);

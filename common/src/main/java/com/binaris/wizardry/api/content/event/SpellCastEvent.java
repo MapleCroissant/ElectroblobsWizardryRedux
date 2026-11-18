@@ -270,7 +270,60 @@ public abstract class SpellCastEvent implements IWizardryEvent {
         }
     }
 
-    /// Fired when a spell cast is completed.
+    /// Fired when a player tries to use a wand or scroll, before requirements and charge are
+    /// calculated. Addon modifiers added here are available to the full item-use session.
+    /// Runs on both logical sides and cannot cancel the cast.
+    public static final class Prepare extends SpellCastEvent {
+        public Prepare(Source source, Spell spell, PlayerCastContext context) {
+            super(source, spell, context);
+        }
+
+        @Override
+        public boolean canBeCanceled() {
+            return false;
+        }
+    }
+
+    /// Modifies the resolved wand or scroll cooldown immediately before it is applied.
+    /// Use a multiplier here to combine with the class's existing cooldown formula.
+    public static final class Cooldown extends SpellCastEvent {
+        private double ticks;
+
+        public Cooldown(Source source, Spell spell, CastContext context, int ticks) {
+            super(source, spell, context);
+            this.ticks = ticks;
+        }
+
+        public void multiply(double factor) {
+            if (Double.isFinite(factor) && factor >= 0) ticks *= factor;
+        }
+
+        public int getTicks() {
+            return (int) Math.max(0, ticks);
+        }
+
+        @Override
+        public boolean canBeCanceled() {
+            return false;
+        }
+    }
+
+    /// Server-only success notification for the normal wand and scroll item paths. Instant spells
+    /// emit after a successful cast. Channeled spells emit on release or natural completion if
+    /// at least one tick succeeded. Custom cast paths can publish this event at their own
+    /// equivalent completion point.
+    public static final class Completed extends SpellCastEvent {
+        public Completed(Source source, Spell spell, CastContext context) {
+            super(source, spell, context);
+        }
+
+        @Override
+        public boolean canBeCanceled() {
+            return false;
+        }
+    }
+
+    /// Fired when an item ends its casting lifecycle, including releases before a cast succeeds.
     public static class Finish extends SpellCastEvent {
 
         /// Creates a finish event backed by a [CastContext].

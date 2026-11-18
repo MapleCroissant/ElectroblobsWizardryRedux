@@ -21,8 +21,15 @@ public class ForgeClientEvents {
     public static void migrationSmoke(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
         if (!Boolean.getBoolean("ebwizardry.migrationSmoke")) return;
         var minecraft = Minecraft.getInstance();
-        if (minecraft.level != null && ++migrationSmokeTicks >= 200) {
-            com.binaris.wizardry.core.EBLogger.info("NeoForge integrated-world smoke test completed after 200 client ticks");
+        minecraft.options.pauseOnLostFocus = false;
+        if (minecraft.level == null || minecraft.player == null) return;
+
+        SpellVisualSmoke.tick(minecraft, ++migrationSmokeTicks);
+        SpellVisualSmoke.tickLectern(minecraft, migrationSmokeTicks);
+        SpellVisualSmoke.tickGreaterTelekinesis(minecraft, migrationSmokeTicks);
+        SpellVisualSmoke.tickMagicLight(minecraft, migrationSmokeTicks);
+        if (migrationSmokeTicks >= 360) {
+            com.binaris.wizardry.core.EBLogger.info("NeoForge integrated-world smoke test completed after 360 client ticks");
             minecraft.stop();
         }
     }

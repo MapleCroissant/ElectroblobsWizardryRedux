@@ -27,6 +27,10 @@ public class LightningPulse extends Spell {
     private static final double ANTI_Z_FIGHTING_OFFSET = 0.005;
     private static final SpellProperty<Float> REPULSION_VELOCITY = SpellProperty.floatProperty("repulsion_velocity", 0.8f);
 
+    public LightningPulse() {
+        soundValues(2, 1, 0);
+    }
+
     @Override
     public boolean cast(PlayerCastContext ctx) {
         if (!ctx.caster().onGround()) return false;
@@ -35,27 +39,18 @@ public class LightningPulse extends Spell {
         List<LivingEntity> targets = EntityUtil.getLivingWithinRadius(radius, ctx.caster().getX(), ctx.caster().getY(), ctx.caster().getZ(), ctx.world());
         targets.removeIf(t -> !AllyDesignation.isValidTarget(ctx.caster(), t));
         for (LivingEntity target : targets) {
+            if (ctx.world().isClientSide()) continue;
             target.hurt(
                     MagicDamageSource.causeDirectMagicDamage(ctx.caster(), EBDamageSources.SHOCK),
                     ctx.modifiers().get(SpellModifiers.POTENCY, property(DefaultProperties.DAMAGE))
             );
 
-            if (!ctx.world().isClientSide()) {
-                double dx = target.getX() - ctx.caster().getX();
-                double dz = target.getZ() - ctx.caster().getZ();
-                double vectorLength = Math.sqrt(dx * dx + dz * dz);
-                dx /= vectorLength;
-                dz /= vectorLength;
-
-                target.setDeltaMovement(
-                        property(REPULSION_VELOCITY) * dx,
-                        0,
-                        property(REPULSION_VELOCITY) * dz
-                );
-
-                if (target instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(target));
-                }
+            var outward = target.position().subtract(ctx.caster().position()).multiply(1, 0, 1)
+                    .normalize().scale(property(REPULSION_VELOCITY));
+            target.setDeltaMovement(outward);
+            target.hurtMarked = true;
+            if (target instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(target));
             }
         }
 
@@ -66,7 +61,12 @@ public class LightningPulse extends Spell {
                     .spawn(ctx.world());
         }
 
-        this.playSound(ctx.world(), ctx.caster(), ctx.castingTicks(), -1);
+        if (!ctx.world().isClientSide()) {
+            ctx.world().playSound(null, ctx.caster(), com.binaris.wizardry.setup.registries.EBSounds.SPELL_LIGHTNING_PULSE_SPARK.get(),
+                    net.minecraft.sounds.SoundSource.PLAYERS, 2, 1);
+            ctx.world().playSound(null, ctx.caster(), com.binaris.wizardry.setup.registries.EBSounds.SPELL_LIGHTNING_PULSE_EXPLOSION.get(),
+                    net.minecraft.sounds.SoundSource.PLAYERS, 2, 1);
+        }
         return true;
     }
 
@@ -77,7 +77,6 @@ public class LightningPulse extends Spell {
                 .add(DefaultProperties.DAMAGE, 8.0F)
                 .add(DefaultProperties.EFFECT_RADIUS, 3)
                 .add(REPULSION_VELOCITY)
-                .add(DefaultProperties.SENSIBLE, true)
                 .build();
     }
 }

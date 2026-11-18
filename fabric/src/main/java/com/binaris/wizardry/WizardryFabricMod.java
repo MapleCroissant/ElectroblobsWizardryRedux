@@ -51,6 +51,7 @@ public final class WizardryFabricMod implements ModInitializer {
         // Banner patterns are loaded from data/ebwizardry/banner_pattern in 1.21.
         EBEntities.register(Registry::register);
         EBEntities.registerAttributes(FabricDefaultAttributeRegistry::register);
+        com.binaris.wizardry.content.item.ScrollDispenseBehavior.register();
         BookshelfMenu.initBookItems();
 
         SpellTiers.register(EBRegistriesFabric.TIERS, Registry::register);

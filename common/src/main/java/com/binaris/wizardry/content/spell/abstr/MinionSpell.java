@@ -137,7 +137,11 @@ public class MinionSpell<T extends Mob> extends Spell {
 
         if (!ctx.world().isClientSide) {
             for (int i = 0; i < property(DefaultProperties.MINION_COUNT); i++) {
-                T minion = minionFactory.apply(ctx.world());
+                T minion = createMinion(ctx.world(), null, ctx.modifiers());
+                MinionData data = Services.OBJECT_DATA.getMinionData(minion);
+                data.setSummoned(true);
+                data.setShouldFollowOwner(false);
+                data.setSearchNearbyTargets(false);
                 minion.setPos(ctx.pos().getX() + 0.5, ctx.pos().getY(), ctx.pos().getZ() + 0.5);
                 setLifetime(minion, (int) (ctx.modifiers().get(SpellModifiers.DURATION, property(DefaultProperties.MINION_LIFETIME).floatValue())));
                 this.addMinionExtras(minion, ctx, i);

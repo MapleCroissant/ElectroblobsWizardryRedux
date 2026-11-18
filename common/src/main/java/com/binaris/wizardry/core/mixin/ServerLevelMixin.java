@@ -11,6 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin {
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void ebwizardry$tickDispenserSpells(java.util.function.BooleanSupplier hasTime,
+                                                org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        com.binaris.wizardry.content.item.ScrollDispenseBehavior.tick((ServerLevel) (Object) this);
+    }
+
     @Inject(method = "addFreshEntity", at = @At("HEAD"), cancellable = true)
     public void EBWIZARDRY$addEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         boolean result = WizardryEventBus.fireEvent(new EBEntityJoinLevelEvent(entity, (ServerLevel) (Object) this));

@@ -181,7 +181,7 @@ public abstract class RaySpell extends Spell {
     public boolean cast(LocationCastContext ctx) {
         Vec3 vec = new Vec3(ctx.direction().step());
 
-        if (shootSpell(ctx, ctx.vec3(), vec)) return false;
+        if (!shootSpell(ctx, ctx.vec3(), vec)) return false;
         this.playSound(ctx.world(), ctx.x() - ctx.direction().getStepX(),
                 ctx.y() - ctx.direction().getStepY(), ctx.z() - ctx.direction().getStepZ(),
                 ctx.castingTicks(), ctx.duration());
@@ -244,7 +244,7 @@ public abstract class RaySpell extends Spell {
         if (rayTrace instanceof EntityHitResult entityHit) {
             flag = onEntityHit(ctx, entityHit, origin);
             if (flag) range = origin.distanceTo(rayTrace.getLocation());
-        } else if (rayTrace instanceof BlockHitResult blockHit) {
+        } else if (rayTrace instanceof BlockHitResult blockHit && blockHit.getType() == HitResult.Type.BLOCK) {
             flag = onBlockHit(ctx, blockHit, origin);
             range = origin.distanceTo(rayTrace.getLocation());
         }

@@ -25,6 +25,9 @@ public final class EBForgeNetwork {
         register(registrar, SpellGlyphPacketS2C.ID, SpellGlyphPacketS2C::new, true);
         register(registrar, SpellPropertiesSyncS2C.ID, SpellPropertiesSyncS2C::new, true);
         register(registrar, NPCSpellCastS2C.ID, NPCSpellCastS2C::new, true);
+        register(registrar, SelectLecternSpellC2S.ID, SelectLecternSpellC2S::new, false);
+        register(registrar, OpenLecternS2C.ID, OpenLecternS2C::new, true);
+        register(registrar, DispenserCastS2C.ID, DispenserCastS2C::new, true);
         register(registrar, SpellCastS2C.ID, SpellCastS2C::new, true);
         register(registrar, ScreenShakeS2C.ID, ScreenShakeS2C::new, true);
         register(registrar, ParticleBuilderS2C.ID, ParticleBuilderS2C::new, true);

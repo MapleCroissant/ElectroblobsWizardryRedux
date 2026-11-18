@@ -37,7 +37,7 @@ public class RayOfPurification extends RaySpell {
         if (target.isInvertedHealAndHarm()) damage *= property(UNDEAD_DAMAGE_MULTIPLIER);
 
         EntityUtil.attackEntityWithoutKnockback(target,
-                MagicDamageSource.causeDirectMagicDamage(ctx.caster(), EBDamageSources.RADIANT), damage);
+                MagicDamageSource.causeDirectMagicDamage(ctx.world(), ctx.caster(), EBDamageSources.RADIANT), damage);
 
         if (!ctx.world().isClientSide) {
             target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,

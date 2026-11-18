@@ -5,6 +5,7 @@ import com.binaris.wizardry.api.content.util.ItemData;
 import com.binaris.wizardry.api.client.util.ClientUtils;
 import com.binaris.wizardry.api.content.data.WizardData;
 import com.binaris.wizardry.api.content.event.SpellCastEvent;
+import com.binaris.wizardry.api.content.event.WandManaRegenEvent;
 import com.binaris.wizardry.api.content.item.*;
 import com.binaris.wizardry.api.content.spell.Element;
 import com.binaris.wizardry.api.content.spell.Spell;
@@ -71,8 +72,9 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
         if (spell == Spells.NONE) return InteractionResultHolder.pass(stack);
 
         PlayerCastContext ctx = createContext(level, player, hand, 0, stack, spell);
+        WizardryEventBus.fireEvent(new SpellCastEvent.Prepare(SpellCastEvent.Sources.WAND, spell, ctx));
         if (!canCastRequirements(stack, spell, ctx)) return InteractionResultHolder.fail(stack);
-        int charge = CastItemUtils.calcCharge(spell, ctx.modifiers());
+        int charge = Math.max(0, CastItemUtils.calcCharge(spell, ctx.modifiers()));
 
         return startCharging(level, player, hand, stack, charge, ctx);
     }
@@ -84,7 +86,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
         Spell spell = CastItemDataHelper.getCurrentSpell(stack);
         SpellModifiers modifiers = Services.OBJECT_DATA.getWizardData(player).getSpellModifiers();
         int useTick = stack.getUseDuration(user) - timeLeft;
-        int charge = CastItemUtils.calcCharge(spell, modifiers);
+        int charge = Math.max(0, CastItemUtils.calcCharge(spell, modifiers));
 
         int castingTick;
         if (spell.isInstantCast()) {
@@ -122,7 +124,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
 
     @Override
     public boolean cast(ItemStack stack, Spell spell, PlayerCastContext ctx) {
-        if (ctx.world().isClientSide && spell.isInstantCast() && spell.requiresPacket()) return false;
+        if (ctx.world().isClientSide && spell.requiresPacket()) return false;
         if (!CastItemUtils.executeSpellCast(SpellCastEvent.Sources.WAND, spell, ctx)) return false;
 
         CastItemUtils.sendSpellCastPacket(ctx.caster(), spell, ctx);
@@ -130,6 +132,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
 
         handleProgression(ctx, spell, stack);
         if (spell.isInstantCast()) CastItemUtils.trackSpellUsage(ctx.caster(), spell);
+        CastItemUtils.recordItemCast(SpellCastEvent.Sources.WAND, spell, ctx, stack);
         return true;
     }
 
@@ -166,8 +169,12 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
 
             if (!level.isClientSide) {
                 this.consumeMana(stack, accumulatedCost, player);
-                if (!player.isCreative()) CastItemDataHelper.setCurrentCooldown(stack, totalCost, level.getGameTime());
+                if (!player.isCreative()) {
+                    int cooldown = CastItemUtils.adjustItemCooldown(SpellCastEvent.Sources.WAND, spell, ctx, totalCost);
+                    CastItemDataHelper.setCurrentCooldown(stack, cooldown, level.getGameTime());
+                }
                 CastItemUtils.trackSpellUsage(player, spell);
+                CastItemUtils.completeChannel(SpellCastEvent.Sources.WAND, spell, ctx, stack);
             }
         }
     }
@@ -195,7 +202,13 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean isHeldInMainHand) {
         if (!world.isClientSide && !this.isManaFull(stack) && world.getGameTime() % EBServerConfig.CONDENSER_TICK_INTERVAL.get() == 0) {
-            this.rechargeMana(stack, CastItemDataHelper.getUpgradeLevel(stack, EBItems.CONDENSER_UPGRADE.get()));
+            int amount = CastItemDataHelper.getUpgradeLevel(stack, EBItems.CONDENSER_UPGRADE.get());
+            if (entity instanceof Player player) {
+                var event = new WandManaRegenEvent(player, stack, amount);
+                WizardryEventBus.fireEvent(event);
+                amount = event.getAmount();
+            }
+            this.rechargeMana(stack, Math.min(amount, getManaCapacity(stack) - getMana(stack)));
         }
     }
 
@@ -216,7 +229,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
 
         if (canCast(stack, spell, ctx)) {
             if (!ctx.world().isClientSide) {
-                consumeManaAndSetCooldown(stack, spell, ctx.caster(), ctx.modifiers());
+                consumeManaAndSetCooldown(stack, spell, ctx);
             }
             cast(stack, spell, ctx);
         } else {
@@ -256,6 +269,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     /// @return An InteractionResultHolder indicating success or failure of starting the charge
     private InteractionResultHolder<ItemStack> startCharging(Level level, Player player, InteractionHand hand, ItemStack stack, int charge, PlayerCastContext ctx) {
         if (!player.isUsingItem()) {
+            CastItemUtils.resetItemCast(player);
             player.startUsingItem(hand);
             Services.OBJECT_DATA.getWizardData(player).setSpellModifiers(ctx.modifiers());
             if (charge > 0 && level.isClientSide) {
@@ -277,9 +291,13 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     /// @param spell  The spell being cast
     /// @return A PlayerCastContext with the appropriate modifiers
     protected PlayerCastContext createContext(Level level, Player player, InteractionHand hand, int tick, ItemStack stack, Spell spell) {
-        SpellModifiers modifiers = tick == 0
-                ? CastItemUtils.calculateModifiers(stack, player, spell)
-                : Services.OBJECT_DATA.getWizardData(player).getSpellModifiers();
+        SpellModifiers modifiers;
+        if (!player.isUsingItem()) {
+            modifiers = CastItemUtils.calculateModifiers(stack, player, spell);
+        } else {
+            modifiers = Services.OBJECT_DATA.getWizardData(player).getSpellModifiers();
+            if (tick == 0) modifiers = new SpellModifiers().combine(modifiers);
+        }
         return new PlayerCastContext(level, player, hand, tick, modifiers);
     }
 
@@ -287,14 +305,15 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     ///
     /// @param stack     The wand item stack
     /// @param spell     The spell being cast
-    /// @param player    The player casting the spell
-    /// @param modifiers The spell modifiers affecting the cast
-    private void consumeManaAndSetCooldown(ItemStack stack, Spell spell, Player player, SpellModifiers modifiers) {
-        int cost = CastItemUtils.calcCastCost(spell, modifiers);
-        consumeMana(stack, cost, player);
+    /// @param ctx      The current cast context
+    private void consumeManaAndSetCooldown(ItemStack stack, Spell spell, PlayerCastContext ctx) {
+        int cost = CastItemUtils.calcCastCost(spell, ctx.modifiers());
+        consumeMana(stack, cost, ctx.caster());
 
-        if (!player.isCreative()) {
-            CastItemDataHelper.setCurrentCooldown(stack, CastItemUtils.calcCastCooldown(spell, modifiers), player.level().getGameTime());
+        if (!ctx.caster().isCreative()) {
+            int base = CastItemUtils.calcCastCooldown(spell, ctx.modifiers());
+            int cooldown = CastItemUtils.adjustItemCooldown(SpellCastEvent.Sources.WAND, spell, ctx, base);
+            CastItemDataHelper.setCurrentCooldown(stack, cooldown, ctx.world().getGameTime());
         }
     }
 
@@ -462,7 +481,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
 
     @Override
     public int getCustomMaxDamage(ItemStack stack) {
-        return (int) (this.components().getOrDefault(net.minecraft.core.component.DataComponents.MAX_DAMAGE, 0) * (1.0f + EBServerConfig.STORAGE_INCREASE_PER_LEVEL.get() * CastItemDataHelper.getUpgradeLevel(stack, EBItems.STORAGE_UPGRADE.get())) + 0.5f);
+        return (int) (stack.getOrDefault(net.minecraft.core.component.DataComponents.MAX_DAMAGE, 0) * (1.0f + EBServerConfig.STORAGE_INCREASE_PER_LEVEL.get() * CastItemDataHelper.getUpgradeLevel(stack, EBItems.STORAGE_UPGRADE.get())) + 0.5f);
     }
 
     @Override

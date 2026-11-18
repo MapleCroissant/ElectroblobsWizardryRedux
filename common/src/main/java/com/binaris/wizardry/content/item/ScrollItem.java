@@ -54,7 +54,9 @@ public class ScrollItem extends Item implements ICastItem, IWorkbenchItem {
         SpellModifiers modifiers = new SpellModifiers();
         PlayerCastContext ctx = new PlayerCastContext(level, player, hand, 0, modifiers);
 
+        WizardryEventBus.fireEvent(new SpellCastEvent.Prepare(SpellCastEvent.Sources.SCROLL, spell, ctx));
         if (!canCast(stack, spell, ctx)) return InteractionResultHolder.fail(stack);
+        CastItemUtils.resetItemCast(player);
 
         if (!spell.isInstantCast()) {
             Services.OBJECT_DATA.getWizardData(player).setSpellModifiers(modifiers);
@@ -79,14 +81,16 @@ public class ScrollItem extends Item implements ICastItem, IWorkbenchItem {
         if (!(livingEntity instanceof Player player)) return;
 
         Spell spell = RegistryUtils.getSpell(stack);
-        int castingTick = stack.getUseDuration(livingEntity) - timeLeft - 1;
+        int castingTick = stack.getUseDuration(livingEntity) - timeLeft;
 
         PlayerCastContext ctx = new PlayerCastContext(level, player, player.getUsedItemHand(), castingTick,
                 Services.OBJECT_DATA.getWizardData(player).getSpellModifiers());
 
         if (!spell.isInstantCast()) {
             if (canCast(stack, spell, ctx)) {
-                cast(stack, spell, ctx);
+                if ((!level.isClientSide || !spell.requiresPacket()) && cast(stack, spell, ctx)) {
+                    CastItemUtils.sendSpellCastPacket(player, spell, ctx);
+                }
             } else {
                 livingEntity.stopUsingItem();
             }
@@ -108,9 +112,12 @@ public class ScrollItem extends Item implements ICastItem, IWorkbenchItem {
 
         if (spell.isInstantCast() && !ctx.caster().isCreative()) {
             stack.shrink(1);
-            ctx.caster().getCooldowns().addCooldown(this, CastItemUtils.calcCastCooldown(spell, ctx.modifiers()));
+            int base = CastItemUtils.calcCastCooldown(spell, ctx.modifiers());
+            int cooldown = CastItemUtils.adjustItemCooldown(SpellCastEvent.Sources.SCROLL, spell, ctx, base);
+            ctx.caster().getCooldowns().addCooldown(this, cooldown);
         }
 
+        CastItemUtils.recordItemCast(SpellCastEvent.Sources.SCROLL, spell, ctx, stack);
         return true;
     }
 
@@ -121,17 +128,19 @@ public class ScrollItem extends Item implements ICastItem, IWorkbenchItem {
         if (!world.isClientSide) CastItemUtils.trackSpellUsage(player, spell);
         if (spell.isInstantCast()) return;
 
-        if (!player.isCreative()) {
-            stack.shrink(1);
-            player.getCooldowns().addCooldown(this, spell.getCooldown());
-        }
-
         int castingTick = stack.getUseDuration(entity) - timeCharged;
         SpellModifiers modifiers = wizardData.getSpellModifiers();
-
         CastContext ctx = new CastContext(world, entity, castingTick, modifiers);
+
+        if (!player.isCreative()) {
+            stack.shrink(1);
+            int cooldown = CastItemUtils.adjustItemCooldown(SpellCastEvent.Sources.SCROLL, spell, ctx, spell.getCooldown());
+            player.getCooldowns().addCooldown(this, cooldown);
+        }
+
         WizardryEventBus.fireEvent(new SpellCastEvent.Finish(SpellCastEvent.Sources.SCROLL, spell, ctx));
         spell.endCast(ctx);
+        CastItemUtils.completeChannel(SpellCastEvent.Sources.SCROLL, spell, ctx, stack);
     }
 
     @Override

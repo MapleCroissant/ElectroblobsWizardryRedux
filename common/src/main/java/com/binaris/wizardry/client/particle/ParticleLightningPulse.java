@@ -10,10 +10,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ParticleLightningPulse extends ParticleWizardry {
+public class ParticleLightningPulse extends UnoccludedSpellParticle {
     public ParticleLightningPulse(ClientLevel world, double x, double y, double z, SpriteSet spriteProvider) {
         super(world, x, y, z, spriteProvider, true);
-        this.quadSize = 6f;
+        this.quadSize = 3.2f;
         this.setColor(1, 1, 1);
         this.shaded = false;
         this.hasPhysics = false;

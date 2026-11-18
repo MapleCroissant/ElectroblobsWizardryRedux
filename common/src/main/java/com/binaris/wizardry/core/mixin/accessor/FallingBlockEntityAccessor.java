@@ -5,9 +5,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(FallingBlockEntity.class)
 public interface FallingBlockEntityAccessor {
+    @Accessor("blockState")
+    void ebwizardry$setCarriedState(BlockState state);
+
     @Invoker("<init>")
     static FallingBlockEntity createFallingBlockEntity(Level level, double x, double y, double z, BlockState state) {
         // This method body is ignored, the implementation is provided by Mixin

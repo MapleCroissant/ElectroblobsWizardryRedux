@@ -43,7 +43,7 @@ public class GuardianBeam extends RaySpell {
 
             if (ctx.castingTicks() % 50 == 1) {
                 EntityUtil.attackEntityWithoutKnockback(livingEntity,
-                        MagicDamageSource.causeDirectMagicDamage(ctx.caster(), EBDamageSources.MAGIC),
+                        MagicDamageSource.causeDirectMagicDamage(ctx.world(), ctx.caster(), EBDamageSources.MAGIC),
                         property(DefaultProperties.DAMAGE) * ctx.modifiers().getFactor(SpellModifiers.POTENCY));
 
                 if (!livingEntity.canBreatheUnderwater() && !livingEntity.hasEffect(MobEffects.WATER_BREATHING)) {

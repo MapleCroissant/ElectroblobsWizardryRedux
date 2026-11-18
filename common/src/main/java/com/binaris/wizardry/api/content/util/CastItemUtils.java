@@ -6,7 +6,9 @@ import com.binaris.wizardry.api.content.event.SpellCastEvent;
 import com.binaris.wizardry.api.content.item.IElementValue;
 import com.binaris.wizardry.api.content.item.ITierValue;
 import com.binaris.wizardry.api.content.spell.Spell;
+import com.binaris.wizardry.api.content.spell.internal.CastContext;
 import com.binaris.wizardry.api.content.spell.internal.PlayerCastContext;
+import com.binaris.wizardry.core.ActiveItemCast;
 import com.binaris.wizardry.api.content.spell.internal.SpellModifiers;
 import com.binaris.wizardry.core.config.EBServerConfig;
 import com.binaris.wizardry.core.event.WizardryEventBus;
@@ -72,14 +74,43 @@ public final class CastItemUtils {
         return true;
     }
 
-    /// Sends spell cast packet to other clients if needed (for non-instant spells).
+    /// Clears a previously interrupted channel when starting another item cast.
+    public static void resetItemCast(Player player) {
+        if (!player.level().isClientSide) ((ActiveItemCast) player).ebwizardry$setItemCast(null);
+    }
+
+    /// Records a successful item cast. Channel ticks update the same pending attempt.
+    public static void recordItemCast(SpellCastEvent.Source source, Spell spell, PlayerCastContext ctx, ItemStack stack) {
+        if (ctx.world().isClientSide) return;
+        if (spell.isInstantCast()) {
+            WizardryEventBus.fireEvent(new SpellCastEvent.Completed(source, spell, ctx));
+        } else if (ctx.caster().isUsingItem() && ctx.caster().getUseItem() == stack) {
+            ActiveItemCast state = (ActiveItemCast) ctx.caster();
+            ActiveItemCast.Attempt attempt = state.ebwizardry$getItemCast();
+            if (attempt == null || attempt.source() != source || attempt.spell() != spell || attempt.stack() != stack) {
+                state.ebwizardry$setItemCast(new ActiveItemCast.Attempt(source, spell, stack));
+            }
+        }
+    }
+
+    /// Consumes the successful channel record before firing the completion event.
+    public static void completeChannel(SpellCastEvent.Source source, Spell spell, CastContext ctx, ItemStack stack) {
+        if (ctx.world().isClientSide || !(ctx.caster() instanceof ActiveItemCast state)) return;
+        ActiveItemCast.Attempt attempt = state.ebwizardry$getItemCast();
+        if (attempt == null || attempt.source() != source || attempt.spell() != spell || attempt.stack() != stack) return;
+
+        state.ebwizardry$setItemCast(null);
+        WizardryEventBus.fireEvent(new SpellCastEvent.Completed(source, spell, ctx));
+    }
+
+    /// Sends an accepted cast tick to clients for effects and animation.
     ///
     /// @param caster The player casting the spell
     /// @param spell  The spell being cast
     /// @param ctx    The casting context
     public static void sendSpellCastPacket(Player caster, Spell spell, PlayerCastContext ctx) {
         if (!ctx.world().isClientSide && spell.requiresPacket()) {
-            SpellCastS2C msg = new SpellCastS2C(caster.getId(), ctx.hand(), spell, ctx.modifiers());
+            SpellCastS2C msg = new SpellCastS2C(caster.getId(), ctx.hand(), spell, ctx.modifiers(), ctx.castingTicks());
             Services.NETWORK_HELPER.sendToDimension(ctx.world().getServer(), msg, ctx.world().dimension());
         }
     }
@@ -191,6 +222,13 @@ public final class CastItemUtils {
     /// @return The calculated cooldown
     public static int calcCastCooldown(Spell spell, SpellModifiers modifiers) {
         return (int) (modifiers.get(SpellModifiers.COOLDOWN, spell.getCooldown()));
+    }
+
+    /// Gives item cooldown listeners the result of the calling item's normal calculation.
+    public static int adjustItemCooldown(SpellCastEvent.Source source, Spell spell, CastContext ctx, int ticks) {
+        var event = new SpellCastEvent.Cooldown(source, spell, ctx, ticks);
+        WizardryEventBus.fireEvent(event);
+        return event.getTicks();
     }
 
     /// Calculates the mana cost of a spell based on its base cost and the given spell modifiers.

@@ -263,6 +263,8 @@ public final class EBSounds {
     public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_DISC = sound("spell.lightning_disc");
     public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_HAMMER = sound("spell.lightning_hammer");
     public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_PULSE = sound("spell.lightning_pulse");
+    public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_PULSE_SPARK = sound("spell.lightning_pulse.spark");
+    public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_PULSE_EXPLOSION = sound("spell.lightning_pulse.explosion");
     public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_RAY_START = sound("spell.lightning_ray.start");
     public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_RAY_LOOP = sound("spell.lightning_ray.loop");
     public static final DeferredObject<SoundEvent> SPELL_LIGHTNING_RAY_END = sound("spell.lightning_ray.end");

@@ -53,6 +53,14 @@ public final class EBBlockEntities {
             () -> BlockEntityType.Builder.of(SpectralBlockEntity::new, EBBlocks.SPECTRAL_BLOCK.get()).build(null)
     );
 
+    public static final DeferredObject<BlockEntityType<MagicLightBlockEntity>> MAGIC_LIGHT = blockEntity(
+            "magic_light", () -> BlockEntityType.Builder.of(MagicLightBlockEntity::new, EBBlocks.MAGIC_LIGHT.get()).build(null));
+
+    public static final DeferredObject<BlockEntityType<LecternBlockEntity>> LECTERN = blockEntity(
+            "lectern", () -> BlockEntityType.Builder.of(LecternBlockEntity::new,
+                    EBBlocks.OAK_LECTERN.get(), EBBlocks.SPRUCE_LECTERN.get(), EBBlocks.BIRCH_LECTERN.get(),
+                    EBBlocks.JUNGLE_LECTERN.get(), EBBlocks.ACACIA_LECTERN.get(), EBBlocks.DARK_OAK_LECTERN.get()).build(null));
+
     public static final DeferredObject<BlockEntityType<BookshelfBlockEntity>> BOOKSHELF = blockEntity(
             "bookshelf", () -> BlockEntityType.Builder.of(BookshelfBlockEntity::new,
                             EBBlocks.OAK_BOOKSHELF.get(), EBBlocks.SPRUCE_BOOKSHELF.get(), EBBlocks.BIRCH_BOOKSHELF.get(),

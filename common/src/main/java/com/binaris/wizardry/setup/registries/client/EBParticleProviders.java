@@ -37,6 +37,8 @@ public final class EBParticleProviders {
         registerParticle(EBParticles.SPHERE, ParticleSphere.SphereProvider::createParticle, ParticleSphere.SphereProvider::new);
         registerParticle(EBParticles.FLASH, ParticleFlash.FlashProvider::createParticle, ParticleFlash.FlashProvider::new);
 
+        registerParticle(EBParticles.BLOCK_HIGHLIGHT, ParticleBlockHighlight.Provider::create, ParticleBlockHighlight.Provider::new);
+
         // Deprecated particles
         registerParticle(EBParticles.SCORCH, ParticleScorch.ScorchProvider::createParticle, ParticleScorch.ScorchProvider::new);
         registerParticle(EBParticles.PATH, ParticlePath.PathProvider::createParticle, ParticlePath.PathProvider::new);
