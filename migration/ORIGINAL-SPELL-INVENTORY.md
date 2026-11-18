@@ -44,7 +44,7 @@ Reference: [Electroblob's Wizardry 4.3.19, Minecraft 1.12.2](https://github.com/
 | `ebwizardry:mine` | earth | novice | 5 / 0 / 5 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:mirage` | sorcery | advanced | 40 / 10 / 200 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:muffle` | sorcery | novice | 5 / 0 / 25 | Missing. No corresponding Redux spell registration. |
-| `ebwizardry:paralysis` | lightning | advanced | 20 / 10 / 60 | Missing spell. The paralysis status effect already exists. |
+| `ebwizardry:paralysis` | lightning | advanced | 20 / 10 / 60 | Restored with the existing status effect, shock ray, shorter player duration, and critical-hit release. |
 | `ebwizardry:petrify` | sorcery | advanced | 40 / 20 / 100 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:possession` | necromancy | master | 100 / 15 / 300 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:radiant_totem` | healing | advanced | 40 / 15 / 175 | Missing. No corresponding Redux spell registration. |
@@ -61,10 +61,10 @@ Reference: [Electroblob's Wizardry 4.3.19, Minecraft 1.12.2](https://github.com/
 | `ebwizardry:summon_ice_wraith` | ice | advanced | 40 / 10 / 200 | Restored under the original ID with the existing ice wraith entity. |
 | `ebwizardry:summon_iron_golem` | sorcery | master | 175 / 20 / 400 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:summon_phoenix` | fire | master | 150 / 20 / 400 | Missing. No corresponding Redux spell registration. |
-| `ebwizardry:summon_shadow_wraith` | necromancy | master | 100 / 20 / 400 | Missing spell. A shadow wraith entity already exists. |
+| `ebwizardry:summon_shadow_wraith` | necromancy | master | 100 / 20 / 400 | Restored with the existing particle-based shadow wraith, Darkness Orb attack, and 600-tick lifetime. |
 | `ebwizardry:summon_spirit_horse` | earth | advanced | 50 / 10 / 150 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:summon_spirit_wolf` | earth | apprentice | 25 / 0 / 100 | Missing. No corresponding Redux spell registration. |
-| `ebwizardry:summon_storm_elemental` | lightning | master | 100 / 20 / 400 | Missing spell. A storm elemental entity already exists. |
+| `ebwizardry:summon_storm_elemental` | lightning | master | 100 / 20 / 400 | Restored with the existing particle-based storm elemental, its original seeking-disc attack, and 600-tick lifetime. |
 | `ebwizardry:thunderstorm` | lightning | master | 100 / 20 / 250 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:transience` | healing | advanced | 50 / 15 / 100 | Missing. No corresponding Redux spell registration. |
 | `ebwizardry:transportation` | sorcery | advanced | 100 / 20 / 100 | Missing. No corresponding Redux spell registration. |
@@ -118,9 +118,9 @@ Reference: [Electroblob's Wizardry 4.3.19, Minecraft 1.12.2](https://github.com/
 
 ## Remaining work
 
-51 spells lack a corresponding casting implementation. Silverfish Swarm and
+48 spells lack a corresponding casting implementation. Silverfish Swarm and
 the renamed Conjure Armour are development-gated. Greater Telekinesis is
-release-playable with a block-entity parity gap. Together, 54 of the 64
+release-playable with a block-entity parity gap. Together, 51 of the 64
 tracked entries have open implementation or release work. See
 [Restoration progress](../RESTORATION-PROGRESS.md) for the full registry count,
 per-spell estimates, and verification-only work. Direct 1.12.2 save conversion and uninterrupted channel resumption after chunk unload
@@ -163,3 +163,8 @@ verification across all restored spells is still open.
   Curios, and Accessories profiles. The packaged dedicated server completed
   100 ticks, and the Fabric Java sources compiled. See the telekinesis logs
   under build for the individual runs.
+- The three-spell follow-up restored Paralysis, Summon Shadow Wraith,
+  and Summon Storm Elemental. All 55 packaged GameTests passed. The three
+  original spell definitions and icons were checked in the JAR. The client
+  booted with the new look-lock mixin. Interactive verification of this
+  batch’s visuals, audio, player movement, and multiplayer remains open.

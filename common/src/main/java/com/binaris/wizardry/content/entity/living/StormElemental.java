@@ -1,11 +1,17 @@
 package com.binaris.wizardry.content.entity.living;
 
 import com.binaris.wizardry.api.client.ParticleBuilder;
-import com.binaris.wizardry.content.entity.goal.BlazeLikeSpellAttackGoal;
+import com.binaris.wizardry.api.content.util.EntityUtil;
+import com.binaris.wizardry.content.entity.projectile.LightningDiscEntity;
+import com.binaris.wizardry.setup.registries.EBDamageSources;
 import com.binaris.wizardry.core.mixin.accessor.MobGoalsAccessor;
 import com.binaris.wizardry.setup.registries.EBEntities;
 import com.binaris.wizardry.setup.registries.EBSounds;
-import com.binaris.wizardry.setup.registries.Spells;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import com.binaris.wizardry.setup.registries.client.EBParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +31,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.NotNull;
 
 
-public class StormElemental extends Blaze {
+public class StormElemental extends Blaze implements RangedAttackMob {
 
     public StormElemental(EntityType<? extends Blaze> entityType, Level level) {
         super(entityType, level);
@@ -129,13 +135,56 @@ public class StormElemental extends Blaze {
     }
 
     @Override
+    public void performRangedAttack(LivingEntity target, float distanceFactor) {
+        var disc = new LightningDiscEntity(EBEntities.LIGHTNING_DISC.get(), level());
+        disc.setOwner(this);
+        var start = getEyePosition().add(0, -0.25, 0);
+        var direction = target.getBoundingBox().getCenter().subtract(start);
+        disc.setPos(start.add(direction.normalize()));
+        disc.shoot(direction.x, direction.y, direction.z, 1, EntityUtil.getDefaultAimingError(level().getDifficulty()));
+        if (level().addFreshEntity(disc)) {
+            playSound(EBSounds.SPELL_LIGHTNING_DISC.get(), 1, 0.95f / (random.nextFloat() * 0.3f + 0.85f));
+        }
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return source.is(EBDamageSources.SHOCK) || super.isInvulnerableTo(source);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return EBSounds.ENTITY_STORM_ELEMENTAL_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return EBSounds.ENTITY_STORM_ELEMENTAL_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return EBSounds.ENTITY_STORM_ELEMENTAL_DEATH.get();
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.removeAllGoals((goal) -> true);
         this.targetSelector.removeAllGoals((goal) -> true);
 
-        // TODO LIGHTNING DISC
-        this.goalSelector.addGoal(4, new BlazeLikeSpellAttackGoal(this, Spells.LIGHTNING_ARROW));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1, false) {
+            @Override
+            public boolean canUse() {
+                return getTarget() != null && distanceToSqr(getTarget()) < 4 && super.canUse();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return getTarget() != null && distanceToSqr(getTarget()) < 4 && super.canContinueToUse();
+            }
+        });
+        this.goalSelector.addGoal(4, new RangedAttackGoal(this, 1, 90, 15));
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 1.0F));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0F, 0.0F));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));

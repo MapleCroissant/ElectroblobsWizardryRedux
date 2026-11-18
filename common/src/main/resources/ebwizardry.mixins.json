@@ -15,6 +15,7 @@
     "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "MobParalysisMixin",
     "MobEffectInstanceMixin",
     "PersistentEntitySectionManagerMixin",
     "PlayerMixin",
@@ -46,6 +47,7 @@
     "client.GuiMixin",
     "client.ItemInHandRendererMixin",
     "client.LocalPlayerMixin",
+    "client.ParalysisLookMixin",
     "client.MouseHandlerMixin",
     "client.LivingEntityRendererMixin"
   ],

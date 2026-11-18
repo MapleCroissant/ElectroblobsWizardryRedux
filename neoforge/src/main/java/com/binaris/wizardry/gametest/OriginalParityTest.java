@@ -30,6 +30,99 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @PrefixGameTestTemplate(false)
 public class OriginalParityTest {
     @GameTest(template = "empty_3x3x3")
+    public static void paralysisDealsShockAndBreaksOnCriticalDamage(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var feet = helper.absolutePos(new BlockPos(1, 1, 1));
+        var target = net.minecraft.world.entity.EntityType.COW.create(level);
+        target.setPos(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+        level.addFreshEntity(target);
+        var context = new com.binaris.wizardry.api.content.spell.internal.LocationCastContext(level,
+                target.getX() - 1, target.getY() + 1, target.getZ(), Direction.EAST, 0, 0, new SpellModifiers());
+
+        helper.assertTrue(Services.REGISTRY_UTIL.getSpell(Spells.PARALYSIS.getLocation()) == Spells.PARALYSIS,
+                "Paralysis is absent from the runtime registry");
+        helper.assertTrue(Spells.PARALYSIS.cast(context), "Paralysis did not cast");
+        helper.assertTrue(target.getHealth() == 6 && target.hasEffect(EBMobEffects.PARALYSIS.get())
+                        && target.getEffect(EBMobEffects.PARALYSIS.get()).getDuration() == 100,
+                "Paralysis did not deal four shock damage and apply the 100-tick effect. Health was " + target.getHealth() + ", effect was " + target.getEffect(EBMobEffects.PARALYSIS.get()));
+        target.setHealth(6);
+        target.invulnerableTime = 0;
+        target.hurt(level.damageSources().magic(), 2);
+        helper.assertTrue(!target.hasEffect(EBMobEffects.PARALYSIS.get()),
+                "Critical damage did not break paralysis");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty_3x3x3")
+    public static void shadowWraithSummonHasOriginalTypeAndLifetime(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var origin = net.minecraft.world.phys.Vec3.atCenterOf(helper.absolutePos(new BlockPos(1, 1, 1)));
+        var context = new com.binaris.wizardry.api.content.spell.internal.LocationCastContext(level,
+                origin.x, origin.y, origin.z, Direction.EAST, 0, 0, new SpellModifiers());
+        var type = com.binaris.wizardry.setup.registries.EBEntities.SHADOW_WRAITH.get();
+
+        helper.assertTrue(Services.REGISTRY_UTIL.getSpell(Spells.SUMMON_SHADOW_WRAITH.getLocation()) == Spells.SUMMON_SHADOW_WRAITH,
+                "Summon Shadow Wraith is absent from the runtime registry");
+        helper.assertTrue(Spells.SUMMON_SHADOW_WRAITH.cast(context), "Shadow Wraith location cast failed");
+        var wraiths = level.getEntities(type, new net.minecraft.world.phys.AABB(BlockPos.containing(origin)).inflate(2), mob -> true);
+        helper.assertTrue(wraiths.size() == 1, "Expected exactly one shadow wraith");
+        var wraith = wraiths.getFirst();
+        var data = Services.OBJECT_DATA.getMinionData(wraith);
+        helper.assertTrue(Services.OBJECT_DATA.isMinion(wraith) && data.getOwnerUUID() == null
+                        && data.getLifetime() == 600 && wraith.getMaxHealth() == 30,
+                "Shadow wraith did not retain original health and summon lifetime");
+        wraith.tickCount = 601;
+        data.tick();
+        helper.assertTrue(wraith.isRemoved(), "Shadow wraith persisted past its summon lifetime");
+        helper.succeed();
+    }
+    @GameTest(template = "empty_3x3x3")
+    public static void stormElementalSummonsAndFiresSeekingShockDisc(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var origin = net.minecraft.world.phys.Vec3.atCenterOf(helper.absolutePos(new BlockPos(1, 1, 1)));
+        var context = new com.binaris.wizardry.api.content.spell.internal.LocationCastContext(level,
+                origin.x, origin.y, origin.z, Direction.EAST, 0, 0, new SpellModifiers());
+        var area = new net.minecraft.world.phys.AABB(BlockPos.containing(origin)).inflate(5);
+        var type = com.binaris.wizardry.setup.registries.EBEntities.STORM_ELEMENTAL.get();
+
+        helper.assertTrue(Services.REGISTRY_UTIL.getSpell(Spells.SUMMON_STORM_ELEMENTAL.getLocation()) == Spells.SUMMON_STORM_ELEMENTAL,
+                "Summon Storm Elemental is absent from the runtime registry");
+        helper.assertTrue(Spells.SUMMON_STORM_ELEMENTAL.cast(context), "Storm Elemental location cast failed");
+        var summoned = level.getEntities(type, area, mob -> true);
+        helper.assertTrue(summoned.size() == 1, "Expected exactly one storm elemental");
+        var elemental = summoned.getFirst();
+        var data = Services.OBJECT_DATA.getMinionData(elemental);
+        helper.assertTrue(Services.OBJECT_DATA.isMinion(elemental) && data.getOwnerUUID() == null
+                        && data.getLifetime() == 600 && elemental.getMaxHealth() == 30,
+                "Storm elemental did not retain original health and summon lifetime");
+
+        var target = net.minecraft.world.entity.EntityType.ZOMBIE.create(level);
+        target.setPos(origin.add(1, 0, 0));
+        target.setOldPosAndRot();
+        level.addFreshEntity(target);
+        elemental.performRangedAttack(target, 1);
+        var discType = com.binaris.wizardry.setup.registries.EBEntities.LIGHTNING_DISC.get();
+        var discs = level.getEntities(discType, area, disc -> true);
+        helper.assertTrue(discs.size() == 1 && discs.getFirst().getOwner() == elemental,
+                "Storm elemental did not launch its owned Lightning Disc");
+        var disc = discs.getFirst();
+        var hit = new net.minecraft.world.phys.EntityHitResult(target);
+        helper.assertTrue(disc.getLifeTime() == 30 && disc.getSeekingStrength() == 5 && disc.isNoGravity()
+                        && disc.doOverpenetration() && disc.getDamage(hit) == 12
+                        && disc.getDamageType(hit) == com.binaris.wizardry.setup.registries.EBDamageSources.SHOCK,
+                "Lightning Disc changed its original attack properties");
+        var targetCenter = target.getBoundingBox().getCenter();
+        disc.setPos(targetCenter.add(-1, 0, 0));
+        disc.setDeltaMovement(1, 0, 0);
+        for (int tick = 0; tick < 6 && target.getHealth() == target.getMaxHealth() && !disc.isRemoved(); tick++) {
+            disc.tick();
+        }
+        helper.assertTrue(target.getHealth() < target.getMaxHealth() && !disc.isRemoved(),
+                "Lightning Disc did not damage its target and continue through it. Health " + target.getHealth() + ", removed " + disc.isRemoved());
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty_3x3x3")
     public static void lightCastsAtTheTargetAndExpires(GameTestHelper helper) {
         var level = helper.getLevel();
         var caster = helper.makeMockPlayer(GameType.SURVIVAL);

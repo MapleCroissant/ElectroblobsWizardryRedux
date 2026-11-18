@@ -1,13 +1,16 @@
 package com.binaris.wizardry.content.entity.living;
 
 import com.binaris.wizardry.api.client.ParticleBuilder;
-import com.binaris.wizardry.content.entity.goal.BlazeLikeSpellAttackGoal;
+import com.binaris.wizardry.api.content.entity.living.ISpellCaster;
+import com.binaris.wizardry.api.content.spell.Spell;
+import com.binaris.wizardry.content.entity.goal.AttackSpellBasicGoal;
 import com.binaris.wizardry.core.mixin.accessor.MobGoalsAccessor;
 import com.binaris.wizardry.setup.registries.EBEntities;
 import com.binaris.wizardry.setup.registries.EBSounds;
 import com.binaris.wizardry.setup.registries.Spells;
 import com.binaris.wizardry.setup.registries.client.EBParticles;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -24,7 +27,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.NotNull;
 
-public class ShadowWraith extends Blaze {
+import java.util.List;
+
+public class ShadowWraith extends Blaze implements ISpellCaster {
 
     public ShadowWraith(EntityType<? extends Blaze> entityType, Level level) {
         super(entityType, level);
@@ -113,6 +118,21 @@ public class ShadowWraith extends Blaze {
     }
 
     @Override
+    protected SoundEvent getAmbientSound() {
+        return EBSounds.ENTITY_SHADOW_WRAITH_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return EBSounds.ENTITY_SHADOW_WRAITH_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return EBSounds.ENTITY_SHADOW_WRAITH_DEATH.get();
+    }
+
+    @Override
     public boolean isOnFire() {
         return false;
     }
@@ -132,12 +152,18 @@ public class ShadowWraith extends Blaze {
     }
 
     @Override
+    public List<Spell> getSpells() {
+        return List.of(Spells.DARKNESS_ORB);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.removeAllGoals((goal) -> true);
         this.targetSelector.removeAllGoals((goal) -> true);
 
-        this.goalSelector.addGoal(4, new BlazeLikeSpellAttackGoal(this, Spells.DARKNESS_ORB));
+        this.goalSelector.addGoal(3, new AttackSpellBasicGoal<>(this, 15, 30, 0));
+        this.goalSelector.addGoal(4, new net.minecraft.world.entity.ai.goal.MeleeAttackGoal(this, 1, false));
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 1.0F));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0F, 0.0F));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));

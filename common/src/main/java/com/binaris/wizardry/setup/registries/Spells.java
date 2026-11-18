@@ -8,6 +8,8 @@ import com.binaris.wizardry.api.content.spell.SpellTypes;
 import com.binaris.wizardry.api.content.spell.properties.SpellProperties;
 import com.binaris.wizardry.content.entity.construct.*;
 import com.binaris.wizardry.content.entity.living.LightningWraith;
+import com.binaris.wizardry.content.entity.living.ShadowWraith;
+import com.binaris.wizardry.content.entity.living.StormElemental;
 import com.binaris.wizardry.content.entity.projectile.*;
 import com.binaris.wizardry.content.spell.necromancy.BlockWithSurprise;
 import com.binaris.wizardry.content.spell.DefaultProperties;
@@ -21,7 +23,9 @@ import com.binaris.wizardry.content.spell.magic.ForceArrowSpell;
 import com.binaris.wizardry.content.spell.necromancy.*;
 import com.binaris.wizardry.content.spell.sorcery.*;
 import com.binaris.wizardry.core.platform.Services;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.SnowGolem;
@@ -94,6 +98,8 @@ public final class Spells {
     public static final Spell FLAMING_AXE;
     public static final Spell BLIZZARD;
     public static final Spell SUMMON_ICE_WRAITH;
+    public static final Spell SUMMON_SHADOW_WRAITH;
+    public static final Spell SUMMON_STORM_ELEMENTAL;
     // ice_shroud
     public static final Spell ICE_CHARGE;
     public static final Spell FROST_AXE;
@@ -192,7 +198,7 @@ public final class Spells {
     // disintegration
     public static final Spell COMBUSTION_RUNE;
     public static final Spell FROST_STEP;
-    // paralysis
+    public static final Spell PARALYSIS;
     public static final Spell SHULKER_BULLET;
     public static final Spell CURSE_OF_UNDEATH;
     public static final Spell DRAGON_FIREBALL;
@@ -520,10 +526,31 @@ public final class Spells {
 
         FROST_RAY = spell("frost_ray", FrostRay::new);
         LIGHTNING_RAY = spell("lightning_ray", LightningRay::new);
+        PARALYSIS = spell("paralysis", Paralysis::new);
+        SUMMON_SHADOW_WRAITH = spell("summon_shadow_wraith", () ->
+                new MinionSpell<ShadowWraith>(ShadowWraith::new) {
+                    @Override
+                    public Component getDesc() {
+                        return super.getDesc().copy().withStyle(ChatFormatting.OBFUSCATED);
+                    }
+                }.soundValues(1, 1.1f, 0.1f)
+                        .assignProperties(SpellProperties.builder()
+                                .assignBaseProperties(SpellTiers.MASTER, Elements.NECROMANCY, SpellTypes.MINION, SpellAction.SUMMON, 100, 20, 400)
+                                .add(DefaultProperties.MINION_COUNT, 1)
+                                .add(DefaultProperties.MINION_LIFETIME, 600)
+                                .add(DefaultProperties.SUMMON_RADIUS, 2).build()));
         SUMMON_ICE_WRAITH = spell("summon_ice_wraith", () ->
                 new MinionSpell<>(com.binaris.wizardry.content.entity.living.IceWraith::new).soundValues(1, 1.1f, 0.2f)
                         .assignProperties(SpellProperties.builder()
                                 .assignBaseProperties(SpellTiers.ADVANCED, Elements.ICE, SpellTypes.MINION, SpellAction.SUMMON, 40, 10, 200)
+                                .add(DefaultProperties.MINION_COUNT, 1)
+                                .add(DefaultProperties.MINION_LIFETIME, 600)
+                                .add(DefaultProperties.SUMMON_RADIUS, 2).build()));
+
+        SUMMON_STORM_ELEMENTAL = spell("summon_storm_elemental", () ->
+                new MinionSpell<>(StormElemental::new).soundValues(1, 1.1f, 0.1f)
+                        .assignProperties(SpellProperties.builder()
+                                .assignBaseProperties(SpellTiers.MASTER, Elements.LIGHTNING, SpellTypes.MINION, SpellAction.SUMMON, 100, 20, 400)
                                 .add(DefaultProperties.MINION_COUNT, 1)
                                 .add(DefaultProperties.MINION_LIFETIME, 600)
                                 .add(DefaultProperties.SUMMON_RADIUS, 2).build()));

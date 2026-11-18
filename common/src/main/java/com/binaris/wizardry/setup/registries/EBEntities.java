@@ -32,6 +32,7 @@ public final class EBEntities {
     public static final DeferredObject<EntityType<IceBall>> ICE_BALL = entity(IceBall::new, "iceball", MobCategory.MISC, 0.5F, 0.5F, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<IceLanceEntity>> ICE_LANCE = entity(IceLanceEntity::new, "ice_lance", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<IceShardEntity>> ICE_SHARD = entity(IceShardEntity::new, "ice_shard", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
+    public static final DeferredObject<EntityType<LightningDiscEntity>> LIGHTNING_DISC = entity(LightningDiscEntity::new, "lightning_disc", MobCategory.MISC, 2f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<LightningArrow>> LIGHTNING_ARROW = entity(LightningArrow::new, "lightning_arrow", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<MagicFireballEntity>> MAGIC_FIREBALL = entity(MagicFireballEntity::new, "magic_fireball", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
     public static final DeferredObject<EntityType<MagicMissileEntity>> MAGIC_MISSILE = entity(MagicMissileEntity::new, "magic_missile", MobCategory.MISC, 0.5f, 0.5f, MagicType.PROJECTILE);
@@ -90,8 +91,16 @@ public final class EBEntities {
         consumer.accept(MAGIC_SLIME.get(), Monster.createMonsterAttributes().build());
         consumer.accept(LIGHTNING_WRAITH.get(), Blaze.createAttributes().build());
         consumer.accept(ICE_WRAITH.get(), Blaze.createAttributes().build());
-        consumer.accept(STORM_ELEMENTAL.get(), Blaze.createAttributes().build());
-        consumer.accept(SHADOW_WRAITH.get(), Blaze.createAttributes().build());
+        consumer.accept(STORM_ELEMENTAL.get(), Blaze.createAttributes()
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 30)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, 6)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, 1)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE, 16).build());
+        consumer.accept(SHADOW_WRAITH.get(), Blaze.createAttributes()
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 30)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, 6)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, 1)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE, 16).build());
         consumer.accept(ICE_GIANT.get(), IceGiant.createAttributes().build());
     }
 

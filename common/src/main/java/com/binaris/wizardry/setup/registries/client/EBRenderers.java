@@ -55,6 +55,7 @@ public final class EBRenderers {
         registerEntityRender(EBEntities.MAGIC_MISSILE, (ctx -> new MagicArrowRenderer<>(ctx, WizardryMainMod.location("textures/entity/magic_missile.png"))));
         registerEntityRender(EBEntities.DART, (ctx -> new MagicArrowRenderer<>(ctx, WizardryMainMod.location("textures/entity/dart.png"))));
         registerEntityRender(EBEntities.ICE_SHARD, (ctx -> new MagicArrowRenderer<>(ctx, WizardryMainMod.location("textures/entity/ice_shard.png"))));
+        registerEntityRender(EBEntities.LIGHTNING_DISC, LightningDiscRenderer::new);
         registerEntityRender(EBEntities.LIGHTNING_ARROW, (ctx -> new MagicArrowRenderer<>(ctx, WizardryMainMod.location("textures/entity/lightning_arrow.png"))));
         registerEntityRender(EBEntities.ICE_LANCE, (ctx -> new MagicArrowRenderer<>(ctx, WizardryMainMod.location("textures/entity/ice_lance.png"))));
         registerEntityRender(EBEntities.FORCE_ARROW, ForceArrowRenderer::new);
