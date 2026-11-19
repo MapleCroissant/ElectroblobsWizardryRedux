@@ -31,6 +31,8 @@
     "ServerLevelMixin",
     "ForcefieldExplosionMixin",
     "ServerPlayerMixin",
+    "PlayerListMixin",
+    "PossessionMobMixin",
     "TransienceGameModeMixin",
     "SlotMixin",
     "network.ClientboundUpdateMobEffectPacketMixin",
@@ -44,6 +46,9 @@
     "invoker.SpawnPlacementsInvoker"
   ],
   "client": [
+    "client.DeathScreenMixin",
+    "client.PossessionRendererMixin",
+    "client.PossessionCameraMixin",
     "accessor.ItemPropertiesAccessor",
     "ClientLevelMixin",
     "HumanoidModelMixin",

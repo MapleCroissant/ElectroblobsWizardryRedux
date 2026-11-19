@@ -255,12 +255,12 @@ public final class Spells {
     public static final Spell GREATER_WARD;
     public static final Spell RAY_OF_PURIFICATION;
     public static final Spell REMOVE_CURSE;
-    // possession
+    public static final Spell POSSESSION;
     public static final Spell CURSE_OF_ENFEEBLEMENT;
     // forest_of_thorns
     public static final Spell SPEED_TIME;
     // slow time
-    // resurrection
+    public static final Spell RESURRECTION;
     // frost barrier
     public static final Spell BLINDING_FLASH;
     public static final Spell ENRAGE;
@@ -674,6 +674,8 @@ public final class Spells {
         GREATER_HEAL = spell("greater_heal", GreaterHeal::new);
         SHIELD = spell("shield", Shield::new);
         TRANSPORTATION = spell("transportation", Transportation::new);
+        POSSESSION = spell("possession", Possession::new);
+        RESURRECTION = spell("resurrection", Resurrection::new);
         FORCEFIELD = spell("forcefield", Forcefield::new);
         TRANSIENCE = spell("transience", Transience::new);
         SHADOW_WARD = spell("shadow_ward", ShadowWard::new);

@@ -40,6 +40,8 @@ final class SpellVisualSmoke {
     private static BlockPos magicLightPos;
     private static volatile java.util.UUID illusionDecoy;
     private static boolean sawMirage;
+    private static boolean sawPossession;
+    private static boolean sawPossessionEnd;
 
     private SpellVisualSmoke() {
     }
@@ -329,6 +331,40 @@ final class SpellVisualSmoke {
             screenshot(minecraft, "parity-mirage.png");
             EBLogger.info("Illusion smoke observed the owner-resolved decoy and synchronized Mirage effect");
         }
+    }
+
+    static void tickPossession(Minecraft minecraft, int tick) {
+        var server = minecraft.getSingleplayerServer();
+        if (server == null) return;
+        var id = minecraft.player.getUUID();
+        if (tick == 590) {
+            server.execute(() -> {
+                var caster = server.getPlayerList().getPlayer(id);
+                var host = net.minecraft.world.entity.EntityType.COW.create(caster.serverLevel());
+                caster.setShiftKeyDown(false);
+                var pos = caster.blockPosition().atY(caster.level().getMaxBuildHeight() - 3);
+                host.setPos(Vec3.atBottomCenterOf(pos));
+                host.setNoGravity(true);
+                caster.serverLevel().addFreshEntity(host);
+                var spell = (com.binaris.wizardry.content.spell.necromancy.Possession) Spells.POSSESSION;
+                if (!spell.start(caster, host, 50)) throw new IllegalStateException("Possession smoke could not start");
+            });
+        }
+        var player = minecraft.player;
+        boolean active = com.binaris.wizardry.content.spell.necromancy.Possession.active(player);
+        var effect = minecraft.gameRenderer.currentEffect();
+        if (tick > 590 && active && effect != null && effect.getName().endsWith("/possession.json")
+                && minecraft.getCameraEntity() == player && !sawPossession) {
+            sawPossession = true;
+            screenshot(minecraft, "parity-possession.png");
+        }
+        if (sawPossession && !active && minecraft.getCameraEntity() == player
+                && (effect == null || !effect.getName().endsWith("/possession.json"))) sawPossessionEnd = true;
+    }
+
+    static void verifyPossession() {
+        if (!sawPossession || !sawPossessionEnd) throw new IllegalStateException("Possession smoke did not observe the camera effect and restoration");
+        EBLogger.info("Possession smoke observed synchronized host control, post effect, and camera restoration");
     }
 
     static void verifyIllusions() {

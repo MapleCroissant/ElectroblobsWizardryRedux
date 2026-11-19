@@ -113,17 +113,24 @@ public class ScrollItem extends Item implements ICastItem, IWorkbenchItem {
 
     @Override
     public boolean cast(ItemStack stack, Spell spell, PlayerCastContext ctx) {
-        if (!CastItemUtils.executeSpellCast(SpellCastEvent.Sources.SCROLL, spell, ctx)) return false;
+        return castAndGetCooldown(stack, spell, ctx).isPresent();
+    }
 
+    /// Runs the normal scroll cast and returns its applied cooldown, allowing a successful resurrection to carry it
+    /// across vanilla's replacement of the ServerPlayer. An empty result indicates a failed cast.
+    public java.util.OptionalInt castAndGetCooldown(ItemStack stack, Spell spell, PlayerCastContext ctx) {
+        if (!CastItemUtils.executeSpellCast(SpellCastEvent.Sources.SCROLL, spell, ctx)) return java.util.OptionalInt.empty();
+
+        int cooldown = 0;
         if (spell.isInstantCast() && !ctx.caster().isCreative()) {
             stack.shrink(1);
             int base = CastItemUtils.calcCastCooldown(spell, ctx.modifiers());
-            int cooldown = CastItemUtils.adjustItemCooldown(SpellCastEvent.Sources.SCROLL, spell, ctx, base);
+            cooldown = CastItemUtils.adjustItemCooldown(SpellCastEvent.Sources.SCROLL, spell, ctx, base);
             ctx.caster().getCooldowns().addCooldown(this, cooldown);
         }
 
         CastItemUtils.recordItemCast(SpellCastEvent.Sources.SCROLL, spell, ctx, stack);
-        return true;
+        return java.util.OptionalInt.of(cooldown);
     }
 
     private void finishCast(ItemStack stack, Level world, LivingEntity entity, int timeCharged) {

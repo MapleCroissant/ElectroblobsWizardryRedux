@@ -20,7 +20,8 @@ public class ControlInputPacketC2S implements Message {
     }
 
     public ControlInputPacketC2S(FriendlyByteBuf buf) {
-        this.controlType = ControlType.values()[buf.readInt()];
+        int ordinal = buf.readInt();
+        this.controlType = ordinal >= 0 && ordinal < ControlType.values().length ? ControlType.values()[ordinal] : null;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class ControlInputPacketC2S implements Message {
 
     @Override
     public void handleServer(MinecraftServer server, ServerPlayer player) {
-        if (player == null) return;
+        if (player == null || controlType == null) return;
         ItemStack wand = player.getMainHandItem();
 
         if (!(wand.getItem() instanceof ICastItem)) {
@@ -43,6 +44,15 @@ public class ControlInputPacketC2S implements Message {
         }
 
         switch (controlType) {
+            case POSSESSION_TAKE_BLOCK:
+                com.binaris.wizardry.content.spell.necromancy.Possession.takeBlock(player);
+                break;
+            case POSSESSION_ABILITY:
+                com.binaris.wizardry.content.spell.necromancy.Possession.useAbility(player);
+                break;
+            case RESURRECT_BUTTON:
+                com.binaris.wizardry.content.spell.healing.Resurrection.requestSelf(player);
+                break;
             case NEXT_SPELL_KEY:
                 if (wand.getItem() instanceof ICastItem castItem) {
                     castItem.selectNextSpell(wand);
@@ -74,6 +84,6 @@ public class ControlInputPacketC2S implements Message {
     public enum ControlType {
         APPLY_BUTTON, NEXT_SPELL_KEY,
         PREVIOUS_SPELL_KEY, RESURRECT_BUTTON,
-        CLEAR_BUTTON
+        CLEAR_BUTTON, POSSESSION_ABILITY, POSSESSION_TAKE_BLOCK
     }
 }

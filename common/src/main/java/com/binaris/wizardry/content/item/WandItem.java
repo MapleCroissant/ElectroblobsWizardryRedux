@@ -118,7 +118,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
         return canCastRequirements(stack, spell, ctx);
     }
 
-    private boolean canCastRequirements(ItemStack stack, Spell spell, PlayerCastContext ctx) {
+    public boolean canCastRequirements(ItemStack stack, Spell spell, PlayerCastContext ctx) {
         int cost = CastItemUtils.calcCastCost(spell, ctx.modifiers());
         if (!spell.isInstantCast()) cost = CastItemUtils.getDistributedCastCost(cost, ctx.castingTicks());
 
@@ -311,7 +311,7 @@ public class WandItem extends Item implements ICastItem, IManaItem, IWorkbenchIt
     /// @param stack     The wand item stack
     /// @param spell     The spell being cast
     /// @param ctx      The current cast context
-    private void consumeManaAndSetCooldown(ItemStack stack, Spell spell, PlayerCastContext ctx) {
+    public void consumeManaAndSetCooldown(ItemStack stack, Spell spell, PlayerCastContext ctx) {
         int cost = CastItemUtils.calcCastCost(spell, ctx.modifiers());
         consumeMana(stack, cost, ctx.caster());
 

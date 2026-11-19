@@ -31,9 +31,11 @@ public class ForgeClientEvents {
         SpellVisualSmoke.tickFrostBarrier(minecraft, migrationSmokeTicks);
         SpellVisualSmoke.tickSpellVision(minecraft, migrationSmokeTicks);
         SpellVisualSmoke.tickIllusions(minecraft, migrationSmokeTicks);
-        if (migrationSmokeTicks >= 580) {
+        SpellVisualSmoke.tickPossession(minecraft, migrationSmokeTicks);
+        if (migrationSmokeTicks >= 680) {
             SpellVisualSmoke.verifyIllusions();
-            com.binaris.wizardry.core.EBLogger.info("NeoForge integrated-world smoke test completed after 580 client ticks");
+            SpellVisualSmoke.verifyPossession();
+            com.binaris.wizardry.core.EBLogger.info("NeoForge integrated-world smoke test completed after 680 client ticks");
             minecraft.stop();
         }
     }

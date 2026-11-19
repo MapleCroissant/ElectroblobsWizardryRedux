@@ -28,6 +28,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
 
+    @Inject(method = "renderHandsWithItems", at = @At("HEAD"), cancellable = true)
+    private void ebwizardry$hidePossessedHands(CallbackInfo ci) {
+        var player = Minecraft.getInstance().player;
+        if (player != null && com.binaris.wizardry.content.spell.necromancy.Possession.active(player)) ci.cancel();
+    }
+
     @Shadow
     private ItemStack mainHandItem;
 

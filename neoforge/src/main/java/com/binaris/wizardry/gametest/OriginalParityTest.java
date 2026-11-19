@@ -29,6 +29,250 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @GameTestHolder("ebwizardry")
 @PrefixGameTestTemplate(false)
 public class OriginalParityTest {
+    private static net.minecraft.server.level.ServerPlayer connectedPlayer(net.minecraft.server.level.ServerLevel level, String name) {
+        var profile = new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), name);
+        var cookie = net.minecraft.server.network.CommonListenerCookie.createInitial(profile, false);
+        var player = new net.minecraft.server.level.ServerPlayer(level.getServer(), level, profile, cookie.clientInformation());
+        var connection = new net.minecraft.network.Connection(net.minecraft.network.protocol.PacketFlow.SERVERBOUND);
+        new io.netty.channel.embedded.EmbeddedChannel(connection);
+        net.neoforged.neoforge.network.registration.NetworkRegistry.configureMockConnection(connection);
+        level.getServer().getPlayerList().placeNewPlayer(connection, player, cookie);
+        return player;
+    }
+
+
+
+
+    @GameTest(template = "empty_3x3x3")
+    public static void possessionMovesHostAndReleasesOnExitAndRemoval(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var player = connectedPlayer(level, "possessor");
+        player.setGameMode(GameType.SURVIVAL);
+        var origin = net.minecraft.world.phys.Vec3.atBottomCenterOf(helper.absolutePos(new BlockPos(1, 21, 1)));
+        player.setPos(origin);
+        player.setYRot(0);
+        var host = net.minecraft.world.entity.EntityType.ZOMBIE.create(level);
+        host.setPos(origin.add(0, 0, 3));
+        level.addFreshEntity(host);
+        var spell = (com.binaris.wizardry.content.spell.necromancy.Possession) Spells.POSSESSION;
+        var context = new PlayerCastContext(level, player, InteractionHand.MAIN_HAND, 0, new SpellModifiers());
+        var item = new ItemStack(net.minecraft.world.item.Items.DIAMOND, 23);
+        player.getInventory().setItem(6, item);
+        var scroll = new ItemStack(EBItems.SCROLL.get());
+        var book = new ItemStack(EBItems.SPELL_BOOK.get());
+        RegistryUtils.setSpell(scroll, spell);
+        RegistryUtils.setSpell(book, spell);
+        Services.OBJECT_DATA.getSpellManagerData(player).discoverSpell(spell);
+        var castItem = (com.binaris.wizardry.api.content.item.ICastItem) scroll.getItem();
+        helper.assertTrue(RegistryUtils.getSpell(book) == spell && castItem.getCurrentSpell(scroll) == spell,
+                "Possession did not resolve from its release book and scroll");
+        helper.assertTrue(castItem.canCast(scroll, spell, context) && castItem.cast(scroll, spell, context)
+                && scroll.isEmpty() && spell.active(player) && spell.controller(host) == player
+                && !spell.cast(context), "Possession did not acquire a single valid host");
+        player.setPos(player.position().add(1, 0, 0));
+        spell.tick(player);
+        helper.assertTrue(host.position().equals(player.position()), "Host did not follow the player's movement");
+        player.setShiftKeyDown(true);
+        spell.tick(player);
+        helper.assertTrue(!spell.active(player) && spell.controller(host) == null
+                && player.getInventory().getItem(6) == item && item.getCount() == 23,
+                "Manual exit did not restore inventory or clear host ownership");
+        player.setShiftKeyDown(false);
+        helper.assertTrue(spell.start(player, host, 40), "Released host could not be possessed again");
+        host.discard();
+        spell.tick(player);
+        helper.assertTrue(!spell.active(player) && spell.controller(host) == null, "Invalid host left control active");
+        level.getServer().getPlayerList().remove(player);
+        helper.succeed();
+    }
+
+
+
+
+    @GameTest(template = "empty_3x3x3")
+    public static void possessionExpiryAndLogoutRestoreFlight(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var players = level.getServer().getPlayerList();
+        var player = connectedPlayer(level, "host_expiry");
+        player.setGameMode(GameType.SURVIVAL);
+        var pos = net.minecraft.world.phys.Vec3.atBottomCenterOf(helper.absolutePos(new BlockPos(1, 19, 1)));
+        player.setPos(pos);
+        var blaze = net.minecraft.world.entity.EntityType.BLAZE.create(level);
+        blaze.setPos(pos.add(0, 0, 1));
+        blaze.setNoGravity(true);
+        level.addFreshEntity(blaze);
+        var spell = (com.binaris.wizardry.content.spell.necromancy.Possession) Spells.POSSESSION;
+        helper.assertTrue(spell.start(player, blaze, 2) && player.getAbilities().mayfly,
+                "Flying host did not grant temporary flight");
+        var save = new net.minecraft.nbt.CompoundTag();
+        player.addAdditionalSaveData(save);
+        helper.assertTrue(!save.getCompound("abilities").getBoolean("mayfly"), "Possession persisted temporary flight");
+        helper.runAfterDelay(7, () -> {
+            try {
+                helper.assertTrue(!spell.active(player) && !player.getAbilities().mayfly && spell.controller(blaze) == null,
+                        "Expiry state: active=" + spell.active(player) + ", flight=" + player.getAbilities().mayfly);
+                helper.assertTrue(spell.start(player, blaze, 30), "Could not acquire the expired host again");
+                players.remove(player);
+                helper.assertTrue(spell.controller(blaze) == null && !spell.active(player) && !player.getAbilities().mayfly,
+                        "Logout left a possession relationship or flight active");
+                helper.succeed();
+            } finally {
+                if (players.getPlayer(player.getUUID()) == player) players.remove(player);
+                blaze.discard();
+            }
+        });
+    }
+
+    @GameTest(template = "empty_3x3x3")
+    public static void possessedEndermanCarriesAndPlacesOneBlock(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var origin = helper.absolutePos(new BlockPos(1, 31, 1));
+        var player = helper.makeMockPlayer(GameType.SURVIVAL);
+        player.setPos(net.minecraft.world.phys.Vec3.atBottomCenterOf(origin.north(2)));
+        var host = net.minecraft.world.entity.EntityType.ENDERMAN.create(level);
+        host.setPos(net.minecraft.world.phys.Vec3.atBottomCenterOf(origin));
+        level.addFreshEntity(host);
+        var spell = (com.binaris.wizardry.content.spell.necromancy.Possession) Spells.POSSESSION;
+        helper.assertTrue(spell.start(player, host, 50), "Could not possess the Enderman");
+        player.setYRot(0);
+        player.setXRot(0);
+        var block = origin.south(2).above(2);
+        level.setBlockAndUpdate(block, Blocks.DIRT.defaultBlockState());
+        level.setBlockAndUpdate(block.south(), Blocks.STONE.defaultBlockState());
+        spell.takeBlock(player);
+        helper.assertTrue(level.isEmptyBlock(block) && host.getCarriedBlock() != null
+                && host.getCarriedBlock().is(Blocks.DIRT), "Enderman failed to take exactly the aimed block");
+        spell.useAbility(player);
+        helper.assertTrue(level.getBlockState(block).is(Blocks.DIRT) && host.getCarriedBlock() == null,
+                "Enderman did not place and clear the carried block");
+        spell.end(player);
+        host.discard();
+        level.setBlockAndUpdate(block, Blocks.AIR.defaultBlockState());
+        level.setBlockAndUpdate(block.south(), Blocks.AIR.defaultBlockState());
+        helper.succeed();
+    }
+
+
+    @GameTest(template = "empty_3x3x3", timeoutTicks = 240)
+    public static void resurrectionScrollConsumesOneAndKeepsCooldown(GameTestHelper helper) {
+        if (com.binaris.wizardry.core.integrations.ArtifactChannel.getIntegration()
+                != com.binaris.wizardry.core.integrations.VanillaArtifactIntegration.INSTANCE) {
+            helper.succeed();
+            return;
+        }
+        var level = helper.getLevel();
+        var players = level.getServer().getPlayerList();
+        var player = connectedPlayer(level, "immortal_scroll");
+        player.setGameMode(GameType.SURVIVAL);
+        Services.OBJECT_DATA.getSpellManagerData(player).discoverSpell(Spells.RESURRECTION);
+        var grave = helper.absolutePos(new BlockPos(1, 35, 1));
+        player.setPos(net.minecraft.world.phys.Vec3.atBottomCenterOf(grave));
+        level.setBlockAndUpdate(grave.below(), Blocks.STONE.defaultBlockState());
+        var scroll = new ItemStack(EBItems.SCROLL.get(), 2);
+        RegistryUtils.setSpell(scroll, Spells.RESURRECTION);
+        player.getInventory().setItem(3, scroll);
+        player.getInventory().setItem(6, new ItemStack(EBItems.AMULET_RESURRECTION.get()));
+        player.setHealth(0);
+        player.die(level.damageSources().genericKill());
+        helper.runAfterDelay(202, () -> {
+            com.binaris.wizardry.content.spell.healing.Resurrection.requestSelf(player);
+            var revived = players.getPlayer(player.getUUID());
+            var retained = revived.getInventory().getItem(3);
+            helper.assertTrue(revived != player && revived.isAlive() && retained.getCount() == 1
+                    && RegistryUtils.getSpell(retained) == Spells.RESURRECTION
+                    && revived.getCooldowns().isOnCooldown(EBItems.SCROLL.get()),
+                    "Scroll revival failed to consume one scroll or restore the scroll cooldown");
+            players.remove(revived);
+            level.setBlockAndUpdate(grave.below(), Blocks.AIR.defaultBlockState());
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = "empty_3x3x3", timeoutTicks = 240)
+    public static void resurrectionAmuletRetainsOnlyPaidWand(GameTestHelper helper) {
+        if (com.binaris.wizardry.core.integrations.ArtifactChannel.getIntegration()
+                != com.binaris.wizardry.core.integrations.VanillaArtifactIntegration.INSTANCE) {
+            helper.succeed();
+            return;
+        }
+        var level = helper.getLevel();
+        var players = level.getServer().getPlayerList();
+        var player = connectedPlayer(level, "immortal");
+        player.setGameMode(GameType.SURVIVAL);
+        Services.OBJECT_DATA.getSpellManagerData(player).discoverSpell(Spells.RESURRECTION);
+        var grave = helper.absolutePos(new BlockPos(1, 27, 1));
+        var landing = net.minecraft.world.phys.Vec3.atBottomCenterOf(grave);
+        player.setPos(landing);
+        level.setBlockAndUpdate(grave.below(), Blocks.STONE.defaultBlockState());
+        var wand = new ItemStack(EBItems.MASTER_WAND.get());
+        var item = (com.binaris.wizardry.content.item.WandItem) wand.getItem();
+        item.setMana(wand, item.getManaCapacity(wand));
+        int before = item.getMana(wand);
+        com.binaris.wizardry.api.content.util.CastItemDataHelper.setSpells(wand, java.util.List.of(Spells.RESURRECTION));
+        com.binaris.wizardry.api.content.util.CastItemDataHelper.setCurrentSpell(wand, Spells.RESURRECTION);
+        for (int i = 0; i < 36; i++) player.getInventory().setItem(i, new ItemStack(net.minecraft.world.item.Items.DIAMOND, 1));
+        player.getInventory().setItem(4, wand);
+        player.getInventory().setItem(6, new ItemStack(EBItems.AMULET_RESURRECTION.get()));
+        player.setHealth(0);
+        player.die(level.damageSources().genericKill());
+        var resurrection = (com.binaris.wizardry.content.spell.healing.Resurrection) Spells.RESURRECTION;
+        resurrection.requestSelf(player);
+        helper.assertTrue(!player.isAlive() && player.getInventory().getItem(4) == wand
+                && player.getInventory().getItem(6).isEmpty(), "Unexpected death state: alive=" + player.isAlive() + " wand=" + player.getInventory().getItem(4)
+                + " amulet=" + player.getInventory().getItem(6));
+        helper.runAfterDelay(202, () -> {
+            resurrection.requestSelf(player);
+            var revived = players.getPlayer(player.getUUID());
+            var retained = revived.getInventory().getItem(4);
+            helper.assertTrue(revived != player && revived.isAlive() && retained.is(EBItems.MASTER_WAND.get())
+                    && item.getMana(retained) == before - 150
+                    && com.binaris.wizardry.api.content.util.CastItemDataHelper.getCurrentCooldown(retained, level.getGameTime()) == 400,
+                    "Amulet revival cost mismatch: alive=" + revived.isAlive() + " item=" + retained + " mana=" + item.getMana(retained)
+                    + " before=" + before + " cooldown=" + com.binaris.wizardry.api.content.util.CastItemDataHelper.getCurrentCooldown(retained, level.getGameTime()));
+            helper.assertTrue(revived.getInventory().getItem(6).isEmpty(), "Revival duplicated the amulet");
+            resurrection.requestSelf(player);
+            helper.assertTrue(players.getPlayer(player.getUUID()) == revived, "The death could be replayed");
+            players.remove(revived);
+            level.setBlockAndUpdate(grave.below(), Blocks.AIR.defaultBlockState());
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = "empty_3x3x3", timeoutTicks = 240)
+    public static void resurrectionRevivesOnlyAfterWaitAndUsesOnePlayer(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var players = level.getServer().getPlayerList();
+        var caster = connectedPlayer(level, "healer");
+        var ally = connectedPlayer(level, "revival");
+        var grave = helper.absolutePos(new BlockPos(1, 24, 1));
+        level.setBlockAndUpdate(grave.below(), Blocks.STONE.defaultBlockState());
+        caster.setPos(net.minecraft.world.phys.Vec3.atBottomCenterOf(grave.offset(3, 0, 0)));
+        ally.setPos(net.minecraft.world.phys.Vec3.atBottomCenterOf(grave));
+        Services.OBJECT_DATA.getWizardData(caster).toggleAlly(ally);
+        var context = new PlayerCastContext(level, caster, InteractionHand.MAIN_HAND, 0, new SpellModifiers());
+        helper.assertTrue(!Spells.RESURRECTION.cast(context), "Resurrection selected a living ally");
+        ally.setHealth(0);
+        ally.die(level.damageSources().genericKill());
+        caster.setNoGravity(true);
+        helper.assertTrue(!Spells.RESURRECTION.cast(context), "Resurrection bypassed the wait");
+        helper.runAfterDelay(202, () -> {
+            com.binaris.wizardry.content.spell.healing.Resurrection.requestSelf(ally);
+            helper.assertTrue(players.getPlayer(ally.getUUID()) == ally && !ally.isAlive(), "Self-revival bypassed the amulet");
+            helper.assertTrue(Spells.RESURRECTION.cast(context), "Resurrection failed to revive the dead ally");
+            var replacement = players.getPlayer(ally.getUUID());
+            helper.assertTrue(replacement != ally && replacement.isAlive() && replacement.serverLevel() == level
+                    && replacement.distanceToSqr(net.minecraft.world.phys.Vec3.atBottomCenterOf(grave)) < 1
+                    && replacement.getHealth() == replacement.getMaxHealth() / 2 && replacement.totalExperience == 0,
+                    "Resurrection did not restore the ally safely at half health");
+            helper.assertTrue(!Spells.RESURRECTION.cast(context)
+                    && players.getPlayers().stream().filter(p -> p.getUUID().equals(ally.getUUID())).count() == 1,
+                    "A single death produced multiple live player entries");
+            players.remove(replacement);
+            players.remove(caster);
+            level.setBlockAndUpdate(grave.below(), Blocks.AIR.defaultBlockState());
+            helper.succeed();
+        });
+    }
 
     @GameTest(template = "empty_3x3x3")
     public static void transportationRemembersCircleAndRechecksAtArrival(GameTestHelper helper) {
@@ -350,7 +594,7 @@ public class OriginalParityTest {
     @GameTest(template = "empty_3x3x3", timeoutTicks = 125)
     public static void summonPhoenixHoversAndCastsFlameRay(GameTestHelper helper) {
         var level = helper.getLevel();
-        var base = helper.absolutePos(new BlockPos(1, 22, 1));
+        var base = helper.absolutePos(new BlockPos(1, 52, 1));
         for (var ground : BlockPos.betweenClosed(base.offset(-2, -1, -2), base.offset(7, -1, 2))) {
             level.setBlockAndUpdate(ground, Blocks.STONE.defaultBlockState());
         }
@@ -362,18 +606,22 @@ public class OriginalParityTest {
                 new net.minecraft.world.phys.AABB(base).inflate(5), entity -> true);
         helper.assertTrue(birds.size() == 1, "Expected one phoenix");
         var phoenix = birds.getFirst();
+        // Embedded players in neighboring fixtures must not cause an unrelated natural despawn.
+        phoenix.setPersistenceRequired();
         helper.assertTrue(phoenix.fireImmune() && phoenix.getMaxHealth() == 30
                 && Services.OBJECT_DATA.getMinionData(phoenix).getLifetime() == 600,
                 "Phoenix did not have its original fire immunity, health, or lifetime");
         var zombie = net.minecraft.world.entity.EntityType.ZOMBIE.create(level);
         zombie.setPos(origin.add(5, 0, 0));
         zombie.setNoAi(true);
+        zombie.setPersistenceRequired();
         zombie.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new ItemStack(net.minecraft.world.item.Items.LEATHER_HELMET));
         level.addFreshEntity(zombie);
         phoenix.setTarget(zombie);
         helper.runAfterDelay(95, () -> {
             helper.assertTrue(phoenix.getY() >= origin.y + 1.9 && phoenix.getY() <= origin.y + 3.1,
-                    "Phoenix did not settle into the two-to-three block hover band");
+                    "Phoenix did not settle into the two-to-three block hover band: height=" + (phoenix.getY() - origin.y)
+                            + ", ticks=" + phoenix.tickCount + ", removed=" + phoenix.isRemoved());
             helper.assertTrue(phoenix.getContinuousSpell() == Spells.FLAME_RAY && zombie.getHealth() < 20,
                     "Phoenix did not channel Flame Ray at its nearby target");
             phoenix.discard();

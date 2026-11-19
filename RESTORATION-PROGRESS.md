@@ -7,16 +7,16 @@ The 1.12.2 reference at commit `c0be7475b234223e5a3276e62e38e69ffa6de0ce` has 18
 | Scope | Entries | Basis |
 | --- | ---: | --- |
 | Original playable spells | 188 | Excludes `none` |
-| Original spells with Redux casting implementations in source | 186 | 183 original IDs and 3 renamed equivalents. Includes partial Greater Telekinesis |
-| Original spells available in the default Redux release registry | 186 | 183 original IDs and 3 release aliases. Includes partial Greater Telekinesis |
-| Original spells unavailable in the default Redux release | 2 | Remaining unavailable originals |
-| All Redux source declarations | 191 | 184 exact original IDs including `none`, plus 7 other IDs |
-| All Redux registrations after the release gate | 190 | Includes `none` and 3 registry-only Redux entries without packaged spell definitions |
-| Base spell definitions in the audited JAR | 187 | The 186 available original spells and `none` |
+| Original spells with Redux casting implementations in source | 188 | 185 original IDs and 3 renamed equivalents. Includes partial Greater Telekinesis |
+| Original spells available in the default Redux release registry | 188 | 185 original IDs and 3 release aliases. Includes partial Greater Telekinesis |
+| Original spells unavailable in the default Redux release | 0 | All originals have a release definition |
+| All Redux source declarations | 193 | 186 exact original IDs including `none`, plus 7 other IDs |
+| All Redux registrations after the release gate | 192 | Includes `none` and 3 registry-only Redux entries without packaged spell definitions |
+| Base spell definitions in the audited JAR | 189 | The 188 available original spells and `none` |
 
 `Spells.register` removes the Redux-only `ojospocos` in a production runtime or on a dedicated server. `block_surprise`, `player_hand`, and `wizard_hand` survive that filter despite lacking packaged spell JSON. They are distinct Redux registrations and are excluded from original coverage. `darkvision → dark_vision` and `fireskin → fire_skin` ship under their Redux IDs. `conjure_armour → conjure_armor` ships under the existing Redux ID. Preserve the Redux IDs to protect modern saves.
 
-The 64-entry [original spell inventory](migration/ORIGINAL-SPELL-INVENTORY.md) omits the two shipped aliases from its historical backlog and includes them as context. Of the 64, 61 are release-available with no open implementation item tracked here, Greater Telekinesis has partial parity, and 2 remain unavailable. This makes 3 remaining tracked entries. Similar spells such as Arc, Homing Spark, Thunderbolt, Fireball, and Phase Step are distinct spells. Icons, sounds, a mob effect, or an entity can exist without a spell registration.
+The 64-entry [original spell inventory](migration/ORIGINAL-SPELL-INVENTORY.md) omits the two shipped aliases from its historical backlog and includes them as context. All 64 are release-available. Availability counts include known mechanical differences such as Greater Telekinesis block entities and Possession host behavior. Similar spells such as Arc, Homing Spark, Thunderbolt, Fireball, and Phase Step are distinct spells. Icons, sounds, a mob effect, or an entity can exist without a spell registration.
 
 ## Completed work and evidence
 
@@ -87,17 +87,16 @@ Slow Time restores the 300-tick aura, original every-sixth-tick cadence, potency
 
 Forcefield restores the persistent spherical boundary, projectile deflection, damage and interaction protection, and explosion filtering. Transportation restores craftable stones, remembered circles, the Ancient Compass selection overlay, countdown and arrival checks, and Spectral Tether mount transport. All 105 development and packaged GameTests passed including Forcefield boundary damage and Transportation delay and broken-circle rejection.
 
-## Unresolved original spells
+## Final spell batch
 
-Difficulty is an estimate. Low means an existing implementation or reusable foundation with limited new mechanics. Medium means a distinct implementation with focused testing. High means significant state, networking, rendering, AI, world changes, or multiplayer risk.
-
-| Original registry ID | Element | Tier | Current status | Difficulty |
-| --- | --- | --- | --- | --- |
-| `ebwizardry:greater_telekinesis` | sorcery | advanced | Release partial; closed unlocked shulker boxes and barrels supported | High |
-| `ebwizardry:possession` | necromancy | master | Absent | High |
-| `ebwizardry:resurrection` | healing | master | Absent | High |
+- Resurrection selects a nearby, same-dimension dead ally after the original 200-tick wait, scaled by potency. The native player-list respawn replaces the dead player at a clear location near the death site, restores half health, clears experience, and plays revival effects. The Amulet of the Immortal authorizes a self-cast with a hotbar wand or scroll. The server retains a single casting stack when inventory drops and applies normal item casting costs. The scroll cooldown is reapplied after the server player is replaced. The death record and retained inventory are stored in player NBT. Addons can cancel the operation through the Resurrection event.
+- Possession acquires a mob through the original ray and transfers movement, view, melee, and special attacks. The real host remains tracked with AI paused. The player retains their normal inventory behind input restrictions. Cleanup removes host ownership on sneak, expiry, invalidation, death, game mode change, dimension change, or logout. Tests cover scroll casting, exclusive control, movement, manual exit, removal, and Enderman block carry and placement.
+- The pinned release audit accounted for all 188 IDs. Both new spells match the original tier, element, type, mana, charge, cooldown, and main properties. The inventory lists 23 existing definitions with metadata differences.
 
 ## Known bugs, limits, and verification-only work
+
+- Possession keeps a real mob in the world and uses the normal player controller. The camera uses the host eye height, while the player collision box remains vanilla. The first-person view hides the player hand model. The Wither, Ender Dragon, and mounted hosts are excluded. Enderman extraction uses a server ray, checks break permissions, and excludes block entities. Exact mob target priorities and individual species combat still need comparison.
+- Resurrection needs interactive checks of the death-screen action, both inventory rules, Curios and Accessories amulet slots, reconnects, and dimension travel. GameTests exercise the allied and vanilla amulet paths through the real server player list. An actual second client was not used.
 
 - Greater Telekinesis preserves closed, unlocked shulker boxes and barrels. Other block entities, including multi-block containers, remain excluded. Test mob and TNT targeting, player protection, artifact interaction, thrown impact damage, and multiplayer before marking full parity. Other block types need dedicated removal and placement handling to preserve data and guard against duplication.
 - Light has a visibly different ray blend from the original. Charm of Light permanence and dispel are implemented and still need an interactive check. The existing test covers finite lifetime.
@@ -111,24 +110,25 @@ Difficulty is an estimate. Low means an existing implementation or reusable foun
 
 | Integration | Existing evidence | What remains |
 | --- | --- | --- |
-| Extra Spells 1.2.0 | Loaded with Twilight Forest in the packaged 105-test run. The earlier addon-specific dedicated check cast all 18 spells. | The latest run did not replay that full addon-specific cast matrix or test its visuals. |
-| Twilight Forest Spell Pack 1.1.2-port and Twilight Forest 4.8.3345 | Combined packaged tests passed, including real addon lookup in the Redux lectern and registry metadata. Earlier gameplay passed in the addon's own copied smoke world. | The portal assertion failed in the generic Redux fixture. Use the addon fixture for portal checks. Addon-specific dispensing uses its own path. |
-| Curios API 9.5.1+1.21.1 | Separate 105-test development GameTest profile passed. | Interactive artifact equip/unequip and telekinesis anchoring are unverified in that profile. |
-| Accessories 1.1.0-beta.52+1.21.1 | Separate 99-test development GameTest profile passed. | Interactive equipment behavior and the simultaneous Curios/Accessories setup were not rechecked in the latest evidence. |
+| Extra Spells 1.2.0 | Loaded with Twilight Forest in the packaged 111-test run. The earlier addon-specific dedicated check cast all 18 spells. | The latest run did not replay that full addon-specific cast matrix or test its visuals. |
+| Twilight Forest Spell Pack 1.1.2-port and Twilight Forest 4.8.3345 | Combined 111-test packaged run passed, including real addon lookup in the Redux lectern and registry metadata. Earlier gameplay passed in the addon's own copied smoke world. | The portal assertion failed in the generic Redux fixture. Use the addon fixture for portal checks. Addon-specific dispensing uses its own path. |
+| Curios API 9.5.1+1.21.1 | Separate 111-test development GameTest profile passed. | Interactive artifact equip/unequip and telekinesis anchoring are unverified in that profile. |
+| Accessories 1.1.0-beta.52+1.21.1 | Separate 111-test development GameTest profile passed. | Interactive equipment behavior and the simultaneous Curios/Accessories setup were not rechecked in the latest evidence. |
 
 No new compatibility failure appeared in the tested profiles. Use compatible 1.21.1 NeoForge addon builds and the same Redux JAR on both sides. Keep addon jars out of baseline smoke runs. See [rendering and casting repair notes](migration/NEOFORGE-REPAIR.md) for prior fixture details.
 
-The remaining index records the pinned entry points and base properties for both unavailable spells. Resurrection needs a real player respawn lifecycle. In 1.21.1 a dead player entity is removed after 20 ticks, earlier than the original 200-tick wait. Track death time independently, validate same-dimension allied corpses, use the normal respawn path at a safe death location, and account for the Amulet of the Immortal casting item through death, respawn, and logout. Possession needs authoritative movement and attack control, mob-specific abilities, and restoration of the player body and state on exit, death, logout, and dimension change.
+## Remaining verification
 
-## Recommended restoration order
+1. Play the amulet death-screen flow with a wand and scroll, both inventory rules, a live second client, and optional artifact equipment.
+2. Check Possession audio, host visuals, varied host movement, attacks, death and dimension travel, logout, and input recovery with two clients.
+3. Revisit other Greater Telekinesis block entities independently.
 
-1. Restore Resurrection with server-owned death tracking and an actual player respawn test, including the amulet and both inventory rules. NeoForge 1.21.1 exposes `GameTestHelper.makeMockServerPlayerInLevel()`, which registers a server player with an embedded connection. Use it to exercise the real `PlayerList.respawn` path, assert one player per UUID, and check normal respawn and disconnect handling before enabling the death-screen action.
-2. Restore Possession in its own batch, beginning with host control and guaranteed player-state cleanup.
-3. Track targeted manual verification separately from new implementation. Prioritize Greater Telekinesis targets and protection, Light and Charm of Light, and the recent spells’ audio and multiplayer behavior.
+The final GameTests use NeoForge-negotiated embedded connections for real player-list respawn, retained wand and scroll accounting, and logout cleanup. The test for Phoenix hover keeps its mobs persistent and runs at a separate height so the embedded players cannot change its natural despawn behavior.
 
 ## Source map
 
-- Latest batch: [Forcefield.java](common/src/main/java/com/binaris/wizardry/content/spell/healing/Forcefield.java), [Transportation.java](common/src/main/java/com/binaris/wizardry/content/spell/sorcery/Transportation.java), [TransportationStoneBlock.java](common/src/main/java/com/binaris/wizardry/content/block/TransportationStoneBlock.java), and [TransportationOverlay.java](common/src/main/java/com/binaris/wizardry/client/effect/TransportationOverlay.java).
+- Final gameplay: [Resurrection.java](common/src/main/java/com/binaris/wizardry/content/spell/healing/Resurrection.java) and [Possession.java](common/src/main/java/com/binaris/wizardry/content/spell/necromancy/Possession.java).
+- Previous batch: [Forcefield.java](common/src/main/java/com/binaris/wizardry/content/spell/healing/Forcefield.java), [Transportation.java](common/src/main/java/com/binaris/wizardry/content/spell/sorcery/Transportation.java), [TransportationStoneBlock.java](common/src/main/java/com/binaris/wizardry/content/block/TransportationStoneBlock.java), and [TransportationOverlay.java](common/src/main/java/com/binaris/wizardry/client/effect/TransportationOverlay.java).
 - Registry and release gate — [Spells.java](common/src/main/java/com/binaris/wizardry/setup/registries/Spells.java), [NeoForgeDataGenerators.java](neoforge/src/main/java/com/binaris/wizardry/datagen/NeoForgeDataGenerators.java), and [generated spell definitions](common/src/generated/resources/data/ebwizardry/spells).
 - Gameplay and rendering coverage — [OriginalParityTest.java](neoforge/src/main/java/com/binaris/wizardry/gametest/OriginalParityTest.java), [NeoForgeMigrationTest.java](neoforge/src/main/java/com/binaris/wizardry/gametest/NeoForgeMigrationTest.java), and [SpellVisualSmoke.java](neoforge/src/main/java/com/binaris/wizardry/client/SpellVisualSmoke.java).
 - Resume against the local original checkout at `$env:TEMP/ew-original` when available. Its registry is `src/main/java/electroblob/wizardry/registry/Spells.java` and its definitions are under `src/main/resources/assets/ebwizardry/spells`. The pinned revision is linked in the inventory.
@@ -148,12 +148,12 @@ Run the smallest relevant step first from the Redux root. These PowerShell comma
 .\gradlew.bat --offline :fabric:compileJava
 ```
 
-For combined addon checks, stage Extra Spells, Twilight Forest Spell Pack, and Twilight Forest in `neoforge/run-packaged-smoke/mods`, run `:neoforge:runGameTestJarSmoke -PwithoutOptionalIntegrations`, then remove only the staged copies. For the Twilight Forest portal check, use a copied addon smoke world. Previous logs are under `build/telekinesis-*.log`. See `build/original-spell-batch-*.log` for the prior batch and `build/restoration-fear-*.log` for the prior checkpoint and `build/restoration-spirit-release.log` for the previous 79-test checkpoint, with optional profile logs in `build/restoration-spirit-addons.log`, `build/restoration-spirit-curios.log`, and `build/restoration-spirit-accessories.log`. See `build/restoration-hammer-release.log` for the 82-test checkpoint and `build/restoration-constructs-release.log` for the 90-test checkpoint. The 92-test checkpoint is under `build/restoration-vision-*.log`. The 94-test checkpoint is under `build/restoration-control-*.log`. The 97-test checkpoint is under `build/restoration-phoenix-*.log`. The combined addon, Curios, and Accessories profiles each passed 99 required GameTests. The 99-test checkpoint is under `build/restoration-quake-*.log`. The base 186-spell packaged validation is in `build/restoration-186-release.log`. The Forcefield and Transportation validation logs are `build/restoration-transportation-*.log`. The combined addon suite also verifies Transportation?s exact tier, element, mana cost, charge time, and cooldown from the packaged registry. See `build/restoration-statues-verified.log` for 102 packaged tests and `build/restoration-slow-time-verified.log` for 103. Client evidence is under `neoforge/run-packaged-smoke/screenshots`. The current JAR is `neoforge/build/libs/electroblobs-wizardry-redux-1.21.1-0.8.10-neoforge.jar`, SHA-256 `47BB8A2135C5CA60E46ED7DCF22589DAA5340D9737876974216765A3B76AE3EA`.
+For combined addon checks, stage Extra Spells, Twilight Forest Spell Pack, and Twilight Forest in `neoforge/run-packaged-smoke/mods`, run `:neoforge:runGameTestJarSmoke -PwithoutOptionalIntegrations`, then remove only the staged copies. For the Twilight Forest portal check, use a copied addon smoke world. Previous logs are under `build/telekinesis-*.log`. See `build/original-spell-batch-*.log` for the prior batch and `build/restoration-fear-*.log` for the prior checkpoint and `build/restoration-spirit-release.log` for the previous 79-test checkpoint, with optional profile logs in `build/restoration-spirit-addons.log`, `build/restoration-spirit-curios.log`, and `build/restoration-spirit-accessories.log`. See `build/restoration-hammer-release.log` for the 82-test checkpoint and `build/restoration-constructs-release.log` for the 90-test checkpoint. The 92-test checkpoint is under `build/restoration-vision-*.log`. The 94-test checkpoint is under `build/restoration-control-*.log`. The 97-test checkpoint is under `build/restoration-phoenix-*.log`. The combined addon, Curios, and Accessories profiles each passed 99 required GameTests. The 99-test checkpoint is under `build/restoration-quake-*.log`. The base 186-spell packaged validation is in `build/restoration-186-release.log`. The 188-spell development and packaged runs each passed 111 required GameTests in `build/restoration-188-final-release.log`. The dedicated server reached 100 ticks and the client reached 680 ticks, including the scripted Possession shader and camera restoration. Fabric Java compilation passed in the same command. The combined addon, Curios, and Accessories profiles each passed their 111-test run in build/restoration-188-final-addons.log, build/restoration-188-final-curios.log, and build/restoration-188-final-accessories.log. The two amulet-specific fixtures use the vanilla artifact integration, so optional equipment slots still need an interactive check. The Forcefield and Transportation validation logs are `build/restoration-transportation-*.log`. The combined addon suite also verifies Transportation?s exact tier, element, mana cost, charge time, and cooldown from the packaged registry. See `build/restoration-statues-verified.log` for 102 packaged tests and `build/restoration-slow-time-verified.log` for 103. Client evidence is under `neoforge/run-packaged-smoke/screenshots`. The current JAR is `neoforge/build/libs/electroblobs-wizardry-redux-1.21.1-0.8.10-neoforge.jar`, SHA-256 `AF42F64514EE84DC29052006B6C7479C895625CBA59D21BB0A7ACB5F71F71795`.
 
 ## Git handoff
 
-Branch `fix/neoforge-rendering`, HEAD `4eaf4ca5`. Current checkpoint has 53 modified tracked files and 183 untracked files, with no staged changes. No commits, pushes, or merges were made during this restoration session.
+Branch `fix/neoforge-rendering`, HEAD `b6c67033`. The working tree has 20 modified tracked files and 13 untracked files, with no staged changes. No commits, pushes, or merges were made during this restoration session.
 
 ## Continuation prompt
 
-> Resume Electroblob’s Wizardry Redux 1.21.1 NeoForge on the existing dirty `fix/neoforge-rendering` branch. Read `RESTORATION-PROGRESS.md` and `migration/ORIGINAL-SPELL-INVENTORY.md`, then use the pinned 1.12.2 source to continue with Resurrection and Possession. Preserve existing IDs, rendering, lectern, scroll dispensing, addon and equipment compatibility, and the Arcane Ascension APIs. Leave progression deferred. Start with incremental tests and use packaged client or server checks where the batch warrants them. Record implementation, automated checks, and manual verification separately, and update the counts. Do not commit, push, or merge.
+> Resume Electroblob’s Wizardry Redux 1.21.1 NeoForge on the existing fix/neoforge-rendering branch. Read both restoration documents and continue with the remaining manual checks, mechanics gaps, and metadata differences. Preserve registry aliases, addon and equipment compatibility, and the Arcane Ascension APIs. Leave progression deferred.

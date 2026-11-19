@@ -42,6 +42,10 @@ public abstract class ItemEntityMixin {
 
     @Inject(method = "playerTouch", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;add(Lnet/minecraft/world/item/ItemStack;)Z", shift = At.Shift.BEFORE), cancellable = true)
     private void EBWIZARDRY$stackBeforePlayerTouch(Player entity, CallbackInfo ci) {
+        if (com.binaris.wizardry.content.spell.necromancy.Possession.active(entity)) {
+            ci.cancel();
+            return;
+        }
         if (WizardryEventBus.fireEvent(new EBItemPickupEvent(itemEntity, entity))) ci.cancel();
     }
 

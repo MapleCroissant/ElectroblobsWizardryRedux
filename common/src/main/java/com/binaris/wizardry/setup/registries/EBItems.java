@@ -320,7 +320,7 @@ public final class EBItems {
     public static final DeferredObject<Item> AMULET_LICH = necklaceArtifact("amulet_lich", Rarity.UNCOMMON, new LichAmuletEffect());
     public static final DeferredObject<Item> AMULET_POTENTIAL = necklaceArtifact("amulet_potential", Rarity.RARE, new AmuletPotentialEffect());
     public static final DeferredObject<Item> AMULET_RECOVERY = necklaceArtifact("amulet_recovery", Rarity.UNCOMMON, new RecoveryAmuletEffect());
-    public static final DeferredObject<Item> AMULET_RESURRECTION = necklaceArtifact("amulet_resurrection", Rarity.EPIC, null); // TODO PlayerDropsEvent
+    public static final DeferredObject<Item> AMULET_RESURRECTION = necklaceArtifact("amulet_resurrection", Rarity.EPIC, null);
     public static final DeferredObject<Item> AMULET_TRANSIENCE = necklaceArtifact("amulet_transience", Rarity.EPIC, new TransienceAmuletEffect());
     public static final DeferredObject<Item> AMULET_WARDING = necklaceArtifact("amulet_warding", Rarity.UNCOMMON, changeDamageIfSource(null, -0.1F, SpellModifiers.Operation.MULTIPLY_TOTAL));
     public static final DeferredObject<Item> AMULET_WISDOM = necklaceArtifact("amulet_wisdom", Rarity.RARE, null);

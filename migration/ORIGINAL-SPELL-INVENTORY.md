@@ -46,9 +46,9 @@ Reference: [Electroblob's Wizardry 4.3.19, Minecraft 1.12.2](https://github.com/
 | `ebwizardry:muffle` | sorcery | novice | 5 / 0 / 25 | Restored with an entity-sound mute and original frontal mob detection arc. |
 | `ebwizardry:paralysis` | lightning | advanced | 20 / 10 / 60 | Restored with the existing status effect, shock ray, shorter player duration, and critical-hit release. |
 | `ebwizardry:petrify` | sorcery | advanced | 40 / 20 / 100 | Restored stone conversion and light-sensitive release after the minimum lifetime. |
-| `ebwizardry:possession` | necromancy | master | 100 / 15 / 300 | Missing. No corresponding Redux spell registration. |
+| `ebwizardry:possession` | necromancy | master | 100 / 15 / 300 | Restored host acquisition, control, movement, attacks, camera, and cleanup. |
 | `ebwizardry:radiant_totem` | healing | advanced | 40 / 15 / 175 | Restored wounded-ally healing priority, hostile damage, rotating cube and ambient audio. |
-| `ebwizardry:resurrection` | healing | master | 150 / 25 / 400 | Missing. No corresponding Redux spell registration. |
+| `ebwizardry:resurrection` | healing | master | 150 / 25 / 400 | Restored ally revival and Amulet of the Immortal self-casting via native player respawn. |
 | `ebwizardry:shadow_ward` | necromancy | advanced | 10 / 0 / 0 | Restored channeled damage split and reflection. |
 | `ebwizardry:shield` | healing | apprentice | 5 / 0 / 0 | Restored continuous Resistance, projectile deflection and animated shield. |
 | `ebwizardry:silverfish_swarm` | earth | master | 80 / 20 / 300 | Enabled with dedicated non-infesting minions that multiply on kills through generation five. |
@@ -118,11 +118,7 @@ Reference: [Electroblob's Wizardry 4.3.19, Minecraft 1.12.2](https://github.com/
 
 ## Remaining work
 
-2 spells lack an available casting implementation. The two previously gated
-original spells ship under their Redux IDs. Greater Telekinesis is release-playable
-with a block-entity parity gap. That leaves 3 open entries among the 64 tracked
-here. See [Restoration progress](../RESTORATION-PROGRESS.md) for the registry
-counts and verification-only work.
+All 188 original playable spells are release-available as 185 matching IDs and three documented Redux aliases. Greater Telekinesis retains a block-entity parity gap. The [restoration handoff](../RESTORATION-PROGRESS.md) tracks remaining mechanical and interactive checks.
 
 Direct 1.12.2 save conversion and uninterrupted channel resumption after chunk unload
 are outside the verified Redux save behavior. The lectern currently uses modern
@@ -130,6 +126,8 @@ widgets on the original book textures. Full visual, combat, and multiplayer
 verification across all restored spells is still open.
 
 ## Test evidence
+
+- All 111 required GameTests passed in the final development, packaged, combined addon, Curios, and Accessories profiles. The two amulet-specific fixtures use vanilla artifact slots. New tests exercise same-dimension ally revival and the no-amulet rejection, full-inventory wand revival, consumption of one scroll and its surviving cooldown, Possession scroll casting and movement, host invalidation, flight expiry and logout, and Enderman block carrying.
 
 - The 103-test suites cover pausing a nearby projectile, the sixth-tick update, full pause from Stop Time, and cleanup following effect removal.
 
@@ -194,14 +192,20 @@ verification across all restored spells is still open.
   booted with the new look-lock mixin. Interactive verification of this
   batch’s visuals, audio, player movement, and multiplayer remains open.
 
-## Remaining source and property index
+## Final spell source and property index
 
-Original spell classes are under the pinned checkout at src/main/java/electroblob/wizardry/spell. Generic registrations are in registry/Spells.java. This index identifies entry points and dependencies for investigation. The full multiplayer, visual, and safety audits for these spells are still open.
+Original spell classes are under the pinned checkout at src/main/java/electroblob/wizardry/spell. Generic registrations are in registry/Spells.java. This index retains the original entry points and properties for the final two releases. Interactive and second-client verification remain open.
 
 | Original ID | Original entry point | Original base properties | Porting dependencies |
 | --- | --- | --- | --- |
 | `ebwizardry:possession` | Possession.java | range=8, effect_duration=600, critical_health=1 | Transferred control, camera, original body and logout cleanup |
 | `ebwizardry:resurrection` | Resurrection.java | effect_radius=8, wait_time=200 | Death interception, revival state and multiplayer safeguards |
+
+### Packaged roster audit
+
+- All 188 original playable spells ship with a definition and icon and enable book, scroll, and wand contexts. The package also includes the none sentinel. Redux-only registrations and addon spells are excluded from this count.
+- Resurrection and Possession match the pinned original tier, element, type, mana cost, charge time, cooldown, and base properties.
+- The pinned comparison found preexisting differences in one or more of the six top-level metadata fields in 23 definitions. They are Banish, Blinding Flash, Conjure Bow, Decay, Enrage, Evade, Fire Sigil, Frost Sigil, Greater Heal, Guardian Beam, Heal, Ice Charge, Ice Lance, Lightning Sigil, Oakflesh, Satiety, Shockwave, Spectral Pathway, Spider Swarm, Summon Snow Golem, Vex Swarm, Whirlwind, and Wither.
 
 ### Forcefield and Transportation validation
 

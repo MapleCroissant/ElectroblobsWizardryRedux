@@ -80,6 +80,14 @@ public abstract class LivingEntityMixin implements Disintegration.Animation {
             if (effect.getEffect() == MobEffects.WITHER) cir.setReturnValue(false);
     }
 
+    @Inject(method = "doPush", at = @At("HEAD"), cancellable = true)
+    private void ebwizardry$ignorePossessionPartnerPush(Entity other, CallbackInfo ci) {
+        if (livingEntity instanceof Player player && com.binaris.wizardry.content.spell.necromancy.Possession.controls(player, other)
+                || other instanceof Player owner && com.binaris.wizardry.content.spell.necromancy.Possession.controls(owner, livingEntity)) {
+            ci.cancel();
+        }
+    }
+
     @WrapMethod(method = "hurt")
     private boolean ebwizardry$shadowWard(DamageSource source, float amount, Operation<Boolean> original) {
         if (!livingEntity.level().isClientSide && com.binaris.wizardry.content.spell.healing.Transience.blocksDamage(livingEntity, source)){
@@ -87,9 +95,16 @@ public abstract class LivingEntityMixin implements Disintegration.Animation {
         }
         if (!livingEntity.level().isClientSide
                 && com.binaris.wizardry.content.entity.construct.ForcefieldConstruct.blocksDamage(livingEntity, source)) return false;
+        if (!livingEntity.level().isClientSide && livingEntity instanceof Player player
+                && com.binaris.wizardry.content.spell.necromancy.Possession.divertDamage(player, source, amount)) return false;
         float fraction = amount > 0 ? ShadowWard.reflectedFraction(livingEntity, source) : 0;
         if (fraction == 0 || livingEntity.isInvulnerableTo(source) || !livingEntity.isAlive()) {
-            return original.call(source, amount);
+            float healthBefore = livingEntity.getHealth();
+            boolean applied = original.call(source, amount);
+            if (applied && !livingEntity.level().isClientSide && livingEntity instanceof Mob host) {
+                com.binaris.wizardry.content.spell.necromancy.Possession.hostDamage(host, healthBefore);
+            }
+            return applied;
         }
         float remaining = amount * (1 - fraction);
         boolean applied = remaining > 0 && original.call(livingEntity.damageSources().magic(), remaining);

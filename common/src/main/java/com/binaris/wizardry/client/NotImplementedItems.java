@@ -9,7 +9,6 @@ public final class NotImplementedItems {
     static List<Item> ITEMS = List.of(
             EBItems.AMULET_AUTO_SHIELD.get(),
             EBItems.AMULET_ANCHORING.get(),
-            EBItems.AMULET_RESURRECTION.get(),
             EBItems.WIZARD_HANDBOOK.get(),
 
             EBItems.AMULET_FIRE_CLOAKING.get(),

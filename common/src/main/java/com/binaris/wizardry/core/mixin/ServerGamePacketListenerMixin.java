@@ -21,6 +21,12 @@ public abstract class ServerGamePacketListenerMixin {
         if (server != null && server.isSameThread() && com.binaris.wizardry.content.effect.SlowTimeMobEffect.blocks(player)) ci.cancel();
     }
 
+    @org.spongepowered.asm.mixin.injection.Inject(method = {"handleUseItem", "handleUseItemOn", "handlePlayerAction",
+            "handleContainerClick", "handleSetCreativeModeSlot", "handlePickItem"}, at = @At("HEAD"), cancellable = true)
+    private void ebwizardry$preventPossessedInventoryUse(org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        if (player.server.isSameThread() && com.binaris.wizardry.content.spell.necromancy.Possession.active(player)) ci.cancel();
+    }
+
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSleeping()Z"))
     private boolean EBWIZARDRY$whitelistFlightFromFloatingKick(ServerPlayer player) {
         if (EntityUtil.isCasting(player, Spells.FLIGHT) || com.binaris.wizardry.content.effect.SlowTimeMobEffect.blocks(player)) return true;
